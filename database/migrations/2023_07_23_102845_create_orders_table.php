@@ -14,13 +14,13 @@ return new class extends Migration
     public function up()
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->id();
+            $table->uuid();
             $table->string('order_number')->unique();
-            $table->integer('product_count');
-            $table->double('total_price');
+            $table->integer('quantity');
+            $table->double('total_price',8, 2);
             $table->double('discount')->nullable();
             $table->unsignedBigInteger('customer_id')->nullable();
-            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
+            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('set null');
             $table->enum('order_status', ['pending', 'completed', 'canceled', 'not_completed'])->default('pending');
             $table->timestamps();
         });

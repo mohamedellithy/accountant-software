@@ -14,13 +14,13 @@ return new class extends Migration
     public function up()
     {
         Schema::create('sales_returns', function (Blueprint $table) {
-            $table->id();
-            $table->integer('return_qty');
-            $table->double('return_price')->nullable();
-            $table->unsignedBigInteger('product_id')->nullable();
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->uuid();
+            $table->integer('qty');
+            $table->double('price',8, 2)->nullable();
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('set null');
             $table->unsignedBigInteger('order_id')->nullable();
-            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('set null');
             $table->timestamps();
         });
     }
