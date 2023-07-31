@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class SalesReturn extends Model
 {
     use HasFactory;
-    protected $fillable = ['return_qty', 'return_price','product_id','order_id'];
+    protected $fillable = ['qty', 'price','product_id','order_id'];
       public function product()
     {
         return $this->belongsTo(Product::class);
