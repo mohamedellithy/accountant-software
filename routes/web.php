@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SupplierController;
 
 /*
@@ -13,12 +14,16 @@ use App\Http\Controllers\SupplierController;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
-// Route::get('/', function () {
-//     return view('pages.admin.dashboard');
-// });
-Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
-Route::resource('suppliers', SupplierController::class);
+Auth::routes();
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/', function () {
+        return view('pages.admin.dashboard');
+    });
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+    Route::resource('suppliers', SupplierController::class);
+    Route::resource('customers', CustomerController::class);
 
-
+});
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -6,7 +6,7 @@
  @section('content')
      <div class="container-fluid">
          <!-- Page Heading -->
-         <h1 class="h3 mb-2 text-gray-800">الموردين</h1>
+         <h1 class="h3 mb-2 text-gray-800">العملاء</h1>
 
          <!-- DataTales Example -->
          <div class="card shadow mb-4">
@@ -48,21 +48,22 @@
                          </thead>
 
                          <tbody>
-                             @foreach ($suppliers as $supplier)
+                             @foreach ($customers as $customer)
                                  <tr>
-                                     <td>{{ $supplier->name }}</td>
-                                     <td>{{ $supplier->phone }}</td>
+                                     <td>{{ $customer->name }}</td>
+                                     <td>{{ $customer->phone }}</td>
                                      <td>
-                                         <form action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST" class="d-flex ">
+                                         <form action="{{ route('customers.destroy', $customer->id) }}" method="POST"
+                                             class="d-flex ">
 
-                                             <a class="crud" href="{{ route('suppliers.edit', $supplier->id) }}">
+                                             <a class="crud" href="{{ route('customers.edit', $customer->id) }}">
                                                  <i class="fas fa-edit text-primary"></i></a>
                                              @csrf
                                              @method('DELETE')
                                              <button type="submit" class="crud">
                                                  <i class="fas fa-trash-alt  text-danger"></i>
                                              </button>
-                                             <a class="crud" href="{{ route('suppliers.show', $supplier->id) }}">
+                                             <a class="crud" href="{{ route('customers.show', $customer->id) }}">
                                                  <i class="far fa-eye"></i>
                                              </a>
                                          </form>
@@ -75,7 +76,7 @@
                          </tbody>
                      </table>
                      <div class="d-flex flex-row justify-content-center">
-                         {{ $suppliers->links() }}
+                         {{ $customers->links() }}
                      </div>
                  </div>
              </div>
