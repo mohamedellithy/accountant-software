@@ -27,7 +27,7 @@
             <div class="sidebar-heading">Interface</div> --}}
 
       <!-- Nav Item - Pages Collapse Menu -->
-      <li class="nav-item {{ IsActiveOnlyIf(['suppliers.create', 'suppliers.store', 'suppliers.index']) }}">
+      <li class="nav-item {{ IsActiveOnlyIf(['suppliers.create', 'suppliers.edit', 'suppliers.index']) }}">
           <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
               aria-expanded="true" aria-controls="collapseTwo">
               <i class="fas fa-user-friends"></i>
@@ -43,7 +43,7 @@
               </div>
           </div>
       </li>
-      <li class="nav-item {{ IsActiveOnlyIf(['customers.create', 'customers.store', 'customers.index']) }}">
+      <li class="nav-item {{ IsActiveOnlyIf(['customers.create', 'customers.edit', 'customers.index']) }}">
           <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree"
               aria-expanded="true" aria-controls="collapseThree">
               <i class="fas fa-users"></i>
