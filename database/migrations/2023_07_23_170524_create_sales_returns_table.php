@@ -14,11 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::create('sales_returns', function (Blueprint $table) {
-            $table->uuid();
+            $table->id();
             $table->integer('qty');
             $table->double('price',8, 2)->nullable();
             $table->unsignedBigInteger('product_id');
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('set null');
+            $table->foreign('product_id')->references('id')->on('products');
             $table->unsignedBigInteger('order_id')->nullable();
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('set null');
             $table->timestamps();

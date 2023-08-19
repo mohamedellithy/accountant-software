@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Supplier extends Model
 {
     use HasFactory;
-    protected $fillable=['name','phoneNumber'];
+    protected $fillable=['name','phone'];
      public function products()
     {
         return $this->hasMany(Product::class);

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Product extends Model
 {
     use HasFactory;
-    protected $fillable = ['productName', 'quantity', 'price', 'supplier_id'];
+    protected $fillable = ['name', 'quantity', 'price', 'supplier_id'];
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);
