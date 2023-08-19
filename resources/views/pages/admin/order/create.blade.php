@@ -21,7 +21,6 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <label class="col-sm-3 col-form-label text-sm-end" for="formtabs-country">
-
                                     اسم الزبون</label>
                                 <select type="text" id="selectBox" name="customer_id" class="form-control" required>
                                     <option value=""></option>
@@ -42,13 +41,13 @@
                                     <span class="text-danger w-100 fs-6">{{ $message }}</span>
                                 @enderror --}}
                             </div>
-                            <table class="table table-bordered" id="dynamicTable">
+                            <table class="table table-bordered container-table" id="dynamicTable">
                                 <tr class="dynamic-added">
                                     <td>
                                         <div class="mb-3">
                                             <label class="form-label" for="basic-default-company"> اسم المنتج</label>
-                                            <select type="text" id="product_id" name="addmore[0][product_id]"
-                                                class="form-control" required>
+                                            <select type="text"  name="addmore[0][product_id]"
+                                                class="form-control product_id" required>
                                                 @foreach ($products as $product)
                                                     <option value={{ $product->id }}>{{ $product->name }}</option>
                                                 @endforeach
@@ -59,30 +58,27 @@
                                     <td>
                                         <div class="mb-3">
                                             <label class="form-label" for="basic-default-company"> الكمية</label>
-                                            <input type="text" class="form-control" id="qty" placeholder=""
+                                            <input type="text" class="form-control qty" placeholder=""
                                                 name="addmore[0][qty]" value="{{ old('addmore[0][qty]') }}" required />
                                             @error('addmore[0][qty]')
                                                 <span class="text-danger w-100 fs-6">{{ $message }}</span>
                                             @enderror
                                         </div>
                                     </td>
-                                    {{-- <td>
+                                    <td>
                                         <div class="mb-3">
                                             <label class="form-label" for="basic-default-company"> السعر</label>
-                                            <input type="text" class="form-control" id="price" placeholder=""
+                                            <input type="text" class="form-control price" placeholder=""
                                                 name="addmore[0][price]" value="{{ old('price[]') }}" required  />
 
                                         </div>
-                                    </td> --}}
-
+                                    </td>
                                     <td>
                                         <div class="mt-4">
                                             <button type="button" name="add" id="add"
                                                 class="btn btn-success">Add</button>
                                         </div>
                                     </td>
-
-
                                 </tr>
                             </table>
 
@@ -127,29 +123,20 @@
             });
         });
 
-        var i = 0;
-
-        $("#add").click(function() {
-
-            ++i;
-
-            $("#dynamicTable").append(
-                '<tr class="dynamic-added"><td><select type="text" id="product_id" name="addmore[' + i +
-                '][product_id]" class="form-control" required>' +
-                ' @foreach ($products as $product)' + '" <option value="' +
-                '{{ $product->id }}' + '">' + '{{ $product->name }}' + '</option> ' +
-                '@endforeach' + ' </select> ' +
-                '</td><td><input type="text" name="addmore[' + i +
-                '][qty]" placeholder="" class="form-control name_list"/></td><td><button type="button" class="btn btn-danger remove-tr">Remove</button></td></tr>'
-            );
+        jQuery("#add").on('click',function() {
+            let count_tr = jQuery('.container-table tr').length;
+            let tr       = jQuery('.dynamic-added').html();
+            jQuery('#dynamicTable').append(`<tr class="tr${count_tr}">${tr}</tr>`);
+            jQuery(`.tr${count_tr}`).find('select').attr('name',`addmore[${count_tr}][product_id]`);
+            jQuery(`.tr${count_tr}`).find('.qty').attr('name',`addmore[${count_tr}][qty]`);
+            jQuery(`.tr${count_tr}`).find('.price').attr('name',`addmore[${count_tr}][price]`);
+            jQuery(`.tr${count_tr}`).find('td:last-child').html(`<button type="button" class="btn btn-danger remove-tr"><i class=""></i></button>`);
         });
 
 
 
-        $(document).on('click', '.remove-tr', function() {
+        $('table').on('click', '.remove-tr', function() {
             $(this).parents('tr').remove();
         });
-
-        ;
     </script>
 @endpush
