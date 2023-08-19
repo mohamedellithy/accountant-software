@@ -1,10 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SupplierController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('suppliers', SupplierController::class);
     Route::resource('customers', CustomerController::class);
     Route::resource('products', ProductController::class);
+    Route::resource('orders', OrderController::class);
+    Route::get('/getPhone/{id}', [OrderController::class, 'getPhone'])->name('getPhone');
+    Route::get('/getProductPrice', [OrderController::class, 'getProductPrice'])->name('getProductPrice');
 
 });
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('getPhone/{id}', [OrderController::class])->name('getPhone');

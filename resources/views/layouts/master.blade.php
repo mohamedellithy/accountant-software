@@ -98,6 +98,8 @@
     <!-- Page level custom scripts -->
     <script src={{ asset('/assets/js/demo/chart-area-demo.js')}}></script>
     <script src={{ asset('/assets/js/demo/chart-pie-demo.js')}}></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+ @stack('script')
 </body>
 
 </html>

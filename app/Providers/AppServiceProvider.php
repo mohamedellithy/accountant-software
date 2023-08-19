@@ -14,7 +14,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        \Spatie\Flash\Flash::levels([
+            'success' => 'alert-success',
+            'warning' => 'alert-warning',
+            'error' => 'alert-error',
+        ]);
+
     }
 
     /**
@@ -24,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-       Paginator::useBootstrap();
+        Paginator::useBootstrap();
 
     }
 }

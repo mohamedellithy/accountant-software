@@ -75,7 +75,22 @@
               </div>
           </div>
       </li>
+ <li class="nav-item {{ IsActiveOnlyIf(['orders.create', 'orders.edit', 'orders.index']) }}">
+          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFive"
+              aria-expanded="true" aria-controls="collapseFive">
+             <i class="far fa-clone"></i>
+              <span>الطلبات</span>
+          </a>
+          <div id="collapseFive" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+              <div class="bg-white py-2 collapse-inner rounded">
 
+                  <a class="collapse-item {{ IsActiveOnlyIf(['orders.create']) }}"
+                      href="{{ route('orders.create') }}">اضافة</a>
+                  <a class="collapse-item {{ IsActiveOnlyIf(['orders.index']) }}"
+                      href="{{ route('orders.index') }}" href="cards.html">عرض</a>
+              </div>
+          </div>
+      </li>
       <!-- Nav Item - Utilities Collapse Menu -->
 
 
