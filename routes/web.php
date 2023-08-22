@@ -29,7 +29,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('products', ProductController::class);
     Route::resource('orders', OrderController::class);
     Route::get('/getPhone/{id}', [OrderController::class, 'getPhone'])->name('getPhone');
-    Route::get('/getProductPrice', [OrderController::class, 'getProductPrice'])->name('getProductPrice');
+    Route::get('/getProductPrice/{id}', [OrderController::class, 'getProductPrice'])->name('getProductPrice');
 
 });
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

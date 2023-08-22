@@ -54,10 +54,9 @@ class OrderController extends Controller
     public function getProductPrice($id)
     {
         $product = Product::find($id);
-        if ($product) {
-            return response()->json(['price' => $product->price]);
-        }
-        return response()->json(['price' => null]);
+
+        return response()->json($product);
+
     }
     /**
      * Show the form for creating a new resource.
@@ -88,19 +87,19 @@ class OrderController extends Controller
         $request->validate([
             'addmore.*.product_id' => 'required',
             'addmore.*.qty' => ['required', 'numeric'],
-            // 'addmore.*.price' => 'required',
+            'addmore.*.price' => 'required',
         ]);
         $order = Order::Create([
             'order_number' => Str::random(5) . auth()->user()->id,
             'customer_id' => $request->input('customer_id'),
             'total_price' => 0,
             'quantity' => 0,
-            'order_status' => 'pending',
+            'order_status' => $request->input('order_status'),
             'discount' => $request->input('discount'),
         ]);
 
         foreach ($request->addmore as $key => $value) {
-            $value['price'] = Product::where('id', $value['product_id'])->value('price');
+            // $value['price'] = Product::where('id', $value['product_id'])->value('price');
             $stock = Product::where('id', $value['product_id'])->value('quantity');
             $productName = Product::where('id', $value['product_id'])->value('name');
             $productPrice = Product::where('id', $value['product_id'])->value('name');
@@ -118,12 +117,13 @@ class OrderController extends Controller
         if ($order->orderitems()->count() > 0) {
 
             $order->update([
-                'total_price' => $order->orderitems()->get()->reduce(function ($total, $item) use ($order) {
-                    return $total + ($item->qty * $item->price) - $order->discount;
-                }),
+                'total_price' => $order->orderitems()->get()->reduce(function ($total, $item) {
+                    return ($total + ($item->qty * $item->price));
+                }) - $order->discount,
                 'quantity' => $order->orderitems()->count(),
 
             ]);
+
         } else {
 
             $order->delete();
