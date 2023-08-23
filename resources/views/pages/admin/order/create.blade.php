@@ -150,16 +150,7 @@
                                 <p class="font-weight-bold"> الاجمالي بعد التخفيض:</p>
                                 <p id="totalAfterDiscount" class="bg-light "></p>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="basic-default-company"> حالة الطلب</label>
-                                <select name="order_status"  class="form-control w-25">
-                                    <option value="">حالة الطلب</option>
-                                    <option value="pending"> Pending</option>
-                                     <option value="completed">Completed</option>
-                                    <option value="cancelled">Cancelled</option>
-                                     <option value="not_completed"> Not Completed</option>
-                                </select>
-                            </div>
+                           
                             <button type="submit" class="btn btn-primary">اضافة الطلب</button>
                         </div>
                     </div>

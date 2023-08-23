@@ -10,7 +10,7 @@
         <h4 class="fw-bold py-3 mb-4">
             الطلبات
         </h4>
-         @if (flash()->message)
+        @if (flash()->message)
             <div class="{{ flash()->class }}">
                 {{ flash()->message }}
             </div>
@@ -34,7 +34,7 @@
                 </div>
                 <div class="nav-item d-flex align-items-center m-2">
                     <select name="order_status" onchange="document.getElementById('filter-data').submit()" id="largeSelect"
-                         class="form-control">
+                        class="form-control">
                         <option value="">حالة الطلب</option>
                         <option value="pending"
                             @isset($order_status) @if ($order_status == 'pending') selected @endif @endisset>
@@ -53,7 +53,7 @@
                 </div>
                 <div class="nav-item d-flex align-items-center m-2">
                     <select name="filter" id="largeSelect" onchange="document.getElementById('filter-data').submit()"
-                         class="form-control">
+                        class="form-control">
                         <option>فلتر المنتجات</option>
                         <option value="sort_asc"
                             @isset($filter) @if ($filter == 'sort_asc') selected @endif @endisset>
@@ -122,7 +122,9 @@
                                     </span>
                                 </td>
                                 <td>
-
+                                    <a class="crud" href="{{ route('orders.show', $order->id) }}">
+                                        <i class="far fa-eye"></i>
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach

@@ -93,8 +93,8 @@ class OrderController extends Controller
             'order_number' => Str::random(5) . auth()->user()->id,
             'customer_id' => $request->input('customer_id'),
             'total_price' => 0,
-            'quantity' => 0,
-            'order_status' => $request->input('order_status'),
+
+            'order_status' => 'pending',
             'discount' => $request->input('discount'),
         ]);
 
@@ -120,7 +120,7 @@ class OrderController extends Controller
                 'total_price' => $order->orderitems()->get()->reduce(function ($total, $item) {
                     return ($total + ($item->qty * $item->price));
                 }) - $order->discount,
-                'quantity' => $order->orderitems()->count(),
+                // 'quantity' => $order->orderitems()->count(),
 
             ]);
 
@@ -140,7 +140,9 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        //
+        $order = Order::where('id', $id)->with('customer', 'orderitems', 'orderitems.product')->first();
+        return view('pages.admin.order.show', compact('order'));
+
     }
 
     /**
@@ -163,7 +165,13 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         //
+        $order = Order::where('id', $id)->update([
+            'order_status' => $request->input('order_status'),
+        ]);
+
+        return redirect()->back();
     }
 
     /**

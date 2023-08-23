@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('order_number')->unique();
-            $table->integer('quantity');
+          
             $table->double('total_price',8, 2);
             $table->double('discount')->nullable();
             $table->unsignedBigInteger('customer_id')->nullable();
