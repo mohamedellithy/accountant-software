@@ -171,6 +171,22 @@ class OrderController extends Controller
             'order_status' => $request->input('order_status'),
         ]);
 
+        $order = Order::where('id', $id)->where('order_status', 'completed')->first();
+        if ($order) {
+            foreach ($order->orderitems as $item) {
+                $product = Product::find($item->product->id);
+
+                if ($product) {
+                    $newQuantity = $product->quantity - $item->qty;
+
+                    if ($newQuantity >= 0) {
+                        $product->quantity = $newQuantity;
+                        $product->save();
+                    }
+                }
+            }
+        }
+
         return redirect()->back();
     }
 
