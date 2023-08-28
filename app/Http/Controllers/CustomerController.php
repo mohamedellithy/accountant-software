@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Http\Requests\CustomerRequest;
@@ -112,6 +113,13 @@ class CustomerController extends Controller
         $customer = Customer::destroy($id);
 
         return redirect()->route('customers.index');
+
+    }
+    public function customerOrder($id)
+    {
+        $customers = Order::where('customer_id', $id)->where('order_status','completed')->with('customer')->first();
+        $customerOrders = Order::where('customer_id', $id)->where('order_status','completed')->with('orderitems', 'orderitems.product')->get();
+        return view('pages.admin.customer.customerorder', compact('customers','customerOrders'));
 
     }
 }

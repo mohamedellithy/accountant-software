@@ -30,6 +30,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('orders', OrderController::class);
     Route::get('/getPhone/{id}', [OrderController::class, 'getPhone'])->name('getPhone');
     Route::get('/getProductPrice/{id}', [OrderController::class, 'getProductPrice'])->name('getProductPrice');
+    Route::get('/customerOrder/{id}', [CustomerController::class, 'customerOrder'])->name('customerOrder');
+    Route::get('/supplierProduct/{id}', [SupplierController::class, 'supplierProduct'])->name('supplierProduct');
 
 });
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
