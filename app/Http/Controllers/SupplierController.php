@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SupplierRequest;
+use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\StakeHolder;
 use Illuminate\Http\Request;
-use App\Http\Requests\SupplierRequest;
 
 class SupplierController extends Controller
 {
@@ -121,6 +122,12 @@ class SupplierController extends Controller
         $supplier = StakeHolder::destroy($id);
 
         return redirect()->route('suppliers.index');
+
+    }
+    public function supplierProduct($id)
+    {
+        $supplierproducts = supplier::where('id', $id)->with('products')->first();
+        return view('pages.admin.supplier.supplierproduct', compact('supplierproducts'));
 
     }
 }

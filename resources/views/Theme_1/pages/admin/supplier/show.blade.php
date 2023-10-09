@@ -6,7 +6,9 @@
 
          <!-- Page Heading -->
          <div class="d-sm-flex align-items-center justify-content-between mb-4">
-             <h1 class="h3 mb-0 text-gray-800">{{ $supplier->name }}</h1>
+             <a class="crud" href="{{ route('supplierProduct', $supplier->id) }}">
+                 <h1 class="h3 mb-0 text-gray-800">{{ $supplier->name }}</h1>
+             </a>
          </div>
          <div class="row">
              <div class="col-lg-6 text-center">
@@ -16,7 +18,7 @@
                          <h6 class="m-0 font-weight-bold text-primary">الاسم :{{ $supplier->name }}</h6>
                      </div>
                      <div class="card-body">
-                        رقم الهاتف :{{ $supplier->phone }}
+                         رقم الهاتف :{{ $supplier->phone }}
                      </div>
                  </div>
              </div>

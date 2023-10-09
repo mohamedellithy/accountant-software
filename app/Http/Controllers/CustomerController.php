@@ -128,4 +128,11 @@ class CustomerController extends Controller
         return redirect()->back()->with('success_message', 'تم حذف العميل');
 
     }
+    public function customerOrder($id)
+    {
+        $customers = Order::where('customer_id', $id)->where('order_status','completed')->with('customer')->first();
+        $customerOrders = Order::where('customer_id', $id)->where('order_status','completed')->with('orderitems', 'orderitems.product')->get();
+        return view('pages.admin.customer.customerorder', compact('customers','customerOrders'));
+
+    }
 }

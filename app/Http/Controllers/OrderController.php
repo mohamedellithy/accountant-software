@@ -143,7 +143,18 @@ class OrderController extends Controller
 
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $order = Order::where('id', $id)->with('customer', 'orderitems', 'orderitems.product')->first();
+        return view('pages.admin.order.show', compact('order'));
 
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -153,7 +164,6 @@ class OrderController extends Controller
      */
     public function update(Request $request,$id)
     {
-
         // $stock=array();
         // foreach ($request->addmore as $item) {
         //     $stock[] = Product::where('id', $item->product_id)->value('quantity');
@@ -211,6 +221,7 @@ class OrderController extends Controller
             $order->delete();
         endif;
         return redirect()->back()->with('success_message', 'تم اضافة طلب');
+
     }
 
      /**
