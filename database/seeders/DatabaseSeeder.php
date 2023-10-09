@@ -3,8 +3,14 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Database\Seeders\AdminSeeder;
+
+use App\Models\OrderItem;
 use Illuminate\Database\Seeder;
+use Database\Seeders\AdminSeeder;
+use Database\Seeders\OrderSeeder;
+use Database\Seeders\StockSeeder;
+use Database\Seeders\ProductSeeder;
+use Database\Seeders\StakeHolderSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,7 +28,14 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         $this->call([
-            AdminSeeder::class,
+            // AdminSeeder::class,
+            // ProductSeeder::class,
+            // StakeHolderSeeder::class,
+            // OrderSeeder::class,
+            // OrderItemSeeder::class,
+            // StockSeeder::class,
+            InvoiceSeeder::class,
+            InvoiceItemSeeder::class,
         ]);
 
     }

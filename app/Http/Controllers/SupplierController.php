@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Supplier;
+use App\Models\StakeHolder;
 use Illuminate\Http\Request;
 use App\Http\Requests\SupplierRequest;
 
@@ -15,7 +16,12 @@ class SupplierController extends Controller
      */
     public function index(Request $request)
     {
-        $suppliers = Supplier::query();
+        $suppliers = StakeHolder::query();
+
+        $suppliers = $suppliers->where('role','supplier');
+
+        $suppliers = $suppliers->orWhereHas('products');
+
 
         $per_page = 10;
         if ($request->has('search')) {
@@ -26,7 +32,7 @@ class SupplierController extends Controller
         }
 
         $suppliers = $suppliers->paginate($per_page);
-        return view('pages.admin.supplier.index', compact('suppliers'));
+        return view(config('app.theme').'.pages.supplier.index', compact('suppliers'));
     }
 
     /**
@@ -47,11 +53,14 @@ class SupplierController extends Controller
      */
     public function store(SupplierRequest $request)
     {
-
+        $request->merge([
+            'role' => 'supplier'
+        ]);
+        
         Supplier::create($request->only([
             'name',
             'phone',
-
+            'role'
         ]));
         return redirect()->route('suppliers.index')->with('success_message', 'تم اضافة مزود');
 
@@ -65,8 +74,8 @@ class SupplierController extends Controller
      */
     public function show($id)
     {
-        $supplier = Supplier::find($id);
-        return view('pages.admin.supplier.show', compact('supplier'));
+        $supplier = StakeHolder::find($id);
+        return view(config('app.theme').'.pages.supplier.show', compact('supplier'));
 
     }
 
@@ -78,8 +87,8 @@ class SupplierController extends Controller
      */
     public function edit($id)
     {
-        $supplier = Supplier::find($id);
-        return view('pages.admin.supplier.edit', compact('supplier'));
+        $supplier = StakeHolder::find($id);
+        return view(config('app.theme').'.pages.supplier.edit', compact('supplier'));
 
     }
 
@@ -92,7 +101,7 @@ class SupplierController extends Controller
      */
     public function update(SupplierRequest $request, $id)
     {
-        $supplier = Supplier::where('id', $id)->update($request->only([
+        $supplier = StakeHolder::where('id', $id)->update($request->only([
             'name',
             'phone',
         ]));
@@ -108,8 +117,8 @@ class SupplierController extends Controller
      */
     public function destroy($id)
     {
-        $supplier = Supplier::find($id);
-        $supplier = Supplier::destroy($id);
+        $supplier = StakeHolder::find($id);
+        $supplier = StakeHolder::destroy($id);
 
         return redirect()->route('suppliers.index');
 

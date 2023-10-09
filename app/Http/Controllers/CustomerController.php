@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
+use App\Models\Order;
+use App\Models\StakeHolder;
 use Illuminate\Http\Request;
 use App\Http\Requests\CustomerRequest;
 
@@ -15,7 +16,15 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $customers = Customer::query();
+        $customers = StakeHolder::query();
+
+        $customers = $customers->where('role','customer');
+
+        $customers = $customers->orWhereHas('orders');
+
+        $customers = $customers->withCount('orders');
+
+        $customers = $customers->withSum('orders','total_price');
 
         $per_page = 10;
         if ($request->has('search')) {
@@ -26,18 +35,10 @@ class CustomerController extends Controller
         }
 
         $customers = $customers->paginate($per_page);
-        return view('pages.admin.customer.index', compact('customers'));
+
+        return view(config('app.theme').'.pages.customer.index', compact('customers'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('pages.admin.customer.create');
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -47,14 +48,16 @@ class CustomerController extends Controller
      */
     public function store(CustomerRequest $request)
     {
+        $request->merge([
+            'role' => 'customer'
+        ]);
 
-        Customer::create($request->only([
+        StakeHolder::create($request->only([
             'name',
             'phone',
-
+            'role'
         ]));
-        return redirect()->route('customers.index')->with('success_message', 'تم اضافة عميل');
-
+        return redirect()->back()->with('success_message', 'تم اضافة عميل');
     }
 
     /**
@@ -63,10 +66,20 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$id)
     {
-        $customer = Customer::find($id);
-        return view('pages.admin.customer.show', compact('customer'));
+        $customer = StakeHolder::with('orders')->withCount('orders')->withSum('orders','total_price')->find($id);
+        $orders   = Order::query();
+        $per_page = 10;
+        if ($request->has('search')) {
+            $customers = $$orders->where('name', 'like', '%' . $request->query('search') . '%');
+        }
+        if ($request->has('rows')) {
+            $per_page = $request->query('rows');
+        }
+
+        $orders   = $orders->where('customer_id',$id)->paginate($per_page);
+        return view(config('app.theme').'.pages.customer.show', compact('customer','orders'));
 
     }
 
@@ -76,11 +89,12 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        $customer = Customer::find($id);
-        return view('pages.admin.customer.edit', compact('customer'));
-
+    public function edit($id){
+        $customer   = StakeHolder::find($id);
+        return response()->json([
+            'status' => true,
+            'view'   => view(config('app.theme').'.pages.customer.model.edit', compact('customer'))->render()
+        ]);
     }
 
     /**
@@ -92,11 +106,11 @@ class CustomerController extends Controller
      */
     public function update(CustomerRequest $request, $id)
     {
-        $customer = Customer::where('id', $id)->update($request->only([
+        $customer = StakeHolder::where('id', $id)->update($request->only([
             'name',
             'phone',
         ]));
-        return redirect()->route('customers.index');
+        return redirect()->back()->with('success_message', 'تم تعديل عميل');
 
     }
 
@@ -108,10 +122,10 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {
-        $customer = Customer::find($id);
-        $customer = Customer::destroy($id);
+        $customer = StakeHolder::find($id);
+        $customer = StakeHolder::destroy($id);
 
-        return redirect()->route('customers.index');
+        return redirect()->back()->with('success_message', 'تم حذف العميل');
 
     }
 }
