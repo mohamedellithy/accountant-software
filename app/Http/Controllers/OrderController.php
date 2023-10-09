@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
-use Illuminate\Http\Request;
+use App\Models\Customer;
+use App\Models\StakeHolder;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -25,16 +27,14 @@ class OrderController extends Controller
         });
 
         $orders->when(request('search') != null, function ($q) {
-            return $q->where('order_no', 'like', '%' . request('search') . '%')->orWhereHas('customer', function ($query) {
+            return $q->where('order_number', 'like', '%' . request('search') . '%')->orWhereHas('customer', function ($query) {
                 $query->where('name', 'like', '%' . request('search') . '%');
             });
         });
 
         $orders->when(request('filter') == 'sort_asc', function ($q) {
             return $q->orderBy('created_at', 'asc');
-        });
-
-        $orders->when(request('filter') == 'sort_desc', function ($q) {
+        },function ($q) {
             return $q->orderBy('created_at', 'desc');
         });
 
@@ -43,21 +43,18 @@ class OrderController extends Controller
         endif;
 
         $orders = $orders->paginate($per_page);
-        return view('pages.admin.order.index', compact('orders'));
+        return view(config('app.theme').'.pages.order.index', compact('orders'));
 
     }
-    public function getPhone($id)
+    public function ajax_get_customer_info($id)
     {
-        $data = Customer::where('id', $id)->first();
+        $data = StakeHolder::where('id', $id)->first();
         return response()->json($data);
     }
-    public function getProductPrice($id)
+    public function ajax_get_product_info($id)
     {
-        $product = Product::find($id);
-        if ($product) {
-            return response()->json(['price' => $product->price]);
-        }
-        return response()->json(['price' => null]);
+        $product = Product::with('stock','stock.supplier')->where('id',$id)->first();
+        return response()->json(['product' => $product]);
     }
     /**
      * Show the form for creating a new resource.
@@ -66,10 +63,22 @@ class OrderController extends Controller
      */
     public function create()
     {
-        $customers = Customer::all();
-        $products = Product::all();
-        return view('pages.admin.order.create', compact('customers', 'products'));
+        $customers = StakeHolder::select('id','name')->get();
+        $products  = Product::whereHas('stock')->get();
+        return view(config('app.theme').'.pages.order.create', compact('customers', 'products'));
+    }
 
+    /**
+     * Show the form for editing a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $order     = Order::with('orderitems')->where('id',$id)->first();
+        $customers = StakeHolder::select('id','name')->get();
+        $products  = Product::all();
+        return view(config('app.theme').'.pages.order.edit', compact('order','customers','products'));
     }
 
     /**
@@ -86,87 +95,123 @@ class OrderController extends Controller
         //     $stock[] = Product::where('id', $item->product_id)->value('quantity');
         // }
         $request->validate([
+            'order_number'         => ['required','unique:orders,order_number'],
             'addmore.*.product_id' => 'required',
-            'addmore.*.qty' => ['required', 'numeric'],
-            // 'addmore.*.price' => 'required',
+            'addmore.*.qty'        => ['required', 'numeric'],
+            'addmore.*.price'      => ['required', 'numeric']
         ]);
+
         $order = Order::Create([
-            'order_number' => Str::random(5) . auth()->user()->id,
-            'customer_id' => $request->input('customer_id'),
-            'total_price' => 0,
-            'quantity' => 0,
+            'order_number' => $request->input('order_number'),
+            'customer_id'  => $request->input('customer_id'),
+            'total_price'  => 0,
+            'quantity'     => count($request->input('addmore')),
             'order_status' => 'pending',
-            'discount' => $request->input('discount'),
+            'discount'     => $request->input('discount'),
         ]);
 
-        foreach ($request->addmore as $key => $value) {
-            $value['price'] = Product::where('id', $value['product_id'])->value('price');
-            $stock = Product::where('id', $value['product_id'])->value('quantity');
-            $productName = Product::where('id', $value['product_id'])->value('name');
-            $productPrice = Product::where('id', $value['product_id'])->value('name');
+        array_filter($request->input('addmore'));
 
-            // if()
-            if ($value['qty'] > $stock) {
-                flash()->warning('كمية المنتج ' . $productName . 'اكبر من المخزون');
-                // return redirect()->back();
+        foreach($request->input('addmore') as $value):
+            $product = Product::with('stock')->where('id', $value['product_id'])->first();
+            if(!isset($value['price'])):
+                $value['price'] =  $product->stock->price;
+            endif;
 
-            } else {
+            if(!isset($value['qty'])):
+                $value['qty'] =  1;
+            endif;
 
+            if($value['qty'] > $product->stock->quantity):
+                return redirect()->back()->withErrors([
+                    'qty' => ['كمية المنتج ' . $product->name . 'اكبر من المخزون']
+                ]);
+            else:
                 $order->orderitems()->create($value);
-            }
-        }
-        if ($order->orderitems()->count() > 0) {
+            endif;
+        endforeach;
 
+        if($order->orderitems()->count() == count($request->input('addmore'))):
             $order->update([
-                'total_price' => $order->orderitems()->get()->reduce(function ($total, $item) use ($order) {
-                    return $total + ($item->qty * $item->price) - $order->discount;
-                }),
-                'quantity' => $order->orderitems()->count(),
-
+                'total_price' => $order->orderitems()->sum(DB::raw("(order_items.qty * order_items.price)")) - $order->discount,
+                'quantity' => $order->orderitems()->count()
             ]);
-        } else {
-
+        else:
             $order->delete();
-        }
-        return redirect()->route('orders.index')->with('success_message', 'تم اضافة طلب');
+        endif;
+        return redirect()->route('admin.orders.index')->with('success_message', 'تم اضافة طلب');
 
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,$id)
     {
-        //
+        // $stock=array();
+        // foreach ($request->addmore as $item) {
+        //     $stock[] = Product::where('id', $item->product_id)->value('quantity');
+        // }
+        $request->validate([
+            'order_number'         => ['required','unique:orders,order_number,'.$id],
+            'addmore.*.product_id' => 'required',
+            'addmore.*.qty'        => ['required', 'numeric'],
+            'addmore.*.price'      => ['required', 'numeric']
+        ]);
+
+        $order = Order::where([
+            'id' => $id
+        ])->first();
+
+        $order->update([
+            'order_number' => $request->input('order_number'),
+            'customer_id'  => $request->input('customer_id'),
+            'total_price'  => 0,
+            'quantity'     => count($request->input('addmore')),
+            'order_status' => 'pending',
+            'discount'     => $request->input('discount'),
+        ]);
+
+        array_filter($request->input('addmore'));
+
+        $order->orderItems()->delete();
+
+        foreach($request->input('addmore') as $value):
+            $product = Product::with('stock')->where('id', $value['product_id'])->first();
+            if(!isset($value['price'])):
+                $value['price'] =  $product->stock->sale_price;
+            endif;
+
+            if(!isset($value['qty'])):
+                $value['qty'] =  1;
+            endif;
+
+            if($value['qty'] > $product->stock->quantity):
+                return redirect()->back()->withErrors([
+                    'qty' => ['كمية المنتج ' . $product->name . 'اكبر من المخزون']
+                ]);
+            else:
+                $order->orderitems()->create($value);
+            endif;
+        endforeach;
+
+        if($order->orderitems()->count() == count($request->input('addmore'))):
+            $order->update([
+                'sub_total'   => $order->orderitems()->sum(DB::raw("(order_items.qty * order_items.price)")),
+                'total_price' => $order->orderitems()->sum(DB::raw("(order_items.qty * order_items.price)")) - $order->discount,
+                'quantity'    => $order->orderitems()->count()
+            ]);
+        else:
+            $order->delete();
+        endif;
+        return redirect()->back()->with('success_message', 'تم اضافة طلب');
+
     }
 
-    /**
+     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
@@ -174,6 +219,22 @@ class OrderController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $order = Order::find($id);
+        $order->delete();
+        $order->orderItems()->delete();
+        return redirect()->route('admin.orders.index');
+
+    }
+
+     /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $order     = Order::with('orderitems','orderitems.product','customer')->where('id',$id)->first();
+        return view(config('app.theme').'.pages.order.show', compact('order'));
     }
 }

@@ -3,16 +3,17 @@
 namespace App\Models;
 
 use App\Models\Customer;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\StakeHolder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model
 {
     use HasFactory;
-    protected $fillable = ['order_number', 'total_price', 'discount', 'quantity', 'customer_id', 'order_status'];
+    protected $fillable = ['order_number','sub_total','total_price', 'discount', 'quantity', 'customer_id', 'order_status'];
     public function customer()
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(StakeHolder::class);
     }
     public function orderitems()
     {

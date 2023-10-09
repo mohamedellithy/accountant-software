@@ -25,9 +25,7 @@ class ProductRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'quantity' => 'required|numeric',
-            'price' => 'required',
-            'supplier_id' => 'required',
+          
         ];
     }
     public function messages()
@@ -35,11 +33,7 @@ class ProductRequest extends FormRequest
         return [
             'name.required' => 'حقل الاسم مطلوب',
             'name.string' => 'يرجى ادخال نص',
-            'name.max' => 'الاسم يجب ان يكون اقل من 255 حرف',
-            'quantity.required' => 'حقل الكمية مطلوب',
-            'price.required' => 'حقل السعر مطلوب',
-            'supplier_id.required' => 'حقل اسم المزود مطلوب',
-
+            'name.max' => 'الاسم يجب ان يكون اقل من 255 حرف'
         ];
     }
 }

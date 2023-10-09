@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Models\Supplier;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
 
@@ -18,45 +17,17 @@ class ProductController extends Controller
     {
         $products = Product::query();
 
-        $per_page = 10;
-        if ($request->has('search')) {
-            $products = $products->where('name', 'like', '%' . request('search') . '%')->orWhereHas('supplier', function ($query) {
-                $query->where('name', 'like', '%' . request('search') . '%');
-            });
+        $per_page = request('rows') ?: 20;
+        if(request('search') != null):
+            $products = $products->where('name', 'like', '%' . request('search') . '%');
+        endif;
 
-            if ($request->has('filter')):
-                if ($request->query('filter') == 'high-price'):
-                    $products = $products->orderBy('price', 'desc');
-                elseif ($request->query('filter') == 'low-price'):
-                    $products = $products->orderBy('price', 'asc');
-                endif;
-            else:
-                $products = $products->orderBy('id', 'desc');
-            endif;
-
-        }
-        if ($request->has('rows')) {
-            $per_page = $request->query('rows');
-        }
+        $products->orderBy('id', 'desc');
 
         $products = $products->paginate($per_page);
-        return view('pages.admin.product.index', compact('products'));
+        return view(config('app.theme').'.pages.product.index', compact('products'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        { $suppliers = Supplier::all();
-
-            return view('pages.admin.product.create', compact('suppliers'));
-
-        }
-
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -68,13 +39,9 @@ class ProductController extends Controller
     {
 
         Product::create($request->only([
-            'name',
-            'quantity',
-            'price',
-            'supplier_id',
-
+            'name'
         ]));
-        return redirect()->route('products.index')->with('success_message', 'تم اضافة صنف');
+        return redirect()->back()->with('success_message', 'تم اضافة صنف');
 
     }
 
@@ -87,7 +54,7 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::find($id);
-        return view('pages.admin.product.show', compact('product'));
+        return view(config('app.theme').'.pages.product.show', compact('product'));
 
     }
 
@@ -97,12 +64,12 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {$suppliers = Supplier::all();
-
-        $product = Product::find($id);
-        return view('pages.admin.product.edit', compact('product', 'suppliers'));
-
+    public function edit($id){
+        $product   = Product::find($id);
+        return response()->json([
+            'status' => true,
+            'view'   => view(config('app.theme').'.pages.product.model.edit', compact('product'))->render()
+        ]);
     }
 
     /**
@@ -115,12 +82,9 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::where('id', $id)->update($request->only([
-            'name',
-            'quantity',
-            'price',
-            'supplier_id',
+            'name'
         ]));
-        return redirect()->route('products.index');
+        return redirect()->back();
 
     }
 
@@ -134,8 +98,7 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         $product = Product::destroy($id);
-
-        return redirect()->route('products.index');
+        return redirect()->back();
 
     }
 }

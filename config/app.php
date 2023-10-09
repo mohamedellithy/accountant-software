@@ -71,6 +71,8 @@ return [
 
     'timezone' => 'UTC',
 
+    'theme' => 'Theme_2',
+
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
