@@ -220,8 +220,8 @@ class OrderController extends Controller
     public function destroy($id)
     {
         $order = Order::find($id);
-        $order->delete();
         $order->orderItems()->delete();
+        $order->delete();
         return redirect()->route('admin.orders.index');
 
     }

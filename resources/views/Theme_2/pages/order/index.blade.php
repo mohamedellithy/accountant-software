@@ -53,7 +53,7 @@ $filter = request()->query('filter') ?: null; @endphp
                             <th>العميل</th>
                             <th>خصم على الفاتورة</th>
                             <th>اجمالى سعر الفاتورة</th>
-                            {{-- <th>حالة الفاتورة</th> --}}
+                           
                             <th>تاريخ الفاتورة</th>
                             <th></th>
                         </tr>

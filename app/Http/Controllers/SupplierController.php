@@ -57,7 +57,7 @@ class SupplierController extends Controller
         $request->merge([
             'role' => 'supplier'
         ]);
-        
+
         Supplier::create($request->only([
             'name',
             'phone',

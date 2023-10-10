@@ -5,7 +5,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReturnsController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\PurchasingInvoiceController;
 
@@ -36,6 +38,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/get-customer-info/{id}', [OrderController::class, 'ajax_get_customer_info'])->name('ajax_get_customer_info');
         Route::get('/get-product-info/{id}', [OrderController::class, 'ajax_get_product_info'])->name('ajax_get_product_info');
         Route::get('/getProductPrice', [OrderController::class, 'getProductPrice'])->name('getProductPrice');
+
+        Route::resource('expenses', ExpensesController::class);
+        Route::resource('returns', ReturnsController::class);
+
+
     });
 });
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -7,11 +7,11 @@ $filter = request()->query('filter') ?: null; @endphp
    <!-- DataTales Example -->
    <div class="card mb-4">
        <div class="card">
-           <h5 class="card-header">عرض فواتير الشراء</h5>
+           <h5 class="card-header">عرض المرتجعات</h5>
            <div class="card-header py-3 ">
                 <div class="d-flex" style="flex-direction: row-reverse;">
                     <div class="nav-item d-flex align-items-center m-2">
-                        <a href="{{ route('admin.purchasing-invoices.create') }}" class="btn btn-success btn-md" style="color:white">اضافة فاتورة جديدة</a>
+                        <a href="{{ route('admin.returns.create') }}" class="btn btn-success btn-md" style="color:white">اضافة مرتجع جديدة</a>
                     </div>
                 </div>
                <form id="filter-data" method="get" class="d-flex justify-content-between">
@@ -49,50 +49,49 @@ $filter = request()->query('filter') ?: null; @endphp
                <table class="table">
                    <thead class="table-light">
                         <tr class="table-dark">
-                            <th>كود الفاتورة</th>
+                            <th>كود المرتجع</th>
                             <th>العميل</th>
-                            <th>اجمالى سعر الفاتورة</th>
-                            <th>عدد الاصناف</th>
-                            <th>تاريخ الفاتورة</th>
+                            <th>اجمالى سعر المرتجع</th>
+                            <th>تاريخ المرتجع</th>
                             <th></th>
                         </tr>
                    </thead>
                    <tbody class="table-border-bottom-0">
-                        @foreach ($orders as $order)
+                        @foreach ($customerReturns as $customerReturn)
                             <tr>
                                 <td class="width-16">
                                     <strong>
-                                        {{ $order->order_number }}#
+                                        {{ $customerReturn->order_number }}#
                                     </strong>
                                 </td>
                                 <td class="width-16">
-                                    <a class="crud" href="{{ route('admin.purchasing-invoices.show', $order->supplier->id) }}">
-                                        {{ $order->supplier ? $order->supplier->name : '-' }}
+                                    <a class="crud" href="{{ route('admin.returns.show', $customerReturn->id) }}">
+                                        {{ $customerReturn->customer ? $customerReturn->customer->name : '-' }}
                                     </a>
                                 </td>
                                 <td>
-                                    {{ $order->total_price }} USD
+                                    {{ $customerReturn->discount }} USD
                                 </td>
                                 <td>
-                                    {{ $order->quantity }} صنف
+                                    {{ $customerReturn->total_price }} USD
                                 </td>
                                 <td>
                                     <span class="badge bg-label-primary me-1">
-                                        {{ $order->created_at }}
+                                        {{ $customerReturn->created_at }}
                                     </span>
                                 </td>
                                 <td>
                                     <div class="d-flex">
-                                        <a class="crud" href="{{ route('admin.purchasing-invoices.show',$order->id) }}">
+                                        <a class="crud" href="{{ route('admin.returns.show',$customerReturn->id) }}">
                                             <i class="fas fa-eye text-info"></i>
                                         </a>
-                                        <a href="{{ route('admin.purchasing-invoices.edit',$order->id) }}" class="crud edit-product" data-product-id="{{ $order->id }}">
+                                        <a href="{{ route('admin.returns.edit',$customerReturn->id) }}" class="crud edit-product" data-product-id="{{ $customerReturn->id }}">
                                             <i class="fas fa-edit text-primary"></i>
                                         </a>
-                                        <form  method="post" action="{{ route('admin.purchasing-invoices.destroy', $order->id) }}">
+                                        <form  method="post" action="{{ route('admin.returns.destroy', $customerReturn->id) }}">
                                             @csrf
                                             @method('DELETE')
-                                            <a class="delete-item crud" data-order-number="{{ $order->order_number }}">
+                                            <a class="delete-item crud" data-customer-return="{{ $customerReturn->id }}">
                                                 <i class="fas fa-trash-alt  text-danger"></i>
                                             </a>
                                         </form>
@@ -105,7 +104,7 @@ $filter = request()->query('filter') ?: null; @endphp
            </div>
            <br/><br/>
            <div class="d-flex flex-row justify-content-center">
-               {{ $orders->links() }}
+               {{ $customerReturns->links() }}
            </div>
        </div>
    </div>
@@ -122,8 +121,8 @@ $filter = request()->query('filter') ?: null; @endphp
 //    });
 
    jQuery('.delete-item').click(function(){
-       let order_number = jQuery(this).attr('data-order-number');
-       if(confirm('هل متأكد من اتمام حذف الفاتورة رقم '+ order_number)){
+       let customer_return = jQuery(this).attr('data-customer-return');
+       if(confirm('هل متأكد من اتمام حذف المرتجع رقم '+ customer_return)){
            jQuery(this).parents('form').submit();
        }
    });

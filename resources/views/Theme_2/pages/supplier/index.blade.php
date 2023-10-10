@@ -1,8 +1,8 @@
-@extends('Theme_2.layouts.master') 
-@php 
-$search = request()->query('search') ?: null; 
-$rows = request()->query('rows') ?: 10; 
-$filter = request()->query('filter') ?: null; 
+@extends('Theme_2.layouts.master')
+@php
+$search = request()->query('search') ?: null;
+$rows = request()->query('rows') ?: 10;
+$filter = request()->query('filter') ?: null;
 @endphp @section('content')
 <div class="container-fluid">
    <br/>
@@ -80,7 +80,7 @@ $filter = request()->query('filter') ?: null;
                <table class="table">
                    <thead class="table-light">
                        <tr class="table-dark">
-                            <th>كود العميل</th>    
+                            <th>كود العميل</th>
                             <th>اسم العميل</th>
                             <th>رقم الهاتف</th>
                             <th>اجمالى الطلبات</th>

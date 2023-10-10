@@ -13,27 +13,27 @@
                 This was an error.
             @endif
         @endif
-        <form action="{{ route('admin.orders.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.purchasing-invoices.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row">
-                <div class="col-lg-9">
+                <div class="col-lg-11">
                     <div class="card mb-4">
                         <div class="card-body">
                             <div class="mb-3">
                                 <label class="form-label" for="basic-default-company">كود الفاتورة</label>
-                                <input type="text" value="{{ \Illuminate\Support\Str::random(10) }}" class="form-control" placeholder=""
-                                    name="order_number" required readonly/>
+                                <input type="text" value="" class="form-control" placeholder=""
+                                    name="order_number"/>
                             </div>
                             <div class="mb-3">
                                 <label class="col-sm-3 col-form-label text-sm-end" for="formtabs-country">
                                     اسم الزبون</label>
-                                <select type="text" id="selectCustomer" name="customer_id" class="form-control form-select2" required>
+                                <select type="text" id="selectCustomer" name="supplier_id" class="form-control form-select2" required>
                                     <option value=""></option>
-                                    @foreach ($customers as $customer)
-                                        <option value={{ $customer->id }}>{{ $customer->name }}</option>
+                                    @foreach ($suppliers as $supplier)
+                                        <option value={{ $supplier->id }}>{{ $supplier->name }}</option>
                                     @endforeach
                                 </select>
-                                @error('customer_id')
+                                @error('supplier_id')
                                     <span class="text-danger w-100 fs-6">{{ $message }}</span>
                                 @enderror
 
@@ -72,13 +72,13 @@
                                                     <label class="form-label" for="basic-default-company"> سعر الوحدة</label>
                                                     <input type="text" class="form-control price" placeholder=""
                                                         name="addmore[0][price]" value="{{ old('price[]') }}" required  />
-    
+
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="mb-3">
                                                     <label class="form-label" for="basic-default-company"> سعر اجمالى</label>
-                                                    <strong class="total-item">0</strong> 
+                                                    <strong class="total-item">0</strong>
                                                     <br/>
                                                     جنيه
                                                 </div>
@@ -98,67 +98,37 @@
                                         </tr>
                                     </tfoot>
                                 </table>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="basic-default-company"> خصم على الفاتورة</label>
-                                <input type="text" class="form-control" id="discount" placeholder="" name="discount"
-                                    value="{{ old('discount') }}" required />
-                                @error('discount')
+                    <div class="card mb-4">
+                        <div class="card-body">
+
+                            <div class="float-end">
+                                <label class="form-label" for="basic-default-company" style="  font-size:20px;" > تحديث المخزن</label>
+                                <input
+                                style="
+                                width:30px;
+                                height:25px;
+                                position: absolute;
+                                margin-top: 5px;
+                                margin-right: 8px;"
+                                type="checkbox" id="update_stock" name="update_stock"value="" />
+                                    @error('update_stock')
                                     <span class="text-danger w-100 fs-6">{{ $message }}</span>
-                                @enderror
+                                    @enderror
                             </div>
+                            <div class="float-start">
+                                <button type="submit" class="btn btn-primary">اضافة الفاتورة</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="row">
-                                <ul class="list-invoices">
-                                    <li>
-                                        <strong>اجمالى الفاتورة :</strong>
-                                        <strong>
-                                            <span class="invoice-final-result">{{ '0' }}</span>
-                                            <span>جنية</span>
-                                        </strong>
-                                    </li>
-                                    <li>
-                                        <strong>خصم على الفاتورة :</strong>
-                                        <strong>
-                                            <span class="invoice-discount">{{ '0' }}</span>
-                                            <span>جنية</span>
-                                        </strong>
-                                    </li>
-                                    <li>
-                                        <strong>السعر النهائي : </strong>
-                                        <strong>
-                                            <span class="invoice-due">{{ '0' }}</span>
-                                            <span>جنية</span>
-                                        </strong>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="mb-3">
-                                    <label class="form-label" for="basic-default-company"> طريقة الدفع</label>
-                                    <select class="form-control" id="TypePayment" name="payment_type" required>
-                                        <option value="cache">كاش</option>
-                                        <option value="postponed">أجل</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3 new-payment" style="display: none">
-                                    <label class="form-label" for="basic-default-company">اضافة دفعة من الفاتورة</label>
-                                    <input type="text" class="form-control" placeholder=""
-                                    name="payment_value" value="" />
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary">اضافة الفاتورة</button>
-                        </div>
-                    </div>
+
+
                 </div>
             </div>
         </form>
@@ -167,9 +137,9 @@
 @push('script')
     <script type="text/javascript">
         jQuery('#selectCustomer').on('change', function() {
-            let customer_id = jQuery(this).val();
+            let supplier_id = jQuery(this).val();
             let url = "{{ route('admin.ajax_get_customer_info', ':id') }}";
-            url = url.replace(':id', customer_id);
+            url = url.replace(':id', supplier_id);
             jQuery.ajax({
                 url: url,
                 type: 'GET',
@@ -214,7 +184,7 @@
             CalculateTotals();
         });
 
-        
+
 
         jQuery("#add").on('click',function() {
             let products = {!! json_encode($products) !!};

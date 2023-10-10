@@ -21,7 +21,7 @@ return new class extends Migration
             $table->double('purchasing_price',8, 2);
             $table->double('sale_price',8, 2);
             $table->unsignedBigInteger('supplier_id')->nullable();
-            $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('set null');
+            $table->foreign('supplier_id')->references('id')->on('stake_holders')->onDelete('set null');
             $table->timestamps();
         });
     }

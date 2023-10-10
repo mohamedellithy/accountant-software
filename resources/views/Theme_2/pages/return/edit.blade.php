@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container-fluid">
-        <h4 class="fw-bold py-3" style="padding-bottom: 0rem !important;">تعديل فاتوره</h4>
+        <h4 class="fw-bold py-3" style="padding-bottom: 0rem !important;">فاتورة جديدة</h4>
         <!-- Basic Layout -->
         @if (flash()->message)
             <div class="{{ flash()->class }}">
@@ -13,28 +13,28 @@
                 This was an error.
             @endif
         @endif
-        <form action="{{ route('admin.purchasing-invoices.update',$order->id) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.returns.update',$customerReturn->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="row">
-                <div class="col-lg-11">
+                <div class="col-lg-12">
                     <div class="card mb-4">
                         <div class="card-body">
                             <div class="mb-3">
                                 <label class="form-label" for="basic-default-company">كود الفاتورة</label>
-                                <input type="text" value="{{ $order->order_number }}" class="form-control" placeholder=""
-                                    name="order_number"/>
+                                <input type="text" value="{{ $customerReturn->order_number}}" class="form-control" placeholder=""
+                                    name="order_number" />
                             </div>
                             <div class="mb-3">
                                 <label class="col-sm-3 col-form-label text-sm-end" for="formtabs-country">
                                     اسم الزبون</label>
-                                <select type="text" name="supplier_id" class="form-control form-select2" required>
+                                <select type="text" name="customer_id" class="form-control form-select2" required>
                                     <option value=""></option>
-                                    @foreach ($suppliers as $supplier)
-                                        <option value={{ $supplier->id }} @if($order->supplier_id == $supplier->id) selected @endif>{{ $supplier->name }}</option>
+                                    @foreach ($customers as $customer)
+                                        <option value={{ $customer->id }} @if($customerReturn->customer_id == $customer->id) selected @endif>{{ $customer->name }}</option>
                                     @endforeach
                                 </select>
-                                @error('supplier_id')
+                                @error('customer_id')
                                     <span class="text-danger w-100 fs-6">{{ $message }}</span>
                                 @enderror
 
@@ -50,7 +50,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        @foreach($order->invoice_items as $item)
+                                        @foreach($customerReturn->returnitems as $item)
                                             <tr class="dynamic-added">
                                                 <td>
                                                     <div class="mb-3 select-product">
@@ -67,9 +67,9 @@
                                                 <td>
                                                     <div class="mb-3">
                                                         <label class="form-label" for="basic-default-company"> الكمية</label>
-                                                        <input type="number"  class="form-control qty" placeholder=""
-                                                            name="addmore[{{ $loop->index }}][qty]" value="{{ $item->qty ?: old('addmore[0][qty]') }}" required />
-                                                        @error('addmore[{{ $loop->index }}][qty]')
+                                                        <input type="number"  class="form-control quantity" placeholder=""
+                                                            name="addmore[{{ $loop->index }}][quantity]" value="{{ $item->quantity ?: old('addmore[0][quantity]') }}" required />
+                                                        @error('addmore[{{ $loop->index }}][quantity]')
                                                             <span class="text-danger w-100 fs-6">{{ $message }}</span>
                                                         @enderror
                                                     </div>
@@ -85,7 +85,7 @@
                                                 <td>
                                                     <div class="mb-3">
                                                         <label class="form-label" for="basic-default-company"> سعر اجمالى</label>
-                                                        <strong class="total-item">{{ $item->price * $item->qty }}</strong>
+                                                        <strong class="total-item">{{ $item->price * $item->quantity }}</strong>
                                                         <br/>
                                                         جنيه
                                                     </div>
@@ -102,12 +102,12 @@
                                     <tfoot>
                                         <tr>
                                             <td colspan="3">اجمالى الفاتورة</td>
-                                            <td colspan="2"><strong class="invoice-final-result">{{ $order->sub_total }}</strong> جنيه</td>
+                                            <td colspan="2"><strong class="invoice-final-result">{{ $customerReturn->total_price }}</strong> جنيه</td>
                                         </tr>
                                     </tfoot>
                                 </table>
 
-                    <div class="card mb-4">
+                                       <div class="card mb-4">
                         <div class="card-body">
 
                             <div class="float-end">
@@ -130,11 +130,16 @@
 
                         </div>
                     </div>
+
+
                             </div>
 
                         </div>
                     </div>
                 </div>
+
+
+
 
             </div>
         </form>
@@ -167,8 +172,8 @@
                 type: 'GET',
                 success: async function(response) {
                     if (response != null) {
-                        jQuery(self).parents('tr').find('input.qty').val(1);
-                        jQuery(self).parents('tr').find('input.qty').attr('max',response.product.stock.quantity);
+                        jQuery(self).parents('tr').find('input.quantity').val(1);
+                        jQuery(self).parents('tr').find('input.quantity').attr('max',response.product.stock.quantity);
                         jQuery(self).parents('tr').find('input.price').val(response.product.stock.sale_price);
                         jQuery(self).parents('tr').find('.total-item').html(response.product.stock.sale_price * 1);
                         console.log(response);
@@ -178,8 +183,8 @@
             });
         });
 
-        jQuery('table').on('keyup','input.qty',function(){
-            let quantity = jQuery(this).parents('tr').find('input.qty').val() || 1;
+        jQuery('table').on('keyup','input.quantity',function(){
+            let quantity = jQuery(this).parents('tr').find('input.quantity').val() || 1;
             let price    = jQuery(this).parents('tr').find('input.price').val();
             jQuery(this).parents('tr').find('.total-item').html(Number(price) * Number(quantity));
             CalculateTotals();
@@ -198,7 +203,7 @@
             let options  = "";
             jQuery('#dynamicTable').append(`<tr class="tr${count_tr}">${tr}</tr>`);
             jQuery(`.tr${count_tr}`).find('select').attr('name',`addmore[${count_tr}][product_id]`);
-            jQuery(`.tr${count_tr}`).find('.qty').attr('name',`addmore[${count_tr}][qty]`);
+            jQuery(`.tr${count_tr}`).find('.quantity').attr('name',`addmore[${count_tr}][quantity]`);
             jQuery(`.tr${count_tr}`).find('.price').attr('name',`addmore[${count_tr}][price]`);
             jQuery(`.tr${count_tr}`).find('td:last-child').html(`<button type="button" class="btn btn-danger btn-sm remove-tr">-</button>`);
             jQuery(`.tr${count_tr}`).find('.total-item').html("0");

@@ -26,6 +26,6 @@ class StakeHolder extends Model
 
     public function products()
     {
-        return $this->hasMany(Product::class,'supplier_id','id');
+        return $this->hasMany(Product::class,/* 'supplier_id', */'id');
     }
 }

@@ -117,21 +117,40 @@
             </ul>
         </li>
 
-        <!-- reactions -->
-        <li class="menu-item {{ IsActiveOnlyIf(['admin.customers.index','admin.customers.create','admin.customers.edit','admin.customers.show']) }}">
+         <!-- Returns -->
+        <li class="menu-item {{ IsActiveOnlyIf(['admin.returns.index','admin.returns.create','admin.returns.edit','admin.returns.show']) }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class='menu-icon tf-icons bx bxs-package'></i>
-                <div data-i18n="Layouts">المرتجع</div>
+                <div data-i18n="Layouts">المرتجعات</div>
             </a>
 
             <ul class="menu-sub">
-                <li class="menu-item {{ IsActiveOnlyIf(['admin.customers.index','admin.customers.show','admin.customers.edit']) }}">
-                    <a href="{{ route('admin.customers.index') }}" class="menu-link">
+                <li class="menu-item {{ IsActiveOnlyIf(['admin.returns.index','admin.returns.show','admin.returns.edit']) }}">
+                    <a href="{{ route('admin.returns.index') }}" class="menu-link">
                         <div data-i18n="Without navbar">عرض</div>
                     </a>
                 </li>
             </ul>
         </li>
+
+
+        <!-- Expenses -->
+        <li class="menu-item {{ IsActiveOnlyIf(['admin.expenses.index','admin.expenses.create','admin.expenses.edit','admin.expenses.show']) }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class='menu-icon tf-icons bx bxs-package'></i>
+                <div data-i18n="Layouts">المصروفات</div>
+            </a>
+
+            <ul class="menu-sub">
+                <li class="menu-item {{ IsActiveOnlyIf(['admin.expenses.index','admin.expenses.show','admin.expenses.edit']) }}">
+                    <a href="{{ route('admin.expenses.index') }}" class="menu-link">
+                        <div data-i18n="Without navbar">عرض</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+
 
     </ul>
 </aside>

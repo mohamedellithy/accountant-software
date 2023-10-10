@@ -28,14 +28,14 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         $this->call([
-            // AdminSeeder::class,
-            // ProductSeeder::class,
-            // StakeHolderSeeder::class,
-            // OrderSeeder::class,
-            // OrderItemSeeder::class,
-            // StockSeeder::class,
-            InvoiceSeeder::class,
-            InvoiceItemSeeder::class,
+             AdminSeeder::class,
+             ProductSeeder::class,
+             StakeHolderSeeder::class,
+             OrderSeeder::class,
+             OrderItemSeeder::class,
+             StockSeeder::class,
+             InvoiceSeeder::class,
+             InvoiceItemSeeder::class,
         ]);
 
     }

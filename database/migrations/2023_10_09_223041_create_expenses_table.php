@@ -13,13 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('purchasing_invoices', function (Blueprint $table) {
+        Schema::create('expenses', function (Blueprint $table) {
             $table->id();
-            $table->string('order_number')->nullable();
-            $table->integer('quantity');
-            $table->double('total_price',8, 2);
-            $table->unsignedBigInteger('supplier_id')->nullable();
-            $table->foreign('supplier_id')->references('id')->on('stake_holders')->onDelete('set null');
+            $table->string('name');
+            $table->double('price',8, 2)->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('purchasing_invoices');
+        Schema::dropIfExists('expenses');
     }
 };

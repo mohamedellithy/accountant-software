@@ -59,9 +59,9 @@ class PurchasingInvoiceController extends Controller
      */
     public function create()
     {
-        $customers = StakeHolder::select('id','name')->get();
+        $suppliers = StakeHolder::select('id','name')->get();
         $products  = Product::whereHas('stock')->get();
-        return view(config('app.theme').'.pages.purchasing-invoice.create', compact('customers', 'products'));
+        return view(config('app.theme').'.pages.purchasing-invoice.create', compact('suppliers', 'products'));
     }
 
     /**
@@ -72,9 +72,9 @@ class PurchasingInvoiceController extends Controller
     public function edit($id)
     {
         $order     = PurchasingInvoice::with('invoice_items')->where('id',$id)->first();
-        $customers = StakeHolder::select('id','name')->get();
+        $suppliers = StakeHolder::select('id','name')->get();
         $products  = Product::all();
-        return view(config('app.theme').'.pages.purchasing-invoice.edit', compact('order','customers','products'));
+        return view(config('app.theme').'.pages.purchasing-invoice.edit', compact('order','suppliers','products'));
     }
 
     /**
@@ -86,12 +86,9 @@ class PurchasingInvoiceController extends Controller
     public function store(Request $request)
     {
 
-        // $stock=array();
-        // foreach ($request->addmore as $item) {
-        //     $stock[] = Product::where('id', $item->product_id)->value('quantity');
-        // }
+
         $request->validate([
-            'order_number'         => ['required','unique:orders,order_number'],
+
             'addmore.*.product_id' => 'required',
             'addmore.*.qty'        => ['required', 'numeric'],
             'addmore.*.price'      => ['required', 'numeric']
@@ -117,11 +114,17 @@ class PurchasingInvoiceController extends Controller
             endif;
 
             $order->invoice_items()->create($value);
+
+
+            if($request->input('update_stock')):
+                $product->stock->quantity +=  $value['quantity'];
+            endif;
+
         endforeach;
 
-        if($order->orderitems()->count() == count($request->input('addmore'))):
+        if($order->invoice_items()->count() == count($request->input('addmore'))):
             $order->update([
-                'total_price' => $order->invoice_items()->sum(DB::raw("(invoice_items.qty * invoice_items.price)")) - $order->discount,
+                'total_price' => $order->invoice_items()->sum(DB::raw("(invoice_items.qty * invoice_items.price)")) ,
                 'quantity' => $order->invoice_items()->count()
             ]);
         else:
@@ -142,12 +145,8 @@ class PurchasingInvoiceController extends Controller
     public function update(Request $request,$id)
     {
 
-        // $stock=array();
-        // foreach ($request->addmore as $item) {
-        //     $stock[] = Product::where('id', $item->product_id)->value('quantity');
-        // }
+
         $request->validate([
-            'order_number'         => ['required','unique:orders,order_number,'.$id],
             'addmore.*.product_id' => 'required',
             'addmore.*.qty'        => ['required', 'numeric'],
             'addmore.*.price'      => ['required', 'numeric']
@@ -159,11 +158,10 @@ class PurchasingInvoiceController extends Controller
 
         $order->update([
             'order_number' => $request->input('order_number'),
-            'customer_id'  => $request->input('customer_id'),
+            'supplier_id'  => $request->input('supplier_id'),
             'total_price'  => 0,
             'quantity'     => count($request->input('addmore')),
-            'order_status' => 'pending',
-            'discount'     => $request->input('discount'),
+
         ]);
 
         array_filter($request->input('addmore'));
@@ -180,19 +178,17 @@ class PurchasingInvoiceController extends Controller
                 $value['qty'] =  1;
             endif;
 
-            if($value['qty'] > $product->stock->quantity):
-                return redirect()->back()->withErrors([
-                    'qty' => ['كمية المنتج ' . $product->name . 'اكبر من المخزون']
-                ]);
-            else:
-                $order->invoice_items()->create($value);
+            $order->invoice_items()->create($value);
+
+            if($request->input('update_stock')):
+                $product->stock->quantity +=  $value['quantity'];
             endif;
         endforeach;
 
         if($order->invoice_items()->count() == count($request->input('addmore'))):
             $order->update([
-                'total_price' => $order->orderitems()->sum(DB::raw("(invoice_items.qty * invoice_items.price)")),
-                'quantity'    => $order->orderitems()->count()
+                'total_price' => $order->invoice_items()->sum(DB::raw("(invoice_items.qty * invoice_items.price)")),
+                'quantity'    => $order->invoice_items()->count()
             ]);
         else:
             $order->delete();
@@ -209,8 +205,8 @@ class PurchasingInvoiceController extends Controller
     public function destroy($id)
     {
         $order = PurchasingInvoice::find($id);
-        $order->delete();
         $order->invoice_items()->delete();
+        $order->delete();
         return redirect()->route('admin.purchasing-invoices.index');
 
     }
@@ -224,6 +220,7 @@ class PurchasingInvoiceController extends Controller
     public function show($id)
     {
         $order     = PurchasingInvoice::with('invoice_items','invoice_items.product','supplier')->where('id',$id)->first();
-        return view(config('app.theme').'.pages.purchasing-invoices.show', compact('order'));
+        return view(config('app.theme').'.pages.purchasing-invoice.show', compact('order'));
+
     }
 }
