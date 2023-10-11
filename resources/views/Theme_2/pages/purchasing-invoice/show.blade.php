@@ -158,9 +158,19 @@
                    <div class="card-body">
                     <a href="{{ route('admin.purchasing-invoices.edit',$order->id) }}" class="btn btn-danger btn-sm" data-product-id="{{ $order->id }}">
                                         تعديل الفاتورة
-                                        </a><br>
-                        <button type='button' id='btn' value='Print' onclick='printDiv();' class="btn btn-primary btn-sm mt-2">طباعة الفاتورة</button>
-                        <button class="btn btn-success btn-sm mt-2">ارسال الفاتورة على الواتس</button>
+                                        </a>
+
+                    <div class="d-flex">
+                        <button type='button' id='btn' value='Print' onclick='printDiv();' class="btn btn-primary btn-sm mt-2">طباعة الفاتورة</button>&nbsp;&nbsp;
+                        <form action="{{ route('admin.teckScreen') }}" method="post">
+                              @csrf
+                        <input type="hidden" name="phone" value="{{ $order->customer->phone }}">
+
+                        <input type="hidden" name="url" value="{{ url()->current()  }}">
+
+                        <button type='submit' id='btn' class="btn btn-success btn-sm mt-2">  ارسال الفاتورة على الواتس</button>
+                        </form>
+                    </div>>
                    </div>
                </div>
            </div>
