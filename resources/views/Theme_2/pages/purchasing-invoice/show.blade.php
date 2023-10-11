@@ -15,10 +15,15 @@
                  <!-- Basic Card Example -->
                 <div class="card mb-4" id="DivIdToPrint">
  <style>
-  @media screen, print {
+  @media print {
+    #DivIdToPrint{
+    width: 551px !important;
+    border: 2px solid red !important;
+    }
       table{
         border:1px solid;
         width:100%;
+        margin-top:10px
       }
      .table-light th{
         color: #566a7f !important;
@@ -37,19 +42,30 @@
         align-items: center !important;
 
     }
+
     .invoice-header .date{
-        align-items: center;
+        margin-right:600px !important;
+
     }
     .invoice-header .date span{
         padding: 10px;
     }
+    .footer .signature{
+        margin-right:410px !important;
+
+    }
+    .custom .customsce{
+        margin-right:510px !important;
+
+    }
+
 
   }
  </style>
                     <div class="card-header py-3">
 
-                        <div class="d-flex invoice-header"style="flex-direction: row; justify-content: space-between; align-items: center;">
-                            <div class="">
+                        <div class="d-flex invoice-header"style="">
+                            <div class="head">
                                 <strong>Green Egypt</strong><br/>
                                 <strong>جرين ايجبت للمبيدات و الاسمدة</strong>
                             </div>
@@ -59,14 +75,14 @@
                             </div>
                         </div>
                         <br/>
-                        <div class="d-flex" style="justify-content: space-between;">
+                        <div class="d-flex custom" style="justify-content: space-between;">
                             <label>
-                                <strong>
+                                <strong class="customfir">
                                      المطلوب من السيد /
                                 </strong>
 
                             </label>
-                            <label>فاتورة رقم  ({{ $order->order_number }})</label>
+                            <label> <strong class="customsce">فاتورة رقم  ({{ $order->order_number }}) </strong></label>
                         </div>
                     </div>
                     <div class="card-body">
@@ -105,7 +121,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="d-flex" style="justify-content: space-between;padding-top: 15px;">
+                        <div class="d-flex footer" style="justify-content: space-between;padding-top: 15px;">
                             <label>
                                 <strong>
                                     المستلم /
@@ -113,7 +129,7 @@
 
                             </label>
                             <label>
-                                <strong>
+                                <strong class="signature">
                                     التوقيع /
                                 </strong>
                                 ............................................................
@@ -196,7 +212,7 @@
 
   newWin.document.open();
 
-  newWin.document.write('<html><body onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
+  newWin.document.write('<html><body dir="rtl" onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
 
   newWin.document.close();
 

@@ -10,11 +10,57 @@
         <div class="row">
             <div class="col-lg-8">
                  <!-- Basic Card Example -->
-                <div class="card mb-4">
+                <div class="card mb-4" id="DivIdToPrint">
+
+<style>
+  @media print {
+    #DivIdToPrint{
+    width: 551px !important;
+    border: 2px solid red !important;
+    }
+      table{
+        border:1px solid;
+        width:100%;
+        margin-top:10px
+      }
+     .table-light th{
+        color: #566a7f !important;
+        border-left: 1px solid;
+    }
+    .table tr{
+        border : 1px solid gray
+    }
+    .table td{
+        border: 1px solid #cac7c7;
+        text-align: center;
+    }
+    .invoice-header{
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+
+    }
+
+    .invoice-header .date{
+        margin-right:600px !important;
+
+    }
+    .invoice-header .date span{
+        padding: 10px;
+    }
+    .footer .signature{
+        margin-right:410px !important;
+
+    }
+    .custom .customsce{
+        margin-right:510px !important;
+
+    }
+
+  }
+ </style>
                     <div class="card-header py-3">
-                        {{-- <h5 class="m-0 font-weight-bold text-warning">
-                             فاتورة رقم  {{ $customerReturn->order_number }}
-                        </h5> --}}
+
                         <div class="d-flex invoice-header">
                             <div class="">
                                 <strong>Green Egypt</strong><br/>
@@ -26,14 +72,14 @@
                             </div>
                         </div>
                         <br/>
-                        <div class="d-flex" style="justify-content: space-between;">
+                        <div class="d-flex custom" style="justify-content: space-between;">
                             <label>
                                 <strong>
                                      المطلوب من السيد /
                                 </strong>
-                                {{ $customerReturn->customer->name }}
+
                             </label>
-                            <label>فاتورة رقم  ({{ $customerReturn->order_number }})</label>
+                            <label> <strong class="customsce">فاتورة رقم  ({{ $customerReturn->order_number }}) </strong></label>
                         </div>
                     </div>
                     <div class="card-body">
@@ -72,15 +118,15 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="d-flex" style="justify-content: space-between;padding-top: 15px;">
+                        <div class="d-flex footer" style="justify-content: space-between;padding-top: 15px;">
                             <label>
                                 <strong>
                                     المستلم /
                                 </strong>
-                                {{ $customerReturn->customer->name }}
+
                             </label>
                             <label>
-                                <strong>
+                                <strong  class="signature">
                                     التوقيع /
                                 </strong>
                                 ............................................................
@@ -106,11 +152,14 @@
                             <p class="text-dark" style="padding: 13px;background-color:#eee">{{ $customerReturn->customer->phone }}</p>
                         </h6>
                    </div>
-                   <div class="card-body">
-                        <button class="btn btn-danger btn-sm">تعديل الفاتورة</button><br/><br/>
-                        <button class="btn btn-primary btn-sm">طباعة الفاتورة</button>
-                        <button class="btn btn-success btn-sm">ارسال الفاتورة على الواتس</button>
+                    <div class="card-body">
+                    <a href="{{ route('admin.purchasing-invoices.edit',$customerReturn->id) }}" class="btn btn-danger btn-sm">
+                                        تعديل الفاتورة
+                                        </a><br>
+                        <button type='button' id='btn' value='Print' onclick='printDiv();' class="btn btn-primary btn-sm mt-2">طباعة الفاتورة</button>
+                        <button class="btn btn-success btn-sm mt-2">ارسال الفاتورة على الواتس</button>
                    </div>
+
                </div>
            </div>
         </div>
@@ -145,3 +194,26 @@
     }
  </style>
  @endpush
+
+@push('script')
+    <script type="text/javascript">
+     function printDiv()
+{
+
+  var divToPrint=document.getElementById('DivIdToPrint');
+
+  var newWin=window.open('','Print-Window');
+
+  newWin.document.open();
+
+  newWin.document.write('<html><body dir="rtl" onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
+
+  newWin.document.close();
+
+  setTimeout(function(){newWin.close();},10);
+
+}
+
+
+</script>
+@endpush
