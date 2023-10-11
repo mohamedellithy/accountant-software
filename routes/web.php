@@ -42,7 +42,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::resource('expenses', ExpensesController::class);
         Route::resource('returns', ReturnsController::class);
-        Route::get('/teckScreen', [WhatsAppController::class, 'teckScreen'])->name('teckScreen');
+        Route::post('/teckScreen', [WhatsAppController::class, 'teckScreen'])->name('teckScreen');
 
 
     });

@@ -155,11 +155,18 @@
                     <div class="card-body">
                     <a href="{{ route('admin.purchasing-invoices.edit',$customerReturn->id) }}" class="btn btn-danger btn-sm">
                                         تعديل الفاتورة
-                                        </a><br>
-                        <button type='button' id='btn' value='Print' onclick='printDiv();' class="btn btn-primary btn-sm mt-2">طباعة الفاتورة</button>
-                        <a href="{{ route('admin.teckScreen') }}" class="btn btn-success btn-sm mt-2">
-                                       ارسال الفاتورة على الواتس
                                         </a>
+                        <div class="d-flex">
+                        <button type='button' id='btn' value='Print' onclick='printDiv();' class="btn btn-primary btn-sm mt-2">طباعة الفاتورة</button>&nbsp;&nbsp;
+                        <form action="{{ route('admin.teckScreen') }}" method="post">
+                              @csrf
+                        <input type="hidden" name="phone" value="{{ $customerReturn->customer->phone }}">
+
+                        <input type="hidden" name="url" value="{{ url()->current()  }}">
+
+                        <button type='submit' id='btn' class="btn btn-success btn-sm mt-2">  ارسال الفاتورة على الواتس</button>
+                        </form>
+                        </div>
 
                    </div>
 
