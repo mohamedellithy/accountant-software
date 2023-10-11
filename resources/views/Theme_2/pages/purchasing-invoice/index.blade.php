@@ -1,5 +1,8 @@
 @extends('Theme_2.layouts.master')
-@php $search = request()->query('search') ?: null;
+@php
+ $search = request()->query('search') ?: null;
+$from = request()->query('from') ?: null;
+$to = request()->query('to') ?: null;
 $rows = request()->query('rows') ?: 10;
 $filter = request()->query('filter') ?: null; @endphp
 @section('content')
@@ -18,6 +21,10 @@ $filter = request()->query('filter') ?: null; @endphp
                    <div class="nav-item d-flex align-items-center m-2" style="background-color: #eee;padding: 8px;">
                        <i class="bx bx-search fs-4 lh-0"></i>
                        <input type="text" class="search form-control border-0 shadow-none" placeholder="البحث ...." @isset($search) value="{{ $search }}" @endisset id="search" name="search" style="background-color: #eee;"/>
+                   </div>
+                    <div class="nav-item d-flex align-items-center m-2">
+                       <input type="date" class=" form-control" placeholder="من ...." @isset($from) value="{{ $from }}" @endisset id="from" name="from"/>&ensp;
+                        <input type="date" class=" form-control" placeholder="الي ...." @isset($to) value="{{ $to }}" @endisset id="to" name="to"/>
                    </div>
                    <div class="d-flex">
                        <div class="nav-item d-flex align-items-center m-2">
@@ -71,7 +78,7 @@ $filter = request()->query('filter') ?: null; @endphp
                                     </a>
                                 </td>
                                 <td>
-                                    {{ $order->total_price }} USD
+                                    {{  formate_price($order->total_price) }}
                                 </td>
                                 <td>
                                     {{ $order->quantity }} صنف

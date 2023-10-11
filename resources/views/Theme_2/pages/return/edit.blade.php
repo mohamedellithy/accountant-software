@@ -119,7 +119,7 @@
                                 position: absolute;
                                 margin-top: 5px;
                                 margin-right: 8px;"
-                                type="checkbox" id="update_stock" name="update_stock"value="" />
+                                type="checkbox" id="update_stock" name="update_stock"value="1" />
                                     @error('update_stock')
                                     <span class="text-danger w-100 fs-6">{{ $message }}</span>
                                     @enderror

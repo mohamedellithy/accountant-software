@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Stock;
 use App\Models\Product;
+use App\Models\ReturnItem;
 use App\Models\StakeHolder;
 use Illuminate\Http\Request;
 use App\Models\CustomerReturn;
 use Illuminate\Support\Facades\DB;
+
 class ReturnsController extends Controller
 {
     /**
@@ -27,10 +30,21 @@ class ReturnsController extends Controller
             });
         });
 
+        
+        if ($request->has('from') and $request->has('to') and $request->get('from') != "" and $request->get('to') != "") {
+
+            $from=$request->get('from');
+            $to=$request->get('to');
+
+            $customerReturns->whereBetween('created_at',[$from,$to]);
+        }
+
+
+
         $customerReturns->when(request('filter') == 'high-price', function ($q) {
-            return $q->orderBy('total_price', 'asc');
-        },function ($q) {
             return $q->orderBy('total_price', 'desc');
+        },function ($q) {
+            return $q->orderBy('total_price', 'asc');
         });
 
         if ($request->has('rows')):
@@ -89,7 +103,9 @@ class ReturnsController extends Controller
             $customerReturn->returnitems()->create($value);
 
             if($request->input('update_stock')):
-                $product->stock->quantity +=  $value['quantity'];
+                $stock = Stock::where('product_id',$product->id)->first();
+                $stock->quantity += $value['quantity'];
+                $stock->save();
             endif;
 
         endforeach;
@@ -160,6 +176,22 @@ class ReturnsController extends Controller
 
         array_filter($request->input('addmore'));
 
+
+
+        if($request->input('update_stock')):
+
+            $Return_Items=ReturnItem::where('return_id',$customerReturn->id)->get();
+
+            foreach( $Return_Items as $Return_Item):
+                  $product = Product::with('stock')->where('id', $Return_Item->product_id)->first();
+
+                $stock = Stock::where('product_id',$product->id)->first();
+
+                $stock->quantity -= $Return_Item->quantity;
+                $stock->save();
+            endforeach;
+        endif;
+
         $customerReturn->returnitems()->delete();
 
         foreach($request->input('addmore') as $value):
@@ -175,8 +207,11 @@ class ReturnsController extends Controller
 
             $customerReturn->returnitems()->create($value);
 
+
             if($request->input('update_stock')):
-                $product->stock->quantity +=  $value['quantity'];
+                $stock = Stock::where('product_id',$product->id)->first();
+                $stock->quantity += $value['quantity'];
+                $stock->save();
             endif;
 
 

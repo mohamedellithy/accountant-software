@@ -76,7 +76,7 @@
                             <tr class="table-light">
                                 <td>{{ $expense->id }}</td>
                                 <td>{{ $expense->name }}</td>
-                                <td>{{ $expense->price }}</td>
+                                <td>{{formate_price($expense->price) }}</td>
                                 <td>
                                     <div class="d-flex">
                                         <a class="crud edit-expense" data-expense-id="{{ $expense->id }}">

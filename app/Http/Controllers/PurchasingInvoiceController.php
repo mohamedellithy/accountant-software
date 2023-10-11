@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Stock;
 use App\Models\Product;
 use App\Models\StakeHolder;
+use App\Models\InvoiceItems;
 use Illuminate\Http\Request;
 use App\Models\PurchasingInvoice;
 use Illuminate\Support\Facades\DB;
@@ -28,10 +30,18 @@ class PurchasingInvoiceController extends Controller
             });
         });
 
-        $orders->when(request('filter') == 'sort_asc', function ($q) {
-            return $q->orderBy('created_at', 'asc');
+        if ($request->has('from') and $request->has('to') and $request->get('from') != "" and $request->get('to') != "") {
+
+            $from=$request->get('from');
+            $to=$request->get('to');
+            $orders->whereBetween('created_at',[$from,$to]);
+        }
+
+
+        $orders->when(request('filter') == 'high-price', function ($q) {
+            return $q->orderBy('total_price', 'desc');
         },function ($q) {
-            return $q->orderBy('created_at', 'desc');
+            return $q->orderBy('total_price', 'asc');
         });
 
         if ($request->has('rows')):
@@ -86,7 +96,6 @@ class PurchasingInvoiceController extends Controller
     public function store(Request $request)
     {
 
-
         $request->validate([
 
             'addmore.*.product_id' => 'required',
@@ -117,7 +126,9 @@ class PurchasingInvoiceController extends Controller
 
 
             if($request->input('update_stock')):
-                $product->stock->quantity +=  $value['quantity'];
+                $stock = Stock::where('product_id',$product->id)->first();
+                $stock->quantity += $value['qty'];
+                $stock->save();
             endif;
 
         endforeach;
@@ -166,6 +177,19 @@ class PurchasingInvoiceController extends Controller
 
         array_filter($request->input('addmore'));
 
+        if($request->input('update_stock')):
+
+            $Invoice_Items=InvoiceItems::where('invoice_id',$order->id)->get();
+            foreach( $Invoice_Items as $Invoice_Item):
+                  $product = Product::with('stock')->where('id', $Invoice_Item->product_id)->first();
+
+                $stock = Stock::where('product_id',$product->id)->first();
+                $stock->quantity -= $Invoice_Item->qty;
+                $stock->save();
+
+            endforeach;
+        endif;
+
         $order->invoice_items()->delete();
 
         foreach($request->input('addmore') as $value):
@@ -181,8 +205,11 @@ class PurchasingInvoiceController extends Controller
             $order->invoice_items()->create($value);
 
             if($request->input('update_stock')):
-                $product->stock->quantity +=  $value['quantity'];
+                $stock = Stock::where('product_id',$product->id)->first();
+                $stock->quantity += $value['qty'];
+                $stock->save();
             endif;
+
         endforeach;
 
         if($order->invoice_items()->count() == count($request->input('addmore'))):
