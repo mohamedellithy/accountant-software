@@ -44,12 +44,20 @@ class PurchasingInvoiceController extends Controller
             return $q->orderBy('total_price', 'asc');
         });
 
+        if ($request->has('customer_filter') and $request->get('customer_filter') != "") {
+
+            $orders->where('supplier_id',$request->get('customer_filter'));
+        }
+
+
         if ($request->has('rows')):
             $per_page = $request->query('rows');
         endif;
 
         $orders = $orders->paginate($per_page);
-        return view(config('app.theme').'.pages.purchasing-invoice.index', compact('orders'));
+        $customers = StakeHolder::select('id','name')->orderBy('name', 'asc')->get();
+
+        return view(config('app.theme').'.pages.purchasing-invoice.index', compact('orders','customers'));
 
     }
     public function ajax_get_supplier_info($id)

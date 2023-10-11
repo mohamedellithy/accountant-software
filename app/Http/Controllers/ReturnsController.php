@@ -30,16 +30,18 @@ class ReturnsController extends Controller
             });
         });
 
-        
-        if ($request->has('from') and $request->has('to') and $request->get('from') != "" and $request->get('to') != "") {
 
+        if ($request->has('from') and $request->has('to') and $request->get('from') != "" and $request->get('to') != "") {
             $from=$request->get('from');
             $to=$request->get('to');
 
             $customerReturns->whereBetween('created_at',[$from,$to]);
         }
 
+        if ($request->has('customer_filter') and $request->get('customer_filter') != "") {
 
+            $customerReturns->where('customer_id',$request->get('customer_filter'));
+        }
 
         $customerReturns->when(request('filter') == 'high-price', function ($q) {
             return $q->orderBy('total_price', 'desc');
@@ -52,7 +54,8 @@ class ReturnsController extends Controller
         endif;
 
         $customerReturns = $customerReturns->paginate($per_page);
-        return view(config('app.theme').'.pages.return.index', compact('customerReturns'));
+        $customers = StakeHolder::select('id','name')->orderBy('name', 'asc')->get();
+        return view(config('app.theme').'.pages.return.index', compact('customerReturns','customers'));
     }
 
     /**

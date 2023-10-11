@@ -9,6 +9,7 @@ use App\Http\Controllers\ReturnsController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\PurchasingInvoiceController;
 
 /*
@@ -41,6 +42,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::resource('expenses', ExpensesController::class);
         Route::resource('returns', ReturnsController::class);
+        Route::get('/teckScreen', [WhatsAppController::class, 'teckScreen'])->name('teckScreen');
 
 
     });

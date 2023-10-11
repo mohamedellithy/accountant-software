@@ -157,7 +157,10 @@
                                         تعديل الفاتورة
                                         </a><br>
                         <button type='button' id='btn' value='Print' onclick='printDiv();' class="btn btn-primary btn-sm mt-2">طباعة الفاتورة</button>
-                        <button class="btn btn-success btn-sm mt-2">ارسال الفاتورة على الواتس</button>
+                        <a href="{{ route('admin.teckScreen') }}" class="btn btn-success btn-sm mt-2">
+                                       ارسال الفاتورة على الواتس
+                                        </a>
+
                    </div>
 
                </div>
