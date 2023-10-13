@@ -12,7 +12,7 @@ class ExpensesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $expenses = Expense::query();
 
@@ -22,6 +22,19 @@ class ExpensesController extends Controller
             return $q->where('name', 'like', '%' . request('search') . '%')->orWhere(function ($query) {
                 $query->where('price', 'like', '%' . request('search') . '%');
             });
+        });
+
+        if ($request->has('from') and $request->has('to') and $request->get('from') != "" and $request->get('to') != "") {
+            $from=$request->get('from');
+            $to=$request->get('to');
+
+            $expenses->whereBetween('created_at',[$from,$to]);
+        }
+
+        $expenses->when(request('filter') == 'high-price', function ($q) {
+            return $q->orderBy('price', 'desc');
+        },function ($q) {
+            return $q->orderBy('price', 'asc');
         });
 
 
