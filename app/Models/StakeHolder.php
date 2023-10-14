@@ -11,11 +11,11 @@ class StakeHolder extends Model
 
     protected $fillable = ['name', 'phone','role'];
 
-    public function CustomerScope(){
+    public function scopeCustomer(){
         return $this->where('role','customer')->orWhereHas('orders');
     }
 
-    public function SupplierScope(){
+    public function scopeSupplier(){
         return $this->where('role','supplier')->orWhereHas('products');
     }
 
