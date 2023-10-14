@@ -163,8 +163,6 @@ class PurchasingInvoiceController extends Controller
      */
     public function update(Request $request,$id)
     {
-
-
         $request->validate([
             'addmore.*.product_id' => 'required',
             'addmore.*.qty'        => ['required', 'numeric'],
@@ -186,15 +184,12 @@ class PurchasingInvoiceController extends Controller
         array_filter($request->input('addmore'));
 
         if($request->input('update_stock')):
-
             $Invoice_Items=InvoiceItems::where('invoice_id',$order->id)->get();
-            foreach( $Invoice_Items as $Invoice_Item):
-                  $product = Product::with('stock')->where('id', $Invoice_Item->product_id)->first();
-
-                $stock = Stock::where('product_id',$product->id)->first();
+            foreach($Invoice_Items as $Invoice_Item):
+                $product = Product::where('id', $Invoice_Item->product_id)->first();
+                $stock   = Stock::where('product_id',$product->id)->first();
                 $stock->quantity -= $Invoice_Item->qty;
                 $stock->save();
-
             endforeach;
         endif;
 
@@ -217,7 +212,6 @@ class PurchasingInvoiceController extends Controller
                 $stock->quantity += $value['qty'];
                 $stock->save();
             endif;
-
         endforeach;
 
         if($order->invoice_items()->count() == count($request->input('addmore'))):
