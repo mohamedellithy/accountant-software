@@ -13,46 +13,46 @@
                 <div class="card mb-4" id="DivIdToPrint">
 
 <style>
-  @media print {
-    #DivIdToPrint{
+  @media screen, print {
+  .body-print #DivIdToPrint{
     width: 551px !important;
     border: 2px solid red !important;
     }
-      table{
+      .body-print table{
         border:1px solid;
         width:100%;
         margin-top:10px
       }
-     .table-light th{
+     .body-print .table-light th{
         color: #566a7f !important;
         border-left: 1px solid;
     }
-    .table tr{
+     .body-print .table tr{
         border : 1px solid gray
     }
-    .table td{
+     .body-print .table td{
         border: 1px solid #cac7c7;
         text-align: center;
     }
-    .invoice-header{
+     .body-print .invoice-header{
         flex-direction: row !important;
         justify-content: space-between !important;
         align-items: center !important;
 
     }
 
-    .invoice-header .date{
+     .body-print .invoice-header .date{
         margin-right:600px !important;
 
     }
-    .invoice-header .date span{
+     .body-print .invoice-header .date span{
         padding: 10px;
     }
-    .footer .signature{
+     .body-print .footer .signature{
         margin-right:410px !important;
 
     }
-    .custom .customsce{
+     .body-print .custom .customsce{
         margin-right:510px !important;
 
     }
@@ -216,7 +216,7 @@
 
   newWin.document.open();
 
-  newWin.document.write('<html><body dir="rtl" onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
+  newWin.document.write('<html><body class="body-print" dir="rtl" onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
 
   newWin.document.close();
 
