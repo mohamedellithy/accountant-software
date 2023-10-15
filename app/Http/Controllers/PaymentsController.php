@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Payment;
 use App\Models\StakeHolder;
-use App\Models\Total_Payments;
 use Illuminate\Http\Request;
+use App\Models\Total_Payments;
 
 class PaymentsController extends Controller
 {
@@ -34,6 +35,23 @@ class PaymentsController extends Controller
         $payments = $payments->paginate($per_page);
         $customers = StakeHolder::select('id','name')->orderBy('name', 'asc')->get();
         return view(config('app.theme').'.pages.payment.index', compact('payments','customers'));
+
+    }
+
+    public function customer_payments(Request $request,$id){
+
+        $payments = Payment::query();
+        $payments =  $payments->where('stake_holder_id', $id)->get();
+
+        $per_page = 10;
+
+
+        if ($request->has('rows')):
+            $per_page = $request->query('rows');
+        endif;
+
+       // $payments = $payments->paginate($per_page);
+        return view(config('app.theme').'.pages.payment.customer', compact('payments'));
 
     }
 }

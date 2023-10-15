@@ -14,20 +14,11 @@ $filter = request()->query('filter') ?: null; @endphp
             <h5 class="card-header"> المدفوعات/المديونات</h5>
             <div class="card-body py-3 ">
 
-                <form id="filter-data" method="get" class=" justify-content-between">
+           {{--      <form id="filter-data" method="get" class=" justify-content-between">
                     <div class="d-flex justify-content-between" style="background-color: #eee;">
                         <div class="nav-item d-flex align-items-center m-2" style="background-color: #fff;padding: 2px;">
                             <i class="bx bx-search fs-4 lh-0"></i>
                             <input type="text" class="search form-control border-0 shadow-none" placeholder="البحث ...." @isset($search) value="{{ $search }}" @endisset id="search" name="search" style="background-color:#fff;"/>
-                        </div>
-
-                        <div class="nav-item d-flex align-items-center m-2">
-                            <select name="customer_filter" id="largeSelect" onchange="document.getElementById('filter-data').submit()" class="form-control form-select2">
-                                <option value="">فلتر العميل</option>
-                                @foreach (  $customers as  $customer)
-                                    <option value="{{ $customer->id }}" @isset($customer_filter) @if ($customer_filter == $customer->id ) selected @endif @endisset>{{  $customer->name }}</option>
-                                @endforeach
-                            </select>
                         </div>
 
                         <div class="nav-item d-flex align-items-center m-2">
@@ -46,16 +37,17 @@ $filter = request()->query('filter') ?: null; @endphp
                             </select>
                         </div>
                     </div>
-                </form>
+                </form> --}}
 
                 <div class="table-responsive text-nowrap">
                 <table class="table">
                     <thead class="table-light">
                             <tr class="table-dark">
 
-                                <th>العميل</th>
-                                <th>مدين</th>
+                                <th>العمليه</th>
+                                <th>كود الفاتوره</th>
                                 <th>دائن</th>
+                                <th>مدين</th>
                                 <th>الرصيد</th>
 
                             </tr>
@@ -64,17 +56,18 @@ $filter = request()->query('filter') ?: null; @endphp
                             @foreach ($payments as $payment)
                                 <tr>
 
-                                    <td class="width-16">
-                                        <a class="crud" href="{{ route('admin.customer_payments',
-                                         $payment->customer ? $payment->customer->id : '-')}}">
-                                            {{ $payment->customer ? $payment->customer->name : '-' }}
-                                        </a>
+                                 <td>
+                                        {{  $payment->invoice_type }}
                                     </td>
                                     <td>
-                                        {{  formate_price($payment->debit) }}
+                                        {{  $payment->invoice_id }}
                                     </td>
                                     <td>
                                      {{  formate_price($payment->credit) }}
+
+                                    </td>
+                                <td>
+                                     {{  formate_price($payment->debit) }}
 
                                     </td>
                                     <td>
@@ -90,7 +83,7 @@ $filter = request()->query('filter') ?: null; @endphp
                 </div>
                 <br/><br/>
                 <div class="d-flex flex-row justify-content-center">
-                    {{ $payments->links() }}
+              {{--       {{ $payments->links() }} --}}
                 </div>
             </div>
         </div>

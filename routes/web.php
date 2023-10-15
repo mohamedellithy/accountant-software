@@ -45,6 +45,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('returns', ReturnsController::class);
         Route::get('/payments', [PaymentsController::class, 'index'])->name('payments.index');
 
+        Route::get('/customer-payments/{id}', [PaymentsController::class, 'customer_payments'])->name('customer_payments');
+
         Route::post('/teckScreen', [WhatsAppController::class, 'teckScreen'])->name('teckScreen');
 
 

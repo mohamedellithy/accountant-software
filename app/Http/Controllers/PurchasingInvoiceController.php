@@ -158,7 +158,7 @@ class PurchasingInvoiceController extends Controller
 
                     $payment =  Payment::create([
                         'invoice_id'=> $order->id,
-                        'invoice_type'=>'order',
+                        'invoice_type'=>'Purchasing',
                         'stake_holder_id'=> $order->supplier_id,
                         'credit'=>0,
                         'debit'=>$order->total_price,
@@ -170,7 +170,7 @@ class PurchasingInvoiceController extends Controller
 
                     $payment = Payment::create([
                     'invoice_id'=> $order->id,
-                    'invoice_type'=>'order',
+                    'invoice_type'=>'Purchasing',
                     'stake_holder_id'=> $order->supplier_id,
                     'credit'=>0,
                     'debit'=>$order->total_price,
@@ -218,7 +218,7 @@ class PurchasingInvoiceController extends Controller
                     $payment = Payment::create([
 
                         'invoice_id'=> $order->id,
-                        'invoice_type'=>'order',
+                        'invoice_type'=>'Purchasing',
                         'stake_holder_id'=> $order->supplier_id,
                         'value'=>$request->input('payment_value'),
                         'debit'=>$order->total_price,
