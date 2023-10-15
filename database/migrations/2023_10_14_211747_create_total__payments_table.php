@@ -13,13 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create('total__payments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('stake_holder_id')->nullable();
             $table->foreign('stake_holder_id')->references('id')->on('stake_holders')->onDelete('Cascade');
-            $table->double('value'); // 100000 + 100000
-            $table->double('paid',2); // مدفوع
-            $table->double('unpaid',2); // غير مدفوع
+            $table->double('value');
+            $table->double('debit',2); // المدين => destination  // purchasing invoices // -
+            $table->double('credit',2); //  الدائن =>source // order invoices // +
+
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payments');
+        Schema::dropIfExists('total__payments');
     }
 };

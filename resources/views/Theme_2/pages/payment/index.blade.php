@@ -11,13 +11,9 @@ $filter = request()->query('filter') ?: null; @endphp
    <!-- DataTales Example -->
    <div class="card mb-4">
         <div class="card">
-            <h5 class="card-header">عرض فواتير الشراء</h5>
+            <h5 class="card-header"> المدفوعات/المديونات</h5>
             <div class="card-body py-3 ">
-                <div class="d-flex" style="flex-direction: row-reverse;">
-                    <div class="nav-item d-flex align-items-center m-2">
-                        <a href="{{ route('admin.purchasing-invoices.create') }}" class="btn btn-success btn-md" style="color:white">اضافة فاتورة جديدة</a>
-                    </div>
-                </div>
+
                 <form id="filter-data" method="get" class=" justify-content-between">
                     <div class="d-flex justify-content-between" style="background-color: #eee;">
                         <div class="nav-item d-flex align-items-center m-2" style="background-color: #fff;padding: 2px;">
@@ -34,12 +30,6 @@ $filter = request()->query('filter') ?: null; @endphp
                             </select>
                         </div>
 
-                        <div class="nav-item d-flex align-items-center m-2">
-                            <label style="color: #636481;">من:</label><br>
-                            <input type="date" onchange="document.getElementById('filter-data').submit()" class=" form-control" placeholder="من ...." @isset($from) value="{{ $from }}" @endisset id="from" name="from"/>&ensp;
-                                <label style="color: #636481;">الي:</label><br>
-                            <input type="date" onchange="document.getElementById('filter-data').submit()" class=" form-control" placeholder="الي ...." @isset($to) value="{{ $to }}" @endisset id="to" name="to"/>
-                        </div>
                         <div class="nav-item d-flex align-items-center m-2">
                             <select name="filter" id="largeSelect" onchange="document.getElementById('filter-data').submit()" class="form-control">
                                 <option value="">فلتر الاصناف</option>
@@ -62,55 +52,36 @@ $filter = request()->query('filter') ?: null; @endphp
                 <table class="table">
                     <thead class="table-light">
                             <tr class="table-dark">
-                                <th>كود الفاتورة</th>
+
                                 <th>العميل</th>
-                                <th>اجمالى سعر الفاتورة</th>
-                                <th>عدد الاصناف</th>
-                                <th>تاريخ الفاتورة</th>
+                                <th>مدين</th>
+                                <th>دائن</th>
+                                <th>الرصيد</th>
                                 <th></th>
                             </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
-                            @foreach ($orders as $order)
+                            @foreach ($payments as $payment)
                                 <tr>
+
                                     <td class="width-16">
-                                        <strong>
-                                            {{ $order->order_number }}#
-                                        </strong>
-                                    </td>
-                                    <td class="width-16">
-                                        <a class="crud" href="{{ route('admin.purchasing-invoices.show', $order->supplier->id) }}">
-                                            {{ $order->supplier ? $order->supplier->name : '-' }}
+                                        <a class="crud" href="#">
+                                            {{ $payment->customer ? $payment->customer->name : '-' }}
                                         </a>
                                     </td>
                                     <td>
-                                        {{  formate_price($order->total_price) }}
+                                        {{  formate_price($payment->debit) }}
                                     </td>
                                     <td>
-                                        {{ $order->quantity }} صنف
+                                     {{  formate_price($payment->credit) }}
+
                                     </td>
                                     <td>
                                         <span class="badge bg-label-primary me-1">
-                                            {{ $order->created_at }}
+                                             {{  formate_price($payment->value) }}
                                         </span>
                                     </td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <a class="crud" href="{{ route('admin.purchasing-invoices.show',$order->id) }}">
-                                                <i class="fas fa-eye text-info"></i>
-                                            </a>
-                                            <a href="{{ route('admin.purchasing-invoices.edit',$order->id) }}" class="crud edit-product" data-product-id="{{ $order->id }}">
-                                                <i class="fas fa-edit text-primary"></i>
-                                            </a>
-                                            <form  method="post" action="{{ route('admin.purchasing-invoices.destroy', $order->id) }}">
-                                                @csrf
-                                                @method('DELETE')
-                                                <a class="delete-item crud" data-order-number="{{ $order->order_number }}">
-                                                    <i class="fas fa-trash-alt  text-danger"></i>
-                                                </a>
-                                            </form>
-                                        </div>
-                                    </td>
+
                                 </tr>
                             @endforeach
                     </tbody>
@@ -118,7 +89,7 @@ $filter = request()->query('filter') ?: null; @endphp
                 </div>
                 <br/><br/>
                 <div class="d-flex flex-row justify-content-center">
-                    {{ $orders->links() }}
+                    {{ $payments->links() }}
                 </div>
             </div>
         </div>

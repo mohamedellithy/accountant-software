@@ -1,0 +1,127 @@
+  public function store(Request $request)
+    {
+
+        $request->validate([
+            'order_number'         => ['required','unique:orders,order_number'],
+            'addmore.*.product_id' => 'required',
+            'addmore.*.qty'        => ['required', 'numeric'],
+            'addmore.*.price'      => ['required', 'numeric']
+        ]);
+
+        $order = Order::Create([
+            'order_number' => $request->input('order_number'),
+            'customer_id'  => $request->input('customer_id'),
+            'total_price'  => 0,
+            'quantity'     => count($request->input('addmore')),
+            'order_status' => 'pending',
+            'discount'     => $request->input('discount'),
+        ]);
+
+        array_filter($request->input('addmore'));
+
+        foreach($request->input('addmore') as $value):
+            $product = Product::with('stock')->where('id', $value['product_id'])->first();
+            if(!isset($value['price'])):
+                $value['price'] =  $product->stock->price;
+            endif;
+
+            if(!isset($value['qty'])):
+                $value['qty'] =  1;
+            endif;
+
+            if($value['qty'] > $product->stock->quantity):
+                return redirect()->back()->withErrors([
+                    'qty' => ['كمية المنتج ' . $product->name . 'اكبر من المخزون']
+                ]);
+            else:
+                $order->orderitems()->create($value);
+            endif;
+        endforeach;
+
+        if($order->orderitems()->count() == count($request->input('addmore'))):
+            $order->update([
+                'total_price' => $order->orderitems()->sum(DB::raw("(order_items.qty * order_items.price)")) - $order->discount,
+                'quantity' => $order->orderitems()->count()
+            ]);
+
+
+            if($request->input('payment_type') == 'cache'):
+
+                $payment= Payment::where('stake_holder_id',$order->customer_id)->latest()->first();
+
+                if($payment){
+                    $total_payment->credit += $order->total_price;
+                    $total_payment->value = $total_payment->credit - $total_payment->debit;
+                    $total_payment->save();
+
+                   }else{
+
+                 Payment::create([
+                    'invoice_id'=> $order->id,
+                    'invoice_type'=>'order',
+                    'stake_holder_id'=> $order->customer_id,
+                    'value'=>$order->total_price,
+                    'credit'=>$order->total_price,
+                    'debit'=>0
+                ]);
+
+            }
+
+              /*  $total_payment= Total_Payments::where('stake_holder_id',$order->customer_id)->first();
+
+               if($total_payment){
+                $total_payment->credit += $order->total_price;
+                $total_payment->value = $total_payment->credit - $total_payment->debit;
+                $total_payment->save();
+
+               }else{
+
+                Total_Payments::create([
+                    'stake_holder_id'=> $order->customer_id,
+                    'value'=>$order->total_price,
+                    'credit'=>$order->total_price,
+                    'debit'=>0
+                ]);
+               } */
+
+
+            else:
+
+                Payment::create([
+                    'invoice_id'=> $order->id,
+                    'invoice_type'=>'order',
+                    'stake_holder_id'=> $order->customer_id,
+                    'value'=>$request->input('payment_value') - ($order->total_price - $request->input('payment_value')),
+                    'credit'=>$request->input('payment_value'),
+                    'debit'=>$order->total_price - $request->input('payment_value')
+                ]);
+
+
+                /* $total_payment= Total_Payments::where('stake_holder_id',$order->customer_id)->first();
+
+                if($total_payment){
+
+                 $total_payment->credit += $request->input('payment_value');
+                 $total_payment->debit += $order->total_price - $request->input('payment_value');
+                 $total_payment->value = $total_payment->credit - $total_payment->debit;
+                 $total_payment->save();
+
+                }else{
+
+                Total_Payments::create([
+                     'stake_holder_id'=> $order->customer_id,
+                     'value'=>$request->input('payment_value') - ($order->total_price - $request->input('payment_value')),
+                     'credit'=>$request->input('payment_value'),
+                     'debit'=>$order->total_price - $request->input('payment_value'),
+                 ]);
+                } */
+
+
+            endif;
+
+        else:
+            $order->delete();
+        endif;
+        return redirect()->route('admin.orders.index')->with('success_message', 'تم اضافة طلب');
+
+    }

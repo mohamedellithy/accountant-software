@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Payment extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['stake_holder_id','invoice_id','invoice_type', 'value','debit','credit'];
+
 }

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Customer;
 use App\Models\StakeHolder;
+use App\Models\Total_Payments;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -90,10 +92,6 @@ class OrderController extends Controller
     public function store(Request $request)
     {
 
-        // $stock=array();
-        // foreach ($request->addmore as $item) {
-        //     $stock[] = Product::where('id', $item->product_id)->value('quantity');
-        // }
         $request->validate([
             'order_number'         => ['required','unique:orders,order_number'],
             'addmore.*.product_id' => 'required',
@@ -136,6 +134,102 @@ class OrderController extends Controller
                 'total_price' => $order->orderitems()->sum(DB::raw("(order_items.qty * order_items.price)")) - $order->discount,
                 'quantity' => $order->orderitems()->count()
             ]);
+
+
+            if($request->input('payment_type') == 'cache'):
+
+                $payment= Payment::where('stake_holder_id',$order->customer_id)->latest()->first();
+
+                if($payment){
+
+                    $payment =  Payment::create([
+                        'invoice_id'=> $order->id,
+                        'invoice_type'=>'order',
+                        'stake_holder_id'=> $order->customer_id,
+                        'credit'=>$order->total_price,
+                        'debit'=>0,
+                        'value'=>$payment->value,
+                    ]);
+
+
+                   }else{
+
+                $payment= Payment::create([
+                    'invoice_id'=> $order->id,
+                    'invoice_type'=>'order',
+                    'stake_holder_id'=> $order->customer_id,
+                    'credit'=>$order->total_price,
+                    'debit'=>0,
+                    'value'=>0,
+                ]);
+            }
+
+            $total_payment= Total_Payments::where('stake_holder_id',$order->customer_id)->first();
+            if($total_payment){
+             $total_payment->credit += $payment->credit;
+             $total_payment->value += $payment->value;
+             $total_payment->debit += $payment->debit;
+             $total_payment->save();
+
+            }else{
+
+             Total_Payments::create([
+                 'stake_holder_id'=> $order->customer_id,
+                 'value'=>$payment->value,
+                 'credit'=> $payment->credit,
+                 'debit'=>$payment->debit
+             ]);
+         }
+
+
+            else:
+
+                $payment= Payment::where('stake_holder_id',$order->customer_id)->latest()->first();
+
+                if($payment){
+
+                    $payment =  Payment::create([
+                'invoice_id'=> $order->id,
+                'invoice_type'=>'order',
+                'stake_holder_id'=> $order->customer_id,
+                'credit'=>$request->input('payment_value'),
+                'debit'=>0,
+                'value'=>$payment->value + $order->total_price - $request->input('payment_value'),
+               ]);
+                   }else{
+
+                    $payment = Payment::create([
+                        'invoice_id'=> $order->id,
+                        'invoice_type'=>'order',
+                        'stake_holder_id'=> $order->customer_id,
+                        'value'=>$request->input('payment_value') - ($order->total_price -       $request->input('payment_value')),
+                        'credit'=>$request->input('payment_value'),
+                        'debit'=>$order->total_price - $request->input('payment_value')
+                    ]);
+
+
+            }
+
+
+            $total_payment= Total_Payments::where('stake_holder_id',$order->customer_id)->first();
+               if($total_payment){
+                $total_payment->credit += $payment->credit;
+                $total_payment->value += $payment->value;
+                $total_payment->debit += $payment->debit;
+                $total_payment->save();
+
+               }else{
+
+                Total_Payments::create([
+                    'stake_holder_id'=> $order->customer_id,
+                    'value'=>$payment->value,
+                    'credit'=> $payment->credit,
+                    'debit'=>$payment->debit
+                ]);
+            }
+
+            endif;
+
         else:
             $order->delete();
         endif;

@@ -134,6 +134,7 @@
         </li>
 
 
+
         <!-- Expenses -->
         <li class="menu-item {{ IsActiveOnlyIf(['admin.expenses.index','admin.expenses.create','admin.expenses.edit','admin.expenses.show']) }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -149,6 +150,23 @@
                 </li>
             </ul>
         </li>
+
+                <!-- payments -->
+        <li class="menu-item {{ IsActiveOnlyIf(['admin.payments.index']) }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class='menu-icon tf-icons bx bxs-package'></i>
+                <div data-i18n="Layouts">المدفوعات</div>
+            </a>
+
+            <ul class="menu-sub">
+                <li class="menu-item {{ IsActiveOnlyIf(['admin.payments.index']) }}">
+                    <a href="{{ route('admin.payments.index') }}" class="menu-link">
+                        <div data-i18n="Without navbar">عرض</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
 
 
 

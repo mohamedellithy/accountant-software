@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Stock;
+use App\Models\Payment;
 use App\Models\Product;
 use App\Models\StakeHolder;
 use App\Models\InvoiceItems;
 use Illuminate\Http\Request;
+use App\Models\Total_Payments;
 use App\Models\PurchasingInvoice;
 use Illuminate\Support\Facades\DB;
 
@@ -146,6 +148,106 @@ class PurchasingInvoiceController extends Controller
                 'total_price' => $order->invoice_items()->sum(DB::raw("(invoice_items.qty * invoice_items.price)")) ,
                 'quantity' => $order->invoice_items()->count()
             ]);
+
+
+            if($request->input('payment_type') == 'cache'):
+
+                $payment= Payment::where('stake_holder_id',$order->supplier_id)->latest()->first();
+
+                if($payment){
+
+                    $payment =  Payment::create([
+                        'invoice_id'=> $order->id,
+                        'invoice_type'=>'order',
+                        'stake_holder_id'=> $order->supplier_id,
+                        'credit'=>0,
+                        'debit'=>$order->total_price,
+                        'value'=>$payment->value - $order->total_price,
+                    ]);
+
+
+                   }else{
+
+                    $payment = Payment::create([
+                    'invoice_id'=> $order->id,
+                    'invoice_type'=>'order',
+                    'stake_holder_id'=> $order->supplier_id,
+                    'credit'=>0,
+                    'debit'=>$order->total_price,
+                    'value'=>0-$order->total_price,
+                ]);
+
+            }
+
+            $total_payment= Total_Payments::where('stake_holder_id',$order->supplier_id)->first();
+            if($total_payment){
+             $total_payment->credit += $payment->credit;
+             $total_payment->value += $payment->value;
+             $total_payment->debit += $payment->debit;
+             $total_payment->save();
+
+            }else{
+
+             Total_Payments::create([
+                 'stake_holder_id'=> $order->supplier_id,
+                 'value'=>$payment->value,
+                 'credit'=> $payment->credit,
+                 'debit'=>$payment->debit
+             ]);
+         }
+
+
+            else:
+
+                $payment= Payment::where('stake_holder_id',$order->supplier_id)->latest()->first();
+
+                if($payment){
+
+                    $payment = Payment::create([
+                'invoice_id'=> $order->id,
+                'invoice_type'=>'order',
+                'stake_holder_id'=> $order->supplier_id,
+                'debit'=>$request->input('payment_value'),
+                'credit'=>0,
+                'value'=>$payment->value - $order->total_price - $request->input('payment_value'),
+            ]);
+
+
+                   }else{
+
+                    $payment = Payment::create([
+
+                        'invoice_id'=> $order->id,
+                        'invoice_type'=>'order',
+                        'stake_holder_id'=> $order->supplier_id,
+                        'value'=>$request->input('payment_value'),
+                        'debit'=>$order->total_price,
+                        'credit'=>$order->total_price - $request->input('payment_value')
+                    ]);
+
+            }
+
+            $total_payment= Total_Payments::where('stake_holder_id',$order->supplier_id)->first();
+            if($total_payment){
+             $total_payment->credit += $payment->credit;
+             $total_payment->value += $payment->value;
+             $total_payment->debit += $payment->debit;
+             $total_payment->save();
+
+            }else{
+
+             Total_Payments::create([
+                 'stake_holder_id'=> $order->supplier_id,
+                 'value'=>$payment->value,
+                 'credit'=> $payment->credit,
+                 'debit'=>$payment->debit
+             ]);
+         }
+
+
+            endif;
+
+
         else:
             $order->delete();
         endif;
@@ -163,6 +265,7 @@ class PurchasingInvoiceController extends Controller
      */
     public function update(Request $request,$id)
     {
+
         $request->validate([
             'addmore.*.product_id' => 'required',
             'addmore.*.qty'        => ['required', 'numeric'],
@@ -219,6 +322,29 @@ class PurchasingInvoiceController extends Controller
                 'total_price' => $order->invoice_items()->sum(DB::raw("(invoice_items.qty * invoice_items.price)")),
                 'quantity'    => $order->invoice_items()->count()
             ]);
+
+            if($request->input('payment_type') == 'cache'):
+                Payment::create([
+                    'invoice_id'=> $order->id,
+                    'invoice_type'=>'purchasing',
+                    'stake_holder_id'=> $order->supplier_id,
+                    'value'=>$order->total_price,
+                    'paid'=>$order->total_price,
+                    'unpaid'=>0
+                ]);
+
+            else:
+                Payment::create([
+                    'invoice_id'=> $order->id,
+                    'invoice_type'=>'purchasing',
+                    'stake_holder_id'=> $order->supplier_id,
+                    'value'=>$order->total_price,
+                    'paid'=>$request->input('payment_value'),
+                    'unpaid'=>$order->total_price - $request->input('payment_value')
+                ]);
+            endif;
+
+
         else:
             $order->delete();
         endif;

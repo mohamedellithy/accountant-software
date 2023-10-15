@@ -16,7 +16,7 @@
         <form action="{{ route('admin.purchasing-invoices.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row">
-                <div class="col-lg-11">
+                <div class="col-lg-9">
                     <div class="card mb-4">
                         <div class="card-body">
                             <div class="mb-3">
@@ -99,36 +99,54 @@
                                     </tfoot>
                                 </table>
                     <div class="card mb-4">
+
+                    </div>
+                </div>
+
+                        </div>
+                    </div>
+                </div>
+                  <div class="col-md-3">
+
+                    <div class="card mb-4">
                         <div class="card-body">
+                            <div class="row">
+                                <div class="mb-3">
+                                    <label class="form-label" for="basic-default-company"> طريقة الدفع</label>
+                                    <select class="form-control" id="TypePayment" name="payment_type" required>
+                                        <option value="cache">كاش</option>
+                                        <option value="postponed">أجل</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 new-payment" style="display: none">
+                                    <label class="form-label" for="basic-default-company">اضافة دفعة من الفاتورة</label>
+                                    <input type="text" class="form-control" placeholder=""
+                                    name="payment_value" value="" />
+                                </div>
+                            </div>
+                                  <div class="">
 
                             <div class="float-end">
-                                <label class="form-label" for="basic-default-company" style="  font-size:20px;" > تحديث المخزن</label>
+                                <label class="form-label" for="basic-default-company" style="  font-size:15px;" > تحديث المخزن</label>
                                 <input
                                 style="
-                                width:30px;
-                                height:25px;
+                                width:20px;
+                                height:18px;
                                 position: absolute;
-                                margin-top: 5px;
-                                margin-right: 8px;"
+                                margin-top: 4px;
+                                margin-right: 67px;"
                                 type="checkbox" id="update_stock" name="update_stock"value="1" />
                                     @error('update_stock')
                                     <span class="text-danger w-100 fs-6">{{ $message }}</span>
                                     @enderror
                             </div>
-                            <div class="float-start">
+                            <div class="float-start mt-3">
                                 <button type="submit" class="btn btn-primary">اضافة الفاتورة</button>
                             </div>
 
                         </div>
-                    </div>
-                </div>
-
                         </div>
                     </div>
-                </div>
-                <div class="col-md-3">
-
-
                 </div>
             </div>
         </form>
