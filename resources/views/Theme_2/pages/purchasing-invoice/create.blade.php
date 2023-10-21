@@ -114,7 +114,7 @@
                                 <div class="mb-3">
                                     <label class="form-label" for="basic-default-company"> طريقة الدفع</label>
                                     <select class="form-control" id="TypePayment" name="payment_type" required>
-                                        <option value="cache">كاش</option>
+                                        <option value="cashe">كاش</option>
                                         <option value="postponed">أجل</option>
                                     </select>
                                 </div>
@@ -124,27 +124,26 @@
                                     name="payment_value" value="" />
                                 </div>
                             </div>
-                                  <div class="">
-
-                            <div class="float-end">
-                                <label class="form-label" for="basic-default-company" style="  font-size:15px;" > تحديث المخزن</label>
-                                <input
-                                style="
-                                width:20px;
-                                height:18px;
-                                position: absolute;
-                                margin-top: 4px;
-                                margin-right: 67px;"
-                                type="checkbox" id="update_stock" name="update_stock"value="1" />
-                                    @error('update_stock')
-                                    <span class="text-danger w-100 fs-6">{{ $message }}</span>
-                                    @enderror
+                            <div class="">
+                                <div class="float-end">
+                                    <label class="form-label" for="basic-default-company" style="  font-size:15px;" > تحديث المخزن</label>
+                                    <input
+                                    style="
+                                    width:20px;
+                                    height:18px;
+                                    position: absolute;
+                                    margin-top: 4px;
+                                    margin-right: 67px;"
+                                    type="checkbox" id="update_stock" name="update_stock"value="1" />
+                                        @error('update_stock')
+                                        <span class="text-danger w-100 fs-6">{{ $message }}</span>
+                                        @enderror
+                                </div>
+                                <br/>
+                                <div class=" mt-3">
+                                    <button type="submit" class="btn btn-primary">اضافة الفاتورة</button>
+                                </div>
                             </div>
-                            <div class="float-start mt-3">
-                                <button type="submit" class="btn btn-primary">اضافة الفاتورة</button>
-                            </div>
-
-                        </div>
                         </div>
                     </div>
                 </div>
@@ -154,6 +153,7 @@
 @endsection
 @push('script')
     <script type="text/javascript">
+        CalculateTotals();
         jQuery('#selectCustomer').on('change', function() {
             let supplier_id = jQuery(this).val();
             let url = "{{ route('admin.ajax_get_customer_info', ':id') }}";
@@ -245,6 +245,7 @@
 
         $('table').on('click', '.remove-tr', function() {
             $(this).parents('tr').remove();
+            CalculateTotals();
         });
 
         jQuery('#TypePayment').on('change',function(){

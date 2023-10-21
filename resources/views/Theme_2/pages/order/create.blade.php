@@ -72,13 +72,13 @@
                                                     <label class="form-label" for="basic-default-company"> سعر الوحدة</label>
                                                     <input type="text" class="form-control price" placeholder=""
                                                         name="addmore[0][price]" value="{{ old('price[]') }}" required  />
-    
+
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="mb-3">
                                                     <label class="form-label" for="basic-default-company"> سعر اجمالى</label>
-                                                    <strong class="total-item">0</strong> 
+                                                    <strong class="total-item">0</strong>
                                                     <br/>
                                                     جنيه
                                                 </div>
@@ -102,7 +102,7 @@
                             <div class="mb-3">
                                 <label class="form-label" for="basic-default-company"> خصم على الفاتورة</label>
                                 <input type="text" class="form-control" id="discount" placeholder="" name="discount"
-                                    value="{{ old('discount') }}" required />
+                                    value="{{ old('discount') ?: 0 }}" required />
                                 @error('discount')
                                     <span class="text-danger w-100 fs-6">{{ $message }}</span>
                                 @enderror
@@ -146,7 +146,7 @@
                                 <div class="mb-3">
                                     <label class="form-label" for="basic-default-company"> طريقة الدفع</label>
                                     <select class="form-control" id="TypePayment" name="payment_type" required>
-                                        <option value="cache">كاش</option>
+                                        <option value="cashe">كاش</option>
                                         <option value="postponed">أجل</option>
                                     </select>
                                 </div>
@@ -214,7 +214,7 @@
             CalculateTotals();
         });
 
-        
+
 
         jQuery("#add").on('click',function() {
             let products = {!! json_encode($products) !!};
@@ -257,6 +257,7 @@
 
         $('table').on('click', '.remove-tr', function() {
             $(this).parents('tr').remove();
+            CalculateTotals();
         });
 
         jQuery('#TypePayment').on('change',function(){

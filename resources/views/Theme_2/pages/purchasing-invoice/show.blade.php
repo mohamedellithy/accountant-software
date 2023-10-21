@@ -102,8 +102,6 @@
                                             <td>{{ formate_price($item->price * $item->qty)  }}</td>
                                         </tr>
                                     @endforeach
-
-
                                     <tr>
                                         <td></td>
                                         <td>
@@ -111,7 +109,20 @@
                                         </td>
                                         <td colspan="4" style="text-align: left;padding-left: 56px;">{{ formate_price($order->total_price) }}</td>
                                     </tr>
-
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            اجمالى القيمة المدفوع
+                                        </td>
+                                        <td colspan="4" style="text-align: left;padding-left: 56px;">{{ formate_price($order->invoice_payments()->sum('value')) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            اجمالى القيمة المتبقية
+                                        </td>
+                                        <td colspan="4" style="text-align: left;padding-left: 56px;">{{ formate_price($order->total_price - $order->invoice_payments()->sum('value')) }}</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -155,7 +166,7 @@
                                         </a>
 
                     <div class="d-flex">
-                        <button type='button' id='btn' value='Print' onclick='printDiv();' class="btn btn-primary btn-sm mt-2">طباعة الفاتورة</button>&nbsp;&nbsp;
+                        <button type='button' id='btn' value='Print' onclick="printDiv('DivIdToPrint');" class="btn btn-primary btn-sm mt-2">طباعة الفاتورة</button>&nbsp;&nbsp;
                         <form action="{{ route('admin.teckScreen') }}" method="post">
                               @csrf
                         <input type="hidden" name="phone" value="{{ $order->customer ? $order->customer->phone : '-' }}">
@@ -164,7 +175,7 @@
 
                         <button type='submit' id='btn' class="btn btn-success btn-sm mt-2">  ارسال الفاتورة على الواتس</button>
                         </form>
-                    </div>>
+                    </div>
                    </div>
                </div>
            </div>
@@ -200,29 +211,5 @@
     .invoice-header .date span{
         padding: 10px;
     }
-
  </style>
  @endpush
-
-@push('script')
-    <script type="text/javascript">
-     function printDiv()
-{
-
-  var divToPrint=document.getElementById('DivIdToPrint');
-
-  var newWin=window.open('','Print-Window');
-
-  newWin.document.open();
-
-  newWin.document.write('<html><body dir="rtl" onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
-
-  newWin.document.close();
-
-  setTimeout(function(){newWin.close();},10);
-
-}
-
-
-    </script>
-@endpush

@@ -31,11 +31,11 @@ class DatabaseSeeder extends Seeder
              AdminSeeder::class,
              ProductSeeder::class,
              StakeHolderSeeder::class,
-             OrderSeeder::class,
-             OrderItemSeeder::class,
+            //  OrderSeeder::class,
+            //  OrderItemSeeder::class,
              StockSeeder::class,
-             InvoiceSeeder::class,
-             InvoiceItemSeeder::class,
+            //  InvoiceSeeder::class,
+            //  InvoiceItemSeeder::class,
         ]);
 
     }

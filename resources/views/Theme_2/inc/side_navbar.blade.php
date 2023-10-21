@@ -151,24 +151,27 @@
             </ul>
         </li>
 
-                <!-- payments -->
-        <li class="menu-item {{ IsActiveOnlyIf(['admin.payments.index']) }}">
+        <!-- payments -->
+        <li class="menu-item {{ IsActiveOnlyIf(['admin.payments.credit-index','admin.payments.debit-index']) }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class='menu-icon tf-icons bx bxs-package'></i>
                 <div data-i18n="Layouts">المدفوعات</div>
             </a>
 
             <ul class="menu-sub">
-                <li class="menu-item {{ IsActiveOnlyIf(['admin.payments.index']) }}">
-                    <a href="{{ route('admin.payments.index') }}" class="menu-link">
-                        <div data-i18n="Without navbar">عرض</div>
+                <li class="menu-item {{ IsActiveOnlyIf(['admin.payments.credit-index']) }}">
+                    <a href="{{ route('admin.payments.credit-index') }}" class="menu-link">
+                        <div data-i18n="Without navbar">دائن</div>
+                    </a>
+                </li>
+
+                <li class="menu-item {{ IsActiveOnlyIf(['admin.payments.debit-index']) }}">
+                    <a href="{{ route('admin.payments.debit-index') }}" class="menu-link">
+                        <div data-i18n="Without navbar">مدين</div>
                     </a>
                 </li>
             </ul>
         </li>
-
-
-
 
     </ul>
 </aside>

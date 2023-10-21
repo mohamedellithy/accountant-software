@@ -110,7 +110,7 @@
                             <div class="mb-3">
                                 <label class="form-label" for="basic-default-company"> خصم على الفاتورة</label>
                                 <input type="text" class="form-control" id="discount" placeholder="" name="discount"
-                                    value="{{ $order->discount ?: old('discount') }}" required />
+                                    value="{{ $order->discount ?: (old('discount') ?: 0) }}" required />
                                 @error('discount')
                                     <span class="text-danger w-100 fs-6">{{ $message }}</span>
                                 @enderror
@@ -145,8 +145,7 @@
                                         </strong>
                                     </li>
                                     <li>
-                                        <button class="btn btn-primary btn-sm">طباعة الفاتورة</button>
-                                        <button class="btn btn-success btn-sm">ارسال الفاتورة على الواتس</button>
+                                        <a href="{{ route('admin.orders.show',$order->id) }}" class="btn btn-primary btn-sm">عرض الفاتورة</a>
                                     </li>
                                 </ul>
                             </div>
@@ -158,17 +157,44 @@
                                 <div class="mb-3">
                                     <label class="form-label" for="basic-default-company"> طريقة الدفع</label>
                                     <select class="form-control" id="TypePayment" name="payment_type" required>
-                                        <option value="cache">كاش</option>
-                                        <option value="postponed">دفعات</option>
+                                        <option value="cashe"     @if($order->payment_type == 'cashe') selected @endif>كاش</option>
+                                        <option value="postponed" @if($order->payment_type == 'postponed') selected @endif>دفعات</option>
                                     </select>
                                 </div>
-                                <div class="mb-3 new-payment" style="display: none">
+                                <div class="mb-3 new-payment" @if($order->payment_type == 'cashe') style="display: none" @endif>
                                     <label class="form-label" for="basic-default-company">اضافة دفعة من الفاتورة</label>
-                                    <input type="text" class="form-control" placeholder=""
-                                    name="payment_value" value="" />
+                                    <input type="number" class="form-control" placeholder=""
+                                    name="payment_value" value="{{ $order->total_price - $order->order_payments()->sum('value') }}" max="{{ $order->total_price - $order->order_payments()->sum('value') }}" />
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-danger">تعديل الفاتورة</button>
+                        </div>
+                    </div>
+                    <div class="card mb-4">
+                        <div class="card-body" id="paymentsOrder">
+                            <h5> الدفعات</h5>
+                            <table class="table table-border table-payments" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th style="background-color:#eee;color:black !important">الدفعة</th>
+                                        <th style="background-color:#eee;color:black !important">تاريخ الدفعة</th>
+                                        <th style="background-color:#eee;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($order->order_payments as $payment)
+                                        <tr>
+                                            <td style="color:black !important">{{ formate_price($payment->value) }}</td>
+                                            <td style="color:black !important">{{ $payment->created_at }}</td>
+                                            <td style="color:black !important">
+                                                <a href="{{ route('admin.customer-payments-delete',['id' => $payment->id]) }}" class="btn btn-danger btn-sm">
+                                                    <i class='bx bxs-x-circle' ></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -178,6 +204,7 @@
 @endsection
 @push('script')
     <script type="text/javascript">
+        CalculateTotals();
         jQuery('#selectCustomer').on('change', function() {
             let customer_id = jQuery(this).val();
             let url = "{{ route('admin.ajax_get_customer_info', ':id') }}";

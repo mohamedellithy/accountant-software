@@ -10,7 +10,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Order extends Model
 {
     use HasFactory;
-    protected $fillable = ['order_number','sub_total','total_price', 'discount', 'quantity', 'customer_id', 'order_status'];
+    
+    protected $fillable = ['order_number','sub_total','total_price', 'discount', 'quantity', 'customer_id', 'order_status','payment_type'];
     public function customer()
     {
         return $this->belongsTo(StakeHolder::class);
@@ -22,6 +23,10 @@ class Order extends Model
     public function salesReturns()
     {
         return $this->hasMany(SalesReturn::class);
+    }
+
+    public function order_payments(){
+        return $this->hasMany(CustomerPayment::class,'s_invoice_id','id');
     }
 
 }

@@ -43,13 +43,12 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::resource('expenses', ExpensesController::class);
         Route::resource('returns', ReturnsController::class);
-        Route::get('/payments', [PaymentsController::class, 'index'])->name('payments.index');
-
+        Route::get('/credit-payments', [PaymentsController::class, 'credit_payments'])->name('payments.credit-index');
+        Route::get('/debit-payments', [PaymentsController::class, 'debit_payments'])->name('payments.debit-index');
+        Route::get('customer-payments-delete/{id}',[PaymentsController::class,'delete_customer_payments'])->name('customer-payments-delete');
+        Route::get('supplier-payments-delete/{id}',[PaymentsController::class,'delete_supplier_payments'])->name('supplier-payments-delete');
         Route::get('/customer-payments/{id}', [PaymentsController::class, 'customer_payments'])->name('customer_payments');
-
         Route::post('/teckScreen', [WhatsAppController::class, 'teckScreen'])->name('teckScreen');
-
-
     });
 });
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

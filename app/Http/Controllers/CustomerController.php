@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\StakeHolder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\CustomerRequest;
 
 class CustomerController extends Controller
@@ -69,16 +70,41 @@ class CustomerController extends Controller
     public function show(Request $request,$id)
     {
         $customer = StakeHolder::with('orders')->withCount('orders')->withSum('orders','total_price')->find($id);
-        $orders   = Order::query();
-        $per_page = 10;
-        if ($request->has('search')) {
-            $customers = $$orders->where('name', 'like', '%' . $request->query('search') . '%');
-        }
-        if ($request->has('rows')) {
-            $per_page = $request->query('rows');
-        }
 
-        $orders   = $orders->where('customer_id',$id)->paginate($per_page);
+        $orders_items = DB::table('orders')->where('orders.customer_id',$id)
+        ->join('order_items','orders.id','=','order_items.order_id')
+        ->join('products','order_items.product_id','=','products.id')
+        ->select('orders.id as order_id','orders.total_price','order_items.qty','order_items.price','orders.created_at','products.name as product_name')
+        ->groupBy('orders.id','order_items.id')
+        ->get();
+
+        $purchasing_items = DB::table('purchasing_invoices')->where('purchasing_invoices.supplier_id',$id)
+        ->join('invoice_items','purchasing_invoices.id','=','invoice_items.invoice_id')
+        ->join('products','invoice_items.product_id','=','products.id')
+        ->select('purchasing_invoices.id as purchasing_invoices_id','purchasing_invoices.total_price','invoice_items.qty','invoice_items.price','purchasing_invoices.created_at','products.name as product_name')
+        ->groupBy('purchasing_invoices.id','invoice_items.id')
+        ->get();
+
+
+
+        $orders_payemnts = DB::table('customer_payments')->where([
+            'customer_payments.customer_id' => $id
+        ])->select('customer_payments.id as customer_payments_id','customer_payments.value as payment_values','customer_payments.created_at','customer_payments.s_invoice_id as id')
+          ->get();
+
+        $invoices_payments = DB::table('supplier_payments')->where([
+            'supplier_payments.supplier_id' => $id
+        ])->select('supplier_payments.id as supplier_payments_id','supplier_payments.value as payment_values','supplier_payments.created_at','supplier_payments.p_invoice_id as id')
+          ->get();
+
+        $orders = $orders_items->merge($orders_payemnts);
+
+        $orders = $orders->merge($invoices_payments);
+
+        $orders = $orders->merge($purchasing_items)->sortBy('created_at');
+
+        //dd($orders);
+
         return view(config('app.theme').'.pages.customer.show', compact('customer','orders'));
 
     }

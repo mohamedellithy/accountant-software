@@ -7,7 +7,7 @@
         <h1 class="h3 mb-0 text-gray-800">{{ $customer->name }}</h1>
     </div>
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-12">
             <ul class="nav nav-pills flex-column flex-md-row mb-3">
                 <li class="nav-item">
                     <a class="nav-link active" href="javascript:void(0);"><i class="bx bx-bell me-1"></i> فواتير
@@ -48,60 +48,86 @@
                     <table class="table">
                         <thead class="table-light">
                             <tr class="table-dark">
-                                <th>كود الفاتورة</th>
-                                <th>سعر الفاتورة</th>
-                                <th>خصم على الفاتورة</th>
-                                <th>سعر نهائي الفاتورة</th>
+                                <th>رقم الفاتورة</th>
                                 <th>تاريخ الفاتورة</th>
-                                <th></th>
+                                <th>البيان</th>
+                                <th>الكمية</th>
+                                <th>السعر</th>
+                                <th>مدين</th>
+                                <th>دائن</th>
+                                <th>الرصيد</th>
                             </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
+                            <?php $balance = 0; ?>
                             @foreach ($orders as $order)
-                            <tr>
-                                <td class="width-16">
-                                    <strong>
-                                        {{ $order->order_number }}#
-                                    </strong>
-                                </td>
-                                 <td>
-                                    {{ formate_price($order->sub_total) }} 
-                                </td>
-                                <td>
-                                    {{ formate_price($order->discount) }} 
-                                </td>
-                                <td>
-                                    {{ formate_price($order->total_price) }} 
-                                </td>
-                                {{--
-                                <td>
-                                    <span class="badge bg-label-info me-1">
-                                             {{ $order->order_status }}
-                                </span>
-                                </td> --}}
-                                <td>
-                                    <span class="badge bg-label-primary me-1">
-                                        {{ $order->created_at }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a class="crud edit-product" data-product-id="{{ $order->id }}">
-                                            <i class="fas fa-eye text-info"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
+                            <?php //dd($order)  ?>
+                            @if(isset($order->product_name))
+                                @php $balance = $balance - ($order->qty * $order->price)  @endphp
+                                <tr>
+                                    <td class="width-16">
+                                        <strong>
+                                            {{ $order->id }}#
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-label-primary me-1">
+                                            {{ $order->created_at }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {{ isset($order->product_name) ? $order->product_name : '-' }} 
+                                    </td>
+                                    <td>
+                                        {{ isset($order->qty) ? $order->qty : '-' }} 
+                                    </td>
+                                    <td>
+                                        {{ isset($order->price) ? formate_price($order->price) : '-' }} 
+                                    </td>
+                                    <td>
+                                        {{ isset($order->qty) ? formate_price($order->qty * $order->price) : '-' }} 
+                                    </td>
+                                    <td>
+                                        -
+                                    </td>
+                                    <td>
+                                        {{ formate_price($balance) }} 
+                                    </td>
+                                </tr>
+                            @elseif(!isset($order->product_name))
+                               @php $balance = $balance + $order->payment_values  @endphp
+                                <tr>
+                                    <td class="width-16">
+                                        <strong>
+                                            -
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-label-primary me-1">
+                                            {{ $order->created_at }}
+                                        </span>
+                                    </td>
+                                    <td colspan="4">
+                                         تم تحصيل كاش من العميل
+                                    </td>
+                                    <td>
+                                        {{ formate_price($order->payment_values) }} 
+                                    </td>
+                                    <td>
+                                        {{ formate_price($balance) }} 
+                                    </td>
+                                </tr>
+                            @endif
                             @endforeach
                         </tbody>
                     </table>
                 </div>
                 <div class="d-flex flex-row justify-content-center">
-                    {{ $orders->links() }}
+                    {{-- {{ $orders->links() }} --}}
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-12">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">تفاصيل العميل</h5>
             </div>

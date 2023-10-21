@@ -23,6 +23,7 @@ return new class extends Migration
             $table->unsignedBigInteger('customer_id')->nullable();
             $table->foreign('customer_id')->references('id')->on('stake_holders')->onDelete('set null');
             $table->enum('order_status', ['pending', 'completed', 'canceled', 'not_completed'])->default('pending');
+            $table->enum('payment_type', ['cashe', 'postponed'])->default('cashe');
             $table->timestamps();
         });
     }

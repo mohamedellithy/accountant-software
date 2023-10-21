@@ -53,13 +53,14 @@ $filter = request()->query('filter') ?: null; @endphp
                             <th>العميل</th>
                             <th>خصم على الفاتورة</th>
                             <th>اجمالى سعر الفاتورة</th>
-                           
+                            <th>حالة الفاتورة</th>
+                            <th>المدفوع</th>
                             <th>تاريخ الفاتورة</th>
                             <th></th>
                         </tr>
                    </thead>
                    <tbody class="table-border-bottom-0">
-                        @foreach ($orders as $order)
+                        @foreach($orders as $order)
                             <tr>
                                 <td class="width-16">
                                     <strong>
@@ -72,10 +73,16 @@ $filter = request()->query('filter') ?: null; @endphp
                                     </a>
                                 </td>
                                 <td>
-                                    {{ $order->discount }} USD
+                                    {{ formate_price($order->discount) }}
                                 </td>
                                 <td>
-                                    {{ $order->total_price }} USD
+                                    {{ formate_price($order->total_price) }}
+                                </td>
+                                <td>
+                                    {{ $order->payment_type == 'cashe' ? 'كاش' : 'دفعات' }}
+                                </td>
+                                <td>
+                                    {{ formate_price($order->order_payments_sum_value) }}
                                 </td>
                                 <td>
                                     <span class="badge bg-label-primary me-1">

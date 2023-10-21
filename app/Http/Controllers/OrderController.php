@@ -7,9 +7,10 @@ use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Customer;
 use App\Models\StakeHolder;
-use App\Models\Total_Payments;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\Total_Payments;
+use App\Services\PaymentService;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
@@ -22,7 +23,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $orders = Order::query();
-        $orders = $orders->with('customer', 'orderitems', 'orderitems.product');
+        $orders = $orders->with('customer', 'orderitems', 'orderitems.product')->withSum('order_payments','value');
         $per_page = 10;
         $orders->when(request('order_status') != null, function ($q) {
             return $q->where('order_status', request('order_status'));
@@ -106,6 +107,7 @@ class OrderController extends Controller
             'quantity'     => count($request->input('addmore')),
             'order_status' => 'pending',
             'discount'     => $request->input('discount'),
+            'payment_type' => $request->input('payment_type')
         ]);
 
         array_filter($request->input('addmore'));
@@ -135,100 +137,7 @@ class OrderController extends Controller
                 'quantity' => $order->orderitems()->count()
             ]);
 
-
-            if($request->input('payment_type') == 'cache'):
-
-                $payment= Payment::where('stake_holder_id',$order->customer_id)->latest()->first();
-
-                if($payment){
-
-                    $payment =  Payment::create([
-                        'invoice_id'=> $order->id,
-                        'invoice_type'=>'order',
-                        'stake_holder_id'=> $order->customer_id,
-                        'credit'=>$order->total_price,
-                        'debit'=>0,
-                        'value'=>$payment->value,
-                    ]);
-
-
-                   }else{
-
-                $payment= Payment::create([
-                    'invoice_id'=> $order->id,
-                    'invoice_type'=>'order',
-                    'stake_holder_id'=> $order->customer_id,
-                    'credit'=>$order->total_price,
-                    'debit'=>0,
-                    'value'=>0,
-                ]);
-            }
-
-            $total_payment= Total_Payments::where('stake_holder_id',$order->customer_id)->first();
-            if($total_payment){
-             $total_payment->credit += $payment->credit;
-             $total_payment->value += $payment->value;
-             $total_payment->debit += $payment->debit;
-             $total_payment->save();
-
-            }else{
-
-             Total_Payments::create([
-                 'stake_holder_id'=> $order->customer_id,
-                 'value'=>$payment->value,
-                 'credit'=> $payment->credit,
-                 'debit'=>$payment->debit
-             ]);
-         }
-
-
-            else:
-
-                $payment= Payment::where('stake_holder_id',$order->customer_id)->latest()->first();
-
-                if($payment){
-
-                    $payment =  Payment::create([
-                'invoice_id'=> $order->id,
-                'invoice_type'=>'order',
-                'stake_holder_id'=> $order->customer_id,
-                'credit'=>$request->input('payment_value'),
-                'debit'=>0,
-                'value'=>$payment->value + $order->total_price - $request->input('payment_value'),
-               ]);
-                   }else{
-
-                    $payment = Payment::create([
-                        'invoice_id'=> $order->id,
-                        'invoice_type'=>'order',
-                        'stake_holder_id'=> $order->customer_id,
-                        'value'=>$request->input('payment_value') - ($order->total_price -       $request->input('payment_value')),
-                        'credit'=>$request->input('payment_value'),
-                        'debit'=>$order->total_price - $request->input('payment_value')
-                    ]);
-
-
-            }
-
-
-            $total_payment= Total_Payments::where('stake_holder_id',$order->customer_id)->first();
-               if($total_payment){
-                $total_payment->credit += $payment->credit;
-                $total_payment->value += $payment->value;
-                $total_payment->debit += $payment->debit;
-                $total_payment->save();
-
-               }else{
-
-                Total_Payments::create([
-                    'stake_holder_id'=> $order->customer_id,
-                    'value'=>$payment->value,
-                    'credit'=> $payment->credit,
-                    'debit'=>$payment->debit
-                ]);
-            }
-
-            endif;
+            PaymentService::create_customer_payments_by_order($order,$request->input('payment_value'));
 
         else:
             $order->delete();
@@ -260,6 +169,8 @@ class OrderController extends Controller
             'id' => $id
         ])->first();
 
+        $old_payment_type = $order->payment_type;
+
         $order->update([
             'order_number' => $request->input('order_number'),
             'customer_id'  => $request->input('customer_id'),
@@ -267,6 +178,7 @@ class OrderController extends Controller
             'quantity'     => count($request->input('addmore')),
             'order_status' => 'pending',
             'discount'     => $request->input('discount'),
+            'payment_type' => $request->input('payment_type')
         ]);
 
         array_filter($request->input('addmore'));
@@ -298,6 +210,10 @@ class OrderController extends Controller
                 'total_price' => $order->orderitems()->sum(DB::raw("(order_items.qty * order_items.price)")) - $order->discount,
                 'quantity'    => $order->orderitems()->count()
             ]);
+
+            if(($old_payment_type !=  $request->input('payment_type')) || (!$order->order_payments()->exists()) || ($request->has('payment_value')) ):
+                PaymentService::create_customer_payments_by_order($order,$request->input('payment_value'));
+            endif;
         else:
             $order->delete();
         endif;
@@ -316,6 +232,7 @@ class OrderController extends Controller
         $order = Order::find($id);
         $order->orderItems()->delete();
         $order->delete();
+        $order->order_payments()->delete();
         return redirect()->route('admin.orders.index');
 
     }
@@ -328,7 +245,7 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $order     = Order::with('orderitems','orderitems.product','customer')->where('id',$id)->first();
+        $order     = Order::with('orderitems','orderitems.product','customer')->withSum('order_payments','value')->where('id',$id)->first();
         return view(config('app.theme').'.pages.order.show', compact('order'));
     }
 }

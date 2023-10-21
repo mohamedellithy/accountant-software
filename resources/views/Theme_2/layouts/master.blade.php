@@ -37,7 +37,7 @@
 
     <link rel="stylesheet" href="{{ asset('theme_2/assets/vendor/libs/apex-charts/apex-charts.css') }}" />
 
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+    <link href="{{ asset('theme_2/assets/css/select2.min.css') }}" rel="stylesheet">
 
 
     <!-- Helpers -->
@@ -47,7 +47,7 @@
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{{ asset('theme_2//assets/js/config.js') }}"></script>
     {{-- jquery --}}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="{{ asset('theme_2/assets/js/jquery.min.js') }}"></script>
     <link href="{{ asset('theme_2/assets/editor/summernote-lite.min.css') }}" rel="stylesheet">
     <style>
         .table th {
@@ -157,7 +157,7 @@
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script> --}}
     {{-- <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script> --}}
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="{{ asset('/theme_2/assets/js/select2.min.js') }}"></script>
 
     <script>
         jQuery('document').ready(function() {
@@ -172,6 +172,16 @@
         jQuery(document).ready(function() {
             jQuery('.form-select2').select2();
         });
+
+        // print div
+        function printDiv(element_id){
+           var divToPrint=document.getElementById(element_id);
+           var newWin=window.open('','Print-Window');
+           newWin.document.open();
+           newWin.document.write('<html><body dir="rtl" onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
+           newWin.document.close();
+           setTimeout(function(){newWin.close();},10);
+        }
     </script>
     @stack('script')
 

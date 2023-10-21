@@ -10,13 +10,52 @@
         <div class="row">
             <div class="col-lg-8">
                  <!-- Basic Card Example -->
-                <div class="card mb-4">
+                <div class="card mb-4" id="DivIdToPrint">
+                    <style>
+                        @media print {
+                            #DivIdToPrint{
+                                width: 551px !important;
+                                border: 2px solid red !important;
+                            }
+                            table{
+                                border:1px solid;
+                                width:100%;
+                                margin-top:10px
+                            }
+                            .table-light th{
+                                color: #566a7f !important;
+                                border-left: 1px solid;
+                            }
+                            .table tr{
+                                border : 1px solid gray
+                            }
+                            .table td{
+                                border: 1px solid #cac7c7;
+                                text-align: center;
+                            }
+                            .invoice-header{
+                                flex-direction: row !important;
+                                justify-content: space-between !important;
+                                align-items: center !important;
+                            }
+    
+                            .invoice-header .date{
+                                margin-right:600px !important;
+                            }
+                            .invoice-header .date span{
+                                padding: 10px;
+                            }
+                            .footer .signature{
+                                margin-right:410px !important;
+                            }
+                            .custom .customsce{
+                                margin-right:510px !important;
+                            }
+                        }
+                    </style>
                     <div class="card-header py-3">
-                        {{-- <h5 class="m-0 font-weight-bold text-warning">
-                             فاتورة رقم  {{ $order->order_number }}
-                        </h5> --}}
                         <div class="d-flex invoice-header">
-                            <div class="">
+                            <div class="head">
                                 <strong>Green Egypt</strong><br/>
                                 <strong>جرين ايجبت للمبيدات و الاسمدة</strong>
                             </div>
@@ -26,14 +65,18 @@
                             </div>
                         </div>
                         <br/>
-                        <div class="d-flex" style="justify-content: space-between;">
+                        <div class="d-flex custom" style="justify-content: space-between;">
                             <label>
-                                <strong>
+                                <strong class="customfir">
                                      المطلوب من السيد /
                                 </strong>
                                 {{ $order->customer->name }}
                             </label>
-                            <label>فاتورة رقم  ({{ $order->order_number }})</label>
+                            <label>
+                                <strong class="customsce">
+                                    فاتورة رقم  ({{ $order->order_number }})
+                                </strong>
+                            </label>
                         </div>
                     </div>
                     <div class="card-body">
@@ -86,19 +129,21 @@
                                         <td>
                                             مدفوع نقدا
                                         </td>
-                                        <td colspan="4"></td>
+                                        <td colspan="4" style="text-align: left;padding-left: 56px;">{{ formate_price($order->order_payments_sum_value) }}</td>
                                     </tr>
                                     <tr>
                                         <td></td>
                                         <td>
                                             الباقي
                                         </td>
-                                        <td colspan="4"></td>
+                                        <td colspan="4" style="text-align: left;padding-left: 56px;">
+                                            {{ formate_price($order->total_price - $order->order_payments_sum_value) }}
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                        <div class="d-flex" style="justify-content: space-between;padding-top: 15px;">
+                        <div class="d-flex footer" style="justify-content: space-between;padding-top: 15px;">
                             <label>
                                 <strong>
                                     المستلم /
@@ -106,10 +151,10 @@
                                 {{ $order->customer->name }}
                             </label>
                             <label>
-                                <strong>
+                                <strong class="signature">
                                     التوقيع /
                                 </strong>
-                                ............................................................
+                                .............
                             </label>
                         </div>
                     </div>
@@ -117,7 +162,7 @@
             </div>
             <div class="col-lg-4">
                 <!-- Basic Card Example -->
-               <div class="card mb-4">
+                <div class="card mb-4">
                    <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">
                             <p>فاتورة رقم</p>
@@ -133,11 +178,67 @@
                         </h6>
                    </div>
                    <div class="card-body">
-                        <button class="btn btn-danger btn-sm">تعديل الفاتورة</button><br/><br/>
-                        <button class="btn btn-primary btn-sm">طباعة الفاتورة</button>
+                        <a href="{{ route('admin.orders.edit',$order->id) }}" class="btn btn-danger btn-sm">تعديل الفاتورة</a><br/><br/>
+                        <button class="btn btn-primary btn-sm" onclick="printDiv('DivIdToPrint');">طباعة الفاتورة</button>
                         <button class="btn btn-success btn-sm">ارسال الفاتورة على الواتس</button>
                    </div>
-               </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header py-3">
+                        <button style="float:left" class="btn btn-primary btn-sm" onclick="printDiv('paymentsOrder');">طباعة المدفوعات</button>
+                    </div>
+                    <div class="card-body" id="paymentsOrder">
+                        <style>
+                            @media print{
+                                .table-payments{
+                                    with:100%;
+                                    text-align: right !important;
+                                    border:1px solid gray !important;
+                                }
+                                .table-payments tr td,
+                                .table-payments th td {
+                                    text-align: right !important;
+                                }
+                                .table-payments tr td
+                                {
+                                    margin:0px;
+                                    border:1px solid gray !important;
+                                }
+                            }
+                        </style>
+                        <h5>تواريخ الدفعات</h5>
+                        <p>دفعات السيد / {{ $order->customer->name }}</p>
+                        <p>رقم الطلبية / {{ $order->order_number }}</p>
+                        <table class="table table-border table-payments" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th style="background-color:#eee;color:black !important">الدفعة</th>
+                                    <th style="background-color:#eee;color:black !important">تاريخ الدفعة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($order->order_payments as $payment)
+                                    <tr>
+                                        <td style="color:black !important">{{ formate_price($payment->value) }}</td>
+                                        <td style="color:black !important">{{ $payment->created_at }}</td>
+                                    </tr>
+                                @endforeach
+                                <tr>
+                                    <td style="background-color:rgb(236, 236, 236);color:black !important">سعر الطلبية</td>
+                                    <td style="background-color:rgb(236, 236, 236);color:black !important">{{ formate_price($order->total_price) }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="background-color:rgb(236, 236, 236);color:black !important">المدفوع</td>
+                                    <td style="background-color:rgb(236, 236, 236);color:black !important" >{{ formate_price($order->order_payments_sum_value) }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="background-color:rgb(236, 236, 236);color:black !important">المتبقي</td>
+                                    <td style="background-color:rgb(236, 236, 236);color:black !important">{{ formate_price($order->total_price - $order->order_payments_sum_value) }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                 </div>
            </div>
         </div>
     </div>
@@ -169,5 +270,6 @@
     .invoice-header .date span{
         padding: 10px;
     }
+    
  </style>
  @endpush
