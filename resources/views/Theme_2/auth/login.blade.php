@@ -1,5 +1,5 @@
 
-@extends('theme_2.layouts.master_auth')
+@extends('Theme_2.layouts.master_auth')
 
 @section('content')
 <div class="container-xxl">
