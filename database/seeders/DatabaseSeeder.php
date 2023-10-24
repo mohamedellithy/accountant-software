@@ -29,11 +29,11 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call([
              AdminSeeder::class,
-             ProductSeeder::class,
-             StakeHolderSeeder::class,
+            //  ProductSeeder::class,
+            //  StakeHolderSeeder::class,
             //  OrderSeeder::class,
             //  OrderItemSeeder::class,
-             StockSeeder::class,
+             //StockSeeder::class,
             //  InvoiceSeeder::class,
             //  InvoiceItemSeeder::class,
         ]);

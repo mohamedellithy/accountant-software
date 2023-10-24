@@ -7,7 +7,7 @@ $filter = request()->query('filter') ?: null;
 <div class="container-fluid">
    <br/>
    <!-- Basic Layout -->
-   <form action="{{ route('admin.customers.store') }}" method="POST" enctype="multipart/form-data">
+   <form action="{{ route('admin.suppliers.store') }}" method="POST" enctype="multipart/form-data">
        @csrf
        <div class="row">
            <div class="col-lg-12">
@@ -15,7 +15,7 @@ $filter = request()->query('filter') ?: null;
                    <h5 class="card-header">اضافة مورد جديد</h5>
                    <div class="card-body">
                        <div class="row">
-                           <div class="mb-3 col-md-5">
+                           <div class="mb-3 col-md-4">
                                <label class="form-label" for="basic-default-fullname">اسم المورد</label>
                                <input type="text" class="form-control" id="basic-default-fullname" placeholder=""
                                    name="name" value="{{ old('name') }}" required />
@@ -23,14 +23,22 @@ $filter = request()->query('filter') ?: null;
                                    <span class="text-danger w-100 fs-6">{{ $message }}</span>
                                @enderror
                            </div>
-                           <div class="mb-3 col-md-5">
+                           <div class="mb-3 col-md-4">
                                <label class="form-label" for="basic-default-company"> رقم التليفون</label>
-                               <input type="number" class="form-control" id="basic-default-fullname" placeholder=""
-                                   name="quantity" value="{{ old('quantity') }}" required />
-                               @error('quantity')
+                               <input type="text" class="form-control" id="basic-default-fullname" placeholder=""
+                                   name="phone" value="{{ old('phone') }}" required />
+                               @error('phone')
                                    <span class="text-danger w-100 fs-6">{{ $message }}</span>
                                @enderror
                            </div>
+                           <div class="mb-3 col-md-4">
+                                <label class="form-label" for="basic-default-company"> رصيد مبدأي</label>
+                                <input type="number" class="form-control" id="basic-default-fullname" placeholder=""
+                                    name="balance" value="{{ old('balance') }}" required />
+                                @error('balance')
+                                    <span class="text-danger w-100 fs-6">{{ $message }}</span>
+                                @enderror
+                            </div>
                        </div>
                        <button type="submit" class="btn btn-primary">اضافة مورد جديد</button>
                    </div>
@@ -83,6 +91,7 @@ $filter = request()->query('filter') ?: null;
                             <th>كود العميل</th>
                             <th>اسم العميل</th>
                             <th>رقم الهاتف</th>
+                            <th>الرصيد البدائي</th>
                             <th>اجمالى الطلبات</th>
                             <th>اجمالى التعاملات</th>
                             <th></th>
@@ -94,27 +103,28 @@ $filter = request()->query('filter') ?: null;
                                <td>{{ $supplier->id }}</td>
                                <td>{{ $supplier->name }}</td>
                                <td>{{ $supplier->phone }}</td>
+                               <td>{{ formate_price($supplier->balance) }}</td>
                                <td>
-                                    122737 طلبية
+                                    {{ $supplier->orders_count + $supplier->purchasing_invoices_count }} طلبية
                                     <a class="crud" href="{{ route('admin.orders.show', $supplier->id) }}">
                                         <i class="far fa-eye"></i>
                                     </a>
                                </td>
                                <td>
-                                   {{ formate_price(5234948) }}
+                                   {{ formate_price($supplier->orders_sum_total_price + $supplier->purchasing_invoices_sum_total_price) }}
                                </td>
                                <td>
                                    <div class="d-flex">
-                                        <a class="crud" href="{{ route('admin.orders.show', $supplier->id) }}">
+                                        <a class="crud" href="{{ route('admin.suppliers.show', $supplier->id) }}">
                                             <i class="far fa-eye text-dark"></i>
                                         </a>
-                                       <a class="crud edit-product" data-product-id="{{ $supplier->id }}">
+                                       <a class="crud edit-supplier" data-supplier-id="{{ $supplier->id }}">
                                            <i class="fas fa-edit text-primary"></i>
                                        </a>
-                                       <form  method="post" action="{{ route('admin.products.destroy', $supplier->id) }}">
+                                       <form  method="post" action="{{ route('admin.suppliers.destroy', $supplier->id) }}">
                                            @csrf
                                            @method('DELETE')
-                                           <a class="delete-item crud" data-product-id="{{ $supplier->id }}">
+                                           <a class="delete-item crud" data-supplier-id="{{ $supplier->id }}">
                                                <i class="fas fa-trash-alt  text-danger"></i>
                                            </a>
                                        </form>
@@ -136,10 +146,10 @@ $filter = request()->query('filter') ?: null;
 
 @push('script')
 <script>
-   jQuery('.edit-product').click(function(){
-       let data_edit = jQuery(this).attr('data-product-id');
+   jQuery('.edit-supplier').click(function(){
+       let data_edit = jQuery(this).attr('data-supplier-id');
        let Popup = jQuery('#modalCenter').modal('show');
-       let url = "{{ route('admin.products.edit',':id') }}";
+       let url = "{{ route('admin.suppliers.edit',':id') }}";
        url = url.replace(':id',data_edit);
        $.ajax({
            url:url,
@@ -155,8 +165,8 @@ $filter = request()->query('filter') ?: null;
    });
 
    jQuery('.delete-item').click(function(){
-       let product_id = jQuery(this).attr('data-product-id');
-       if(confirm('هل متأكد من اتمام حذف الصنف رقم '+ product_id)){
+       let customer_name = jQuery(this).attr('data-supplier-name');
+       if(confirm('هل متأكد من اتمام حذف المورد  '+ customer_name)){
            jQuery(this).parents('form').submit();
        }
    });

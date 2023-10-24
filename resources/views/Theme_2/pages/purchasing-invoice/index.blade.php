@@ -66,6 +66,8 @@ $filter = request()->query('filter') ?: null; @endphp
                                 <th>العميل</th>
                                 <th>اجمالى سعر الفاتورة</th>
                                 <th>عدد الاصناف</th>
+                                <th>حالة الفاتورة</th>
+                                <th>المدفوع</th>
                                 <th>تاريخ الفاتورة</th>
                                 <th></th>
                             </tr>
@@ -79,7 +81,7 @@ $filter = request()->query('filter') ?: null; @endphp
                                         </strong>
                                     </td>
                                     <td class="width-16">
-                                        <a class="crud" href="{{ route('admin.purchasing-invoices.show', $order->supplier->id) }}">
+                                        <a class="crud" href="{{ route('admin.suppliers.show', $order->supplier->id) }}">
                                             {{ $order->supplier ? $order->supplier->name : '-' }}
                                         </a>
                                     </td>
@@ -88,6 +90,12 @@ $filter = request()->query('filter') ?: null; @endphp
                                     </td>
                                     <td>
                                         {{ $order->quantity }} صنف
+                                    </td>
+                                    <td>
+                                        {{ $order->payment_type == 'cashe' ? 'كاش' : 'دفعات' }}
+                                    </td>
+                                    <td>
+                                        {{ formate_price($order->invoice_payments_sum_value) }}
                                     </td>
                                     <td>
                                         <span class="badge bg-label-primary me-1">

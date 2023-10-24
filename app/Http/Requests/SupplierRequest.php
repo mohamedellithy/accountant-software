@@ -24,9 +24,8 @@ class SupplierRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
-            'phone' => 'required',
-
+            'name' => 'required|string|max:255|unique:stake_holders,name,'.$this->supplier,
+            'phone' => 'required'
         ];
     }
     public function messages()

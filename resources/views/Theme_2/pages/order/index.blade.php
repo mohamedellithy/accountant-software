@@ -45,7 +45,7 @@ $filter = request()->query('filter') ?: null; @endphp
                    </div>
                </form>
            </div>
-           <div class="table-responsive text-nowrap">
+           <div class="table-responsive">
                <table class="table">
                    <thead class="table-light">
                         <tr class="table-dark">
@@ -55,6 +55,7 @@ $filter = request()->query('filter') ?: null; @endphp
                             <th>اجمالى سعر الفاتورة</th>
                             <th>حالة الفاتورة</th>
                             <th>المدفوع</th>
+                            <th>الربح من الفاتورة</th>
                             <th>تاريخ الفاتورة</th>
                             <th></th>
                         </tr>
@@ -68,7 +69,7 @@ $filter = request()->query('filter') ?: null; @endphp
                                     </strong>
                                 </td>
                                 <td class="width-16">
-                                    <a class="crud" href="{{ route('admin.orders.show', $order->customer->id) }}">
+                                    <a class="crud" href="{{ route('admin.customers.show', $order->customer->id) }}">
                                         {{ $order->customer ? $order->customer->name : '-' }}
                                     </a>
                                 </td>
@@ -83,6 +84,9 @@ $filter = request()->query('filter') ?: null; @endphp
                                 </td>
                                 <td>
                                     {{ formate_price($order->order_payments_sum_value) }}
+                                </td>
+                                <td>
+                                    {{ formate_price(isset($profits[$order->id]) ? $profits[$order->id] : '0')  }}
                                 </td>
                                 <td>
                                     <span class="badge bg-label-primary me-1">

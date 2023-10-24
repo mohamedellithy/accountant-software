@@ -31,7 +31,7 @@
     <div class="card mb-4">
         <div class="card">
             {{-- <h5 class="card-header">عرض الاصناف</h5> --}}
-            <div class="card-header py-3 ">
+            <div class="card-header py-3">
                 <form id="filter-data" method="get" class="d-flex justify-content-between">
                     <div class="nav-item d-flex align-items-center m-2" style="background-color: #eee;padding: 8px;">
                         <i class="bx bx-search fs-4 lh-0"></i>
@@ -67,6 +67,9 @@
                                 <td>{{ $product->name }}</td>
                                 <td>
                                     <div class="d-flex">
+                                        <a class="crud" href="{{ route('admin.products.show',$product->id) }}">
+                                            <i class="far fa-eye text-dark"></i>
+                                        </a>
                                         <a class="crud edit-product" data-product-id="{{ $product->id }}">
                                             <i class="fas fa-edit text-primary"></i>
                                         </a>

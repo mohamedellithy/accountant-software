@@ -38,7 +38,7 @@
                                 justify-content: space-between !important;
                                 align-items: center !important;
                             }
-    
+
                             .invoice-header .date{
                                 margin-right:600px !important;
                             }
@@ -61,7 +61,7 @@
                             </div>
                             <div class="date d-flex">
                                 <strong>تحرير في </strong>
-                                <span>12 / 12 / 2012</span>
+                                <span>{{ date('Y-m-d') }}</span>
                             </div>
                         </div>
                         <br/>
@@ -180,12 +180,13 @@
                    <div class="card-body">
                         <a href="{{ route('admin.orders.edit',$order->id) }}" class="btn btn-danger btn-sm">تعديل الفاتورة</a><br/><br/>
                         <button class="btn btn-primary btn-sm" onclick="printDiv('DivIdToPrint');">طباعة الفاتورة</button>
-                        <button class="btn btn-success btn-sm">ارسال الفاتورة على الواتس</button>
+                        <a href="{{ route('admin.download-pdf-order-bill',['id' => $order->id]) }}" class="btn btn-success btn-sm">تنزيل الفاتورة</a>
                    </div>
                 </div>
                 <div class="card mb-4">
                     <div class="card-header py-3">
                         <button style="float:left" class="btn btn-primary btn-sm" onclick="printDiv('paymentsOrder');">طباعة المدفوعات</button>
+                        <a href="{{ route('admin.download-pdf-payments-bill',['id' => $order->id]) }}" class="btn btn-success btn-sm">تنزيل المدفوعات</a>
                     </div>
                     <div class="card-body" id="paymentsOrder">
                         <style>
@@ -270,6 +271,6 @@
     .invoice-header .date span{
         padding: 10px;
     }
-    
+
  </style>
  @endpush

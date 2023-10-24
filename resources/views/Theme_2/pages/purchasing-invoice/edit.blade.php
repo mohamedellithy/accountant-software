@@ -56,6 +56,7 @@
                                                         <label class="form-label" for="basic-default-company"> اسم المنتج</label>
                                                         <select type="text" name="addmore[{{ $loop->index }}][product_id]"
                                                             class="form-control form-select2 selectProduct" required>
+                                                            <option value=""></option>
                                                             @foreach ($products as $product)
                                                                 <option value={{ $product->id }} @if($item->product_id == $product->id) selected @endif>{{ $product->name }}</option>
                                                             @endforeach
@@ -135,7 +136,7 @@
                                 position: absolute;
                                 margin-top: 5px;
                                 margin-right: 8px;"
-                                type="checkbox" id="update_stock" name="update_stock"value="1" />
+                                type="checkbox" id="update_stock" name="update_stock" value="1"/>
                                     @error('update_stock')
                                     <span class="text-danger w-100 fs-6">{{ $message }}</span>
                                     @enderror

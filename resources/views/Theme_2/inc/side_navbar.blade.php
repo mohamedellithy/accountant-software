@@ -22,14 +22,14 @@
         </li>
 
         <!-- products -->
-        <li class="menu-item {{ IsActiveOnlyIf(['admin.products.index','admin.products.create','admin.products.edit']) }}">
+        <li class="menu-item {{ IsActiveOnlyIf(['admin.products.index','admin.products.show','admin.products.create','admin.products.edit']) }}">
             <a href="{{ route('admin.products.index') }}" class="menu-link menu-toggle">
                 <i class='menu-icon tf-icons bx bxs-category'></i>
                 <div data-i18n="Layouts">الأصناف</div>
             </a>
 
             <ul class="menu-sub">
-                <li class="menu-item {{ IsActiveOnlyIf(['admin.products.index','admin.products.edit']) }}">
+                <li class="menu-item {{ IsActiveOnlyIf(['admin.products.index','admin.products.edit','admin.products.show']) }}">
                     <a href="{{ route('admin.products.index') }}" class="menu-link">
                         <div data-i18n="Without navbar">كل الاصناف</div>
                     </a>
@@ -152,22 +152,22 @@
         </li>
 
         <!-- payments -->
-        <li class="menu-item {{ IsActiveOnlyIf(['admin.payments.credit-index','admin.payments.debit-index']) }}">
+        <li class="menu-item {{ IsActiveOnlyIf(['admin.payments.customers-index','admin.payments.suppliers-index']) }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class='menu-icon tf-icons bx bxs-package'></i>
                 <div data-i18n="Layouts">المدفوعات</div>
             </a>
 
             <ul class="menu-sub">
-                <li class="menu-item {{ IsActiveOnlyIf(['admin.payments.credit-index']) }}">
-                    <a href="{{ route('admin.payments.credit-index') }}" class="menu-link">
-                        <div data-i18n="Without navbar">دائن</div>
+                <li class="menu-item {{ IsActiveOnlyIf(['admin.payments.customers-index']) }}">
+                    <a href="{{ route('admin.payments.customers-index') }}" class="menu-link">
+                        <div data-i18n="Without navbar">مدفوعات العملاء</div>
                     </a>
                 </li>
 
-                <li class="menu-item {{ IsActiveOnlyIf(['admin.payments.debit-index']) }}">
-                    <a href="{{ route('admin.payments.debit-index') }}" class="menu-link">
-                        <div data-i18n="Without navbar">مدين</div>
+                <li class="menu-item {{ IsActiveOnlyIf(['admin.payments.suppliers-index']) }}">
+                    <a href="{{ route('admin.payments.suppliers-index') }}" class="menu-link">
+                        <div data-i18n="Without navbar">مدفوعات الموردين</div>
                     </a>
                 </li>
             </ul>

@@ -114,6 +114,7 @@
                             <th>الكمية ( الوحدة / الكيلو ) </th>
                             <th>سعر البيع ( الوحدة / الكيلو) </th>
                             <th>سعر الشراء ( الوحدة / الكيلو) </th>
+                            <th>قيمة الربح </th>
                             <th>اسم المورد </th>
                             <th>العمليات</th>
                         </tr>
@@ -126,15 +127,16 @@
                                 <td>{{ $stock->quantity }}</td>
                                 <td>{{ formate_price($stock->sale_price) }}</td>
                                 <td>{{ formate_price($stock->purchasing_price) }}</td>
+                                <td>{{ formate_price($stock->sale_price - $stock->purchasing_price) }}</td>
                                 <td>
                                     {{ $stock->supplier->name }}
-                                    <a class="crud" href="{{ route('admin.stocks.show', $stock->id) }}">
+                                    <a class="crud" href="{{ route('admin.suppliers.show', $stock->supplier->id) }}">
                                         <i class="far fa-eye"></i>
                                     </a>
                                 </td>
                                 <td>
                                     <div class="d-flex">
-                                        <a class="crud edit-product" data-stock-id="{{ $stock->id }}">
+                                        <a class="crud edit-stock" data-stock-id="{{ $stock->id }}">
                                             <i class="fas fa-edit text-primary"></i>
                                         </a>
                                         <form  method="post" action="{{ route('admin.stocks.destroy', $stock->id) }}">
@@ -173,11 +175,11 @@
             success: function(data){
                 if(data.status == true){
                     jQuery('#modal-content-inner').html(data.view);
+                   // jQuery('.form-select2').select2();
                 }
                 console.log(data);
             }
-        })
-        console.log(Popup);
+        });
     });
 
     jQuery('.delete-item').click(function(){

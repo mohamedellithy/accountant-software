@@ -16,4 +16,13 @@ class Product extends Model
     public function stock(){
         return $this->hasOne(Stock::class);
     }
+
+    public function order_items(){
+        return $this->hasMany(OrderItem::class,'product_id','id');
+    }
+
+    public function invoice_items(){
+        return $this->hasMany(InvoiceItems::class,'product_id','id');
+    }
+
 }

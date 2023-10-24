@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ProductRequest;
+use App\Models\InvoiceItems;
 
 class ProductController extends Controller
 {
@@ -51,10 +54,62 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$id)
     {
-        $product = Product::find($id);
-        return view(config('app.theme').'.pages.product.show', compact('product'));
+        $per_page    = 10;
+
+        if(request('type') != 'invoices'):
+            $product     = Product::withSum('order_items',DB::raw('order_items.price * order_items.qty'))
+            ->withSum('order_items','qty');
+
+            $order_items = OrderItem::query();
+ 
+            $order_items = $order_items->whereHas('product',function($q) use($id){
+                return $q->where('id',$id);
+            })->with('order','order.customer');
+
+            $order_items->when(request('search') != null, function ($q) {
+                return $q->WhereHas('order.customer', function ($query) {
+                    $query->where('name', 'like', '%' . request('search') . '%');
+                })->orWhereHas('order',function($query){
+                    $query->where('id', 'like', '%' . request('search') . '%');
+                });
+            });
+        else:
+            $product     = Product::withSum('invoice_items',DB::raw('invoice_items.price * invoice_items.qty'))
+            ->withSum('invoice_items','qty');
+            
+            $order_items = InvoiceItems::query();
+ 
+            $order_items = $order_items->whereHas('product',function($q) use($id){
+                return $q->where('id',$id);
+            })->with('purchasing_invoice','purchasing_invoice.supplier');
+
+            $order_items->when(request('search') != null, function ($q) {
+                return $q->WhereHas('purchasing_invoice.supplier', function ($query) {
+                    $query->where('name', 'like', '%' . request('search') . '%');
+                })->orWhereHas('purchasing_invoice',function($query){
+                    $query->where('id', 'like', '%' . request('search') . '%');
+                });
+            });
+        endif;
+
+        $order_items->when(request('filter') == 'sort_asc', function ($q) {
+            return $q->orderBy('created_at', 'asc');
+        },function ($q) {
+            return $q->orderBy('created_at', 'desc');
+        });
+
+        if ($request->has('rows')):
+            $per_page = $request->query('rows');
+        endif;
+
+        $product     = $product->find($id);
+        $order_items = $order_items->paginate($per_page);
+
+        //dd($product);
+
+        return view(config('app.theme').'.pages.product.show', compact('product','order_items'));
 
     }
 

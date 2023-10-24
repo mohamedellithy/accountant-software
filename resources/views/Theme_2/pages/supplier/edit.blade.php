@@ -27,6 +27,14 @@
                                     <span class="text-danger w-100 fs-6">{{ $message }}</span>
                                 @enderror
                             </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="basic-default-company"> رصيد مبدأي</label>
+                                <input type="text" class="form-control" id="basic-default-fullname" placeholder=""
+                                    name="phone" value="{{ old('balance') }}" required />
+                                @error('phone')
+                                    <span class="text-danger w-100 fs-6">{{ $message }}</span>
+                                @enderror
+                            </div>
                             <button type="submit" class="btn btn-primary">تعديل المورد</button>
                         </div>
                     </div>

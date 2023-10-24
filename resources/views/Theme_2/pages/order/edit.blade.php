@@ -91,6 +91,15 @@
                                                     </div>
                                                 </td>
                                                 <td>
+                                                    <div class="mb-3">
+                                                        <input type="hidden" class="purchasing_price" value="{{ $item->product->stock->purchasing_price }}" name="purchasing_price" />
+                                                        <label class="form-label" for="basic-default-company"> معدل الربح</label>
+                                                        <strong class="profit-item">{{ ($item->price - $item->product->stock->purchasing_price) * $item->qty }}</strong>
+                                                        <br/>
+                                                        جنيه
+                                                    </div>
+                                                </td>
+                                                <td>
                                                     <div class="">
                                                         <button type="button" name="add"
                                                             class="btn btn-danger btn-sm remove-tr">-</button>
@@ -234,6 +243,8 @@
                         jQuery(self).parents('tr').find('input.qty').attr('max',response.product.stock.quantity);
                         jQuery(self).parents('tr').find('input.price').val(response.product.stock.sale_price);
                         jQuery(self).parents('tr').find('.total-item').html(response.product.stock.sale_price * 1);
+                        jQuery(self).parents('tr').find('.profit-item').html(Number(response.product.stock.sale_price) - Number(response.product.stock.purchasing_price));
+                        jQuery(self).parents('tr').find('input.purchasing_price').val(Number(response.product.stock.purchasing_price));
                         console.log(response);
                         await CalculateTotals();
                     }
@@ -244,7 +255,18 @@
         jQuery('table').on('keyup','input.qty',function(){
             let quantity = jQuery(this).parents('tr').find('input.qty').val() || 1;
             let price    = jQuery(this).parents('tr').find('input.price').val();
+            let purchasing_price    = jQuery(this).parents('tr').find('input.purchasing_price').val();
             jQuery(this).parents('tr').find('.total-item').html(Number(price) * Number(quantity));
+            jQuery(this).parents('tr').find('.profit-item').html((Number(price) - Number(purchasing_price)) * quantity);
+            CalculateTotals();
+        });
+
+        jQuery('table').on('keyup','input.price',function(){
+            let quantity = jQuery(this).parents('tr').find('input.qty').val() || 1;
+            let price    = jQuery(this).parents('tr').find('input.price').val();
+            let purchasing_price    = jQuery(this).parents('tr').find('input.purchasing_price').val();
+            jQuery(this).parents('tr').find('.total-item').html(Number(price) * Number(quantity));
+            jQuery(this).parents('tr').find('.profit-item').html((Number(price) - Number(purchasing_price)) * quantity);
             CalculateTotals();
         });
 

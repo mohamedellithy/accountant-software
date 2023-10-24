@@ -15,7 +15,7 @@ $filter = request()->query('filter') ?: null;
                    <h5 class="card-header">اضافة عميل جديد</h5>
                    <div class="card-body">
                        <div class="row">
-                           <div class="mb-3 col-md-5">
+                           <div class="mb-3 col-md-4">
                                <label class="form-label" for="basic-default-fullname">اسم العميل</label>
                                <input type="text" class="form-control" id="basic-default-fullname" placeholder=""
                                    name="name" value="{{ old('name') }}" required />
@@ -23,7 +23,7 @@ $filter = request()->query('filter') ?: null;
                                    <span class="text-danger w-100 fs-6">{{ $message }}</span>
                                @enderror
                            </div>
-                           <div class="mb-3 col-md-5">
+                           <div class="mb-3 col-md-4">
                                <label class="form-label" for="basic-default-company"> رقم التليفون</label>
                                <input type="text" class="form-control" id="basic-default-fullname" placeholder=""
                                    name="phone" value="{{ old('phone') }}" required />
@@ -31,7 +31,15 @@ $filter = request()->query('filter') ?: null;
                                    <span class="text-danger w-100 fs-6">{{ $message }}</span>
                                @enderror
                            </div>
-                       </div>
+                           <div class="mb-3 col-md-4">
+                                <label class="form-label" for="basic-default-company"> رصيد مبدأي</label>
+                                <input type="text" class="form-control" id="basic-default-fullname" placeholder=""
+                                    name="balance" value="{{ old('balance') }}" required />
+                                @error('balance')
+                                    <span class="text-danger w-100 fs-6">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
                        <button type="submit" class="btn btn-primary">اضافة عميل جديد</button>
                    </div>
                </div>
@@ -83,6 +91,7 @@ $filter = request()->query('filter') ?: null;
                             <th>كود العميل</th>
                             <th>اسم العميل</th>
                             <th>رقم الهاتف</th>
+                            <th>الرصيد البدائي</th>
                             <th>اجمالى الطلبات</th>
                             <th>اجمالى التعاملات</th>
                             <th></th>
@@ -94,14 +103,15 @@ $filter = request()->query('filter') ?: null;
                                <td>{{ $customer->id }}</td>
                                <td>{{ $customer->name }}</td>
                                <td>{{ $customer->phone }}</td>
+                               <td>{{ formate_price($customer->balance) }}</td>
                                <td>
-                                    {{ $customer->orders_count }} طلبية
+                                    {{ $customer->orders_count + $customer->purchasing_invoices_count }} طلبية
                                     <a class="crud" href="{{ route('admin.orders.show', $customer->id) }}">
                                         <i class="far fa-eye"></i>
                                     </a>
                                </td>
                                <td>
-                                   {{ formate_price($customer->orders_sum_total_price) }}
+                                    {{ formate_price($customer->orders_sum_total_price + $customer->purchasing_invoices_sum_total_price) }}
                                </td>
                                <td>
                                    <div class="d-flex">

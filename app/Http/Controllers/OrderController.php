@@ -10,8 +10,10 @@ use App\Models\StakeHolder;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Total_Payments;
+use App\Models\Stock;
 use App\Services\PaymentService;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class OrderController extends Controller
 {
@@ -45,10 +47,15 @@ class OrderController extends Controller
             $per_page = $request->query('rows');
         endif;
 
-        $orders = $orders->paginate($per_page);
-        return view(config('app.theme').'.pages.order.index', compact('orders'));
+        $orders  = $orders->paginate($per_page);
+
+        $profits = DB::table('order_items')->join('stocks','order_items.product_id','=','stocks.product_id')
+        ->select('order_items.order_id',DB::raw('SUM((order_items.price - stocks.purchasing_price) * order_items.qty) as profit'))
+        ->groupBy('order_items.order_id')->pluck('profit','order_id')->toArray(); 
+        return view(config('app.theme').'.pages.order.index', compact('orders','profits'));
 
     }
+
     public function ajax_get_customer_info($id)
     {
         $data = StakeHolder::where('id', $id)->first();
@@ -129,6 +136,8 @@ class OrderController extends Controller
             else:
                 $order->orderitems()->create($value);
             endif;
+
+            Stock::where('product_id',$value['product_id'])->decrement('quantity',$value['qty']);
         endforeach;
 
         if($order->orderitems()->count() == count($request->input('addmore'))):

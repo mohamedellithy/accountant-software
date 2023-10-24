@@ -17,26 +17,21 @@ class PaymentsController extends Controller
      * . لذلك الدائن هو المال الممنوح من قبل المنشأة.
      */
 
-    public function debit_payments(){
-        // مدين
+    public function supplier_payments(Request $request){
+        $suppliers = StakeHolder::query();
 
-    }
-
-    public function credit_payments(Request $request){
-        // دائن
-
-        $payments = CustomerPayment::query();
-        $payments = $payments->with('customer');
-        $per_page = 10;
-
-
-        $payments->when(request('search') != null, function ($q) {
-            return $q->where('customer', function ($query) {
-                $query->where('name', 'like', '%' . request('search') . '%');
-            });
+        $suppliers = $suppliers->where('role','supplier')->where(function($query){
+            $query->whereHas('orders')->orWhereHas('purchasing_invoices');
+        })->withSum('orders','total_price')
+        ->withSum('customer_payments','value')
+        ->withSum('supplier_payments','value')
+        ->withSum('purchasing_invoices','total_price');
+        
+        $suppliers->when(request('search') != null, function ($q) {
+            return $q->where('name', 'like', '%' . request('search') . '%');
         });
 
-        $payments->when(request('filter') == 'sort_asc', function ($q) {
+        $suppliers->when(request('filter') == 'sort_asc', function ($q) {
             return $q->orderBy('created_at', 'asc');
         },function ($q) {
             return $q->orderBy('created_at', 'desc');
@@ -46,26 +41,23 @@ class PaymentsController extends Controller
             $per_page = $request->query('rows');
         endif;
 
-        $payments = $payments->paginate($per_page);
-        $customers = StakeHolder::select('id','name')->orderBy('name', 'asc')->get();
-        return view(config('app.theme').'.pages.payment.credit-index', compact('payments','customers'));
-
-
+        $suppliers = $suppliers->paginate(10);
+        return view(config('app.theme').'.pages.payment.supplier-payments', compact('suppliers'));
     }
-    public function index(Request $request)
-    {
-        $payments = Total_Payments::query();
-        $payments = $payments->with('customer');
-        $per_page = 10;
 
+    public function customer_payments(Request $request){
+        $customers = StakeHolder::query();
 
-        $payments->when(request('search') != null, function ($q) {
-            return $q->where('customer', function ($query) {
-                $query->where('name', 'like', '%' . request('search') . '%');
-            });
+        $customers = $customers->where('role','customer')->whereHas('orders')->orWhereHas('purchasing_invoices')->withSum('orders','total_price')
+        ->withSum('customer_payments','value')
+        ->withSum('supplier_payments','value')
+        ->withSum('purchasing_invoices','total_price');
+        
+        $customers->when(request('search') != null, function ($q) {
+            return $q->where('name', 'like', '%' . request('search') . '%');
         });
 
-        $payments->when(request('filter') == 'sort_asc', function ($q) {
+        $customers->when(request('filter') == 'sort_asc', function ($q) {
             return $q->orderBy('created_at', 'asc');
         },function ($q) {
             return $q->orderBy('created_at', 'desc');
@@ -75,26 +67,24 @@ class PaymentsController extends Controller
             $per_page = $request->query('rows');
         endif;
 
-        $payments = $payments->paginate($per_page);
-        $customers = StakeHolder::select('id','name')->orderBy('name', 'asc')->get();
-        return view(config('app.theme').'.pages.payment.index', compact('payments','customers'));
-
+        $customers = $customers->paginate(10);
+        return view(config('app.theme').'.pages.payment.customer-payments', compact('customers'));
     }
 
-    public function customer_payments(Request $request,$id){
+    public function customer_payments_lists($id){
+        $customer = StakeHolder::find($id);
+        $customer_payments = CustomerPayment::where('customer_id',$id)->get();
+        $supplier_payments = SupplierPayment::where('supplier_id',$id)->get();
+        $payments = $customer_payments->merge($supplier_payments)->sortby('created_at');
+        return view(config('app.theme').'.pages.customer.payments', compact('payments','customer'));
+    }
 
-        $payments = Payment::query();
-        $payments =  $payments->where('stake_holder_id', $id)->get();
-
-        $per_page = 10;
-
-
-        if ($request->has('rows')):
-            $per_page = $request->query('rows');
-        endif;
-
-       // $payments = $payments->paginate($per_page);
-        return view(config('app.theme').'.pages.payment.customer', compact('payments'));
+    public function supplier_payments_lists($id){
+        $supplier = StakeHolder::find($id);
+        $customer_payments = CustomerPayment::where('customer_id',$id)->get();
+        $supplier_payments = SupplierPayment::where('supplier_id',$id)->get();
+        $payments = $customer_payments->merge($supplier_payments)->sortby('created_at');
+        return view(config('app.theme').'.pages.supplier.payments', compact('payments','supplier'));   
     }
 
     public function delete_customer_payments($id){

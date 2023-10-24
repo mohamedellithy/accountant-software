@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('phone')->nullable();
+            $table->double('balance')->default(0.0);
             $table->string('role')->default('customer');
             $table->timestamps();
         });

@@ -88,9 +88,10 @@ class StockController extends Controller
     public function edit($id){
         $suppliers = StakeHolder::all();
         $stock   = Stock::find($id);
+        $products  = Product::all();
         return response()->json([
             'status' => true,
-            'view'   => view(config('app.theme').'.pages.stock.model.edit', compact('stock', 'suppliers'))->render()
+            'view'   => view(config('app.theme').'.pages.stock.model.edit', compact('stock', 'suppliers','products'))->render()
         ]);
     }
 
@@ -106,8 +107,9 @@ class StockController extends Controller
         $stock = Stock::where('id', $id)->update($request->only([
             'product_id',
             'quantity',
-            'price',
-            'supplier_id',
+            'sale_price',
+            'purchasing_price',
+            'supplier_id'
         ]));
         return redirect()->back();
 

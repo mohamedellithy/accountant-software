@@ -23,9 +23,10 @@ class CustomerController extends Controller
 
         $customers = $customers->orWhereHas('orders');
 
-        $customers = $customers->withCount('orders');
+        $customers = $customers->withCount('orders','purchasing_invoices');
 
-        $customers = $customers->withSum('orders','total_price');
+        $customers = $customers->withSum('orders','total_price')
+        ->withSum('purchasing_invoices','total_price');
 
         $per_page = 10;
         if ($request->has('search')) {
@@ -56,7 +57,8 @@ class CustomerController extends Controller
         StakeHolder::create($request->only([
             'name',
             'phone',
-            'role'
+            'role',
+            'balance'
         ]));
         return redirect()->back()->with('success_message', 'تم اضافة عميل');
     }
@@ -135,6 +137,7 @@ class CustomerController extends Controller
         $customer = StakeHolder::where('id', $id)->update($request->only([
             'name',
             'phone',
+            'balance'
         ]));
         return redirect()->back()->with('success_message', 'تم تعديل عميل');
 
@@ -148,7 +151,6 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {
-        $customer = StakeHolder::find($id);
         $customer = StakeHolder::destroy($id);
 
         return redirect()->back()->with('success_message', 'تم حذف العميل');

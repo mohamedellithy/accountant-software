@@ -12,6 +12,7 @@ use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\PurchasingInvoiceController;
+use App\Http\Controllers\InvoicesPdfController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,17 +39,23 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('stocks', StockController::class);
         Route::resource('purchasing-invoices', PurchasingInvoiceController::class);
         Route::get('/get-customer-info/{id}', [OrderController::class, 'ajax_get_customer_info'])->name('ajax_get_customer_info');
+        Route::get('/get-supplier-info/{id}', [OrderController::class, 'ajax_get_supplier_info'])->name('ajax_get_supplier_info');
         Route::get('/get-product-info/{id}', [OrderController::class, 'ajax_get_product_info'])->name('ajax_get_product_info');
         Route::get('/getProductPrice', [OrderController::class, 'getProductPrice'])->name('getProductPrice');
 
         Route::resource('expenses', ExpensesController::class);
         Route::resource('returns', ReturnsController::class);
-        Route::get('/credit-payments', [PaymentsController::class, 'credit_payments'])->name('payments.credit-index');
-        Route::get('/debit-payments', [PaymentsController::class, 'debit_payments'])->name('payments.debit-index');
+        Route::get('/customers-payments', [PaymentsController::class, 'customer_payments'])->name('payments.customers-index');
+        Route::get('/suppliers-payments', [PaymentsController::class, 'supplier_payments'])->name('payments.suppliers-index');
         Route::get('customer-payments-delete/{id}',[PaymentsController::class,'delete_customer_payments'])->name('customer-payments-delete');
         Route::get('supplier-payments-delete/{id}',[PaymentsController::class,'delete_supplier_payments'])->name('supplier-payments-delete');
         Route::get('/customer-payments/{id}', [PaymentsController::class, 'customer_payments'])->name('customer_payments');
-        Route::post('/teckScreen', [WhatsAppController::class, 'teckScreen'])->name('teckScreen');
+        Route::get('/download-pdf-order-bill/{id}', [InvoicesPdfController::class, 'download_pdf_order_bill'])->name('download-pdf-order-bill');
+        Route::get('/download-pdf-payments-bill/{id}', [InvoicesPdfController::class, 'download_pdf_payments_bill'])->name('download-pdf-payments-bill');
+        Route::get('/download-pdf-purchasing-invoices-bill/{id}', [InvoicesPdfController::class, 'download_pdf_purchasing_invoices_bill'])->name('download-pdf-purchasing-invoices-bill');
+        Route::get('/download-pdf-balance-bill/{id}', [InvoicesPdfController::class, 'download_pdf_balance_bill'])->name('download-pdf-balance-bill');
+        Route::get('/customer-payments-lists/{id}',[PaymentsController::class,'customer_payments_lists'])->name('customer-payments-lists');
+        Route::get('/supplier-payments-lists/{id}',[PaymentsController::class,'supplier_payments_lists'])->name('supplier-payments-lists');
     });
 });
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -51,6 +51,7 @@
                                                 <div class="mb-3 select-product">
                                                     <label class="form-label" for="basic-default-company"> اسم الصنف</label>
                                                     <select type="text" name="addmore[0][product_id]" class="form-control form-select2 selectProduct" required>
+                                                        <option>الصنف</option>
                                                         @foreach ($products as $product)
                                                             <option value={{ $product->id }}>{{ $product->name }}</option>
                                                         @endforeach
@@ -79,6 +80,15 @@
                                                 <div class="mb-3">
                                                     <label class="form-label" for="basic-default-company"> سعر اجمالى</label>
                                                     <strong class="total-item">0</strong>
+                                                    <br/>
+                                                    جنيه
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="mb-3">
+                                                    <input type="hidden" class="purchasing_price" name="purchasing_price" />
+                                                    <label class="form-label" for="basic-default-company"> معدل الربح</label>
+                                                    <strong class="profit-item">0</strong>
                                                     <br/>
                                                     جنيه
                                                 </div>
@@ -195,6 +205,8 @@
                         jQuery(self).parents('tr').find('input.qty').attr('max',response.product.stock.quantity);
                         jQuery(self).parents('tr').find('input.price').val(response.product.stock.sale_price);
                         jQuery(self).parents('tr').find('.total-item').html(response.product.stock.sale_price * 1);
+                        jQuery(self).parents('tr').find('.profit-item').html(Number(response.product.stock.sale_price) - Number(response.product.stock.purchasing_price));
+                        jQuery(self).parents('tr').find('input.purchasing_price').val(Number(response.product.stock.purchasing_price));
                         console.log(response);
                         await CalculateTotals();
                     }
@@ -206,7 +218,18 @@
         jQuery('table').on('keyup','input.qty',function(){
             let quantity = jQuery(this).parents('tr').find('input.qty').val() || 1;
             let price    = jQuery(this).parents('tr').find('input.price').val();
+            let purchasing_price    = jQuery(this).parents('tr').find('input.purchasing_price').val();
             jQuery(this).parents('tr').find('.total-item').html(Number(price) * Number(quantity));
+            jQuery(this).parents('tr').find('.profit-item').html((Number(price) - Number(purchasing_price)) * quantity);
+            CalculateTotals();
+        });
+
+        jQuery('table').on('keyup','input.price',function(){
+            let quantity = jQuery(this).parents('tr').find('input.qty').val() || 1;
+            let price    = jQuery(this).parents('tr').find('input.price').val();
+            let purchasing_price    = jQuery(this).parents('tr').find('input.purchasing_price').val();
+            jQuery(this).parents('tr').find('.total-item').html(Number(price) * Number(quantity));
+            jQuery(this).parents('tr').find('.profit-item').html((Number(price) - Number(purchasing_price)) * quantity);
             CalculateTotals();
         });
 
@@ -220,7 +243,7 @@
             let products = {!! json_encode($products) !!};
             let count_tr = jQuery('.container-table tr').length;
             let tr       = jQuery('.dynamic-added').html();
-            let options  = "";
+            let options  = "<option>الصنف</option>";
             jQuery('#dynamicTable').append(`<tr class="tr${count_tr}">${tr}</tr>`);
             jQuery(`.tr${count_tr}`).find('select').attr('name',`addmore[${count_tr}][product_id]`);
             jQuery(`.tr${count_tr}`).find('select').addClass('new-selet2');
@@ -282,6 +305,14 @@
         padding: 13px;
         display: flex;
         justify-content: space-between;
+    }
+    @media(max-width:1000px){
+        table tr {
+            display: grid;
+        }
+        table tr.dynamic-added td .mb-3{
+            margin-bottom: 0px !important;
+        }
     }
 </style>
 @endpush

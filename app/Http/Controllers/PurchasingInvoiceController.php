@@ -24,7 +24,7 @@ class PurchasingInvoiceController extends Controller
     public function index(Request $request)
     {
         $orders = PurchasingInvoice::query();
-        $orders = $orders->with('supplier', 'invoice_items', 'invoice_items.product');
+        $orders = $orders->with('supplier', 'invoice_items', 'invoice_items.product')->withSum('invoice_payments','value');;
         $per_page = 10;
 
         $orders->when(request('search') != null, function ($q) {

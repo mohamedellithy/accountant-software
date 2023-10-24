@@ -26,7 +26,7 @@ class StockRequest extends FormRequest
         return [
             'purchasing_price' => 'required',
             'sale_price'       => 'required',
-            'product_id'       => 'required|unique:products,id,'.$this->stock,
+            'product_id'       => 'required|unique:stocks,product_id,'.$this->stock,
             'quantity'         => 'required|numeric',
             'supplier_id'      => 'required',
         ];
