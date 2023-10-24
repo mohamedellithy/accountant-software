@@ -40,6 +40,6 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-        return view('theme_2.auth.login');
+        return view(config('app.theme').'.auth.login');
     }
 }
