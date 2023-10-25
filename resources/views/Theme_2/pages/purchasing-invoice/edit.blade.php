@@ -225,6 +225,13 @@
             CalculateTotals();
         });
 
+        jQuery('table').on('keyup','input.price',function(){
+            let quantity = jQuery(this).parents('tr').find('input.qty').val() || 1;
+            let price    = jQuery(this).parents('tr').find('input.price').val();
+            jQuery(this).parents('tr').find('.total-item').html(Number(price) * Number(quantity));
+            CalculateTotals();
+        });
+
         jQuery('body').on('keyup','#discount',function(){
             CalculateTotals();
         });
