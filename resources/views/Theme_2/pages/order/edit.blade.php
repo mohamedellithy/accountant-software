@@ -347,5 +347,13 @@
         display: flex;
         justify-content: space-between;
     }
+    @media(max-width:1000px){
+        table tr {
+            display: grid;
+        }
+        table tr.dynamic-added td .mb-3{
+            margin-bottom: 0px !important;
+        }
+    }
 </style>
 @endpush
