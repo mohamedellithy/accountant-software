@@ -24,16 +24,8 @@ class ProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
-          
+            'name' => 'required|string|max:255|unique:products,name,'.$this->product,
         ];
     }
-    public function messages()
-    {
-        return [
-            'name.required' => 'حقل الاسم مطلوب',
-            'name.string' => 'يرجى ادخال نص',
-            'name.max' => 'الاسم يجب ان يكون اقل من 255 حرف'
-        ];
-    }
+
 }
