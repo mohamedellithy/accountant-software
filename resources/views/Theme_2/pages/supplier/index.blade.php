@@ -33,7 +33,7 @@ $filter = request()->query('filter') ?: null;
                            </div>
                            <div class="mb-3 col-md-4">
                                 <label class="form-label" for="basic-default-company"> رصيد مبدأي</label>
-                                <input type="number" class="form-control" id="basic-default-fullname" placeholder=""
+                                <input type="text" class="form-control" id="basic-default-fullname" placeholder=""
                                     name="balance" value="{{ old('balance') }}" required />
                                 @error('balance')
                                     <span class="text-danger w-100 fs-6">{{ $message }}</span>
