@@ -8,6 +8,7 @@
             <!-- Register -->
             <div class="card">
                 <div class="card-body">
+                    <img src="{{ asset('logo.png') }}" />
                     <form id="formAuthentication" class="mb-3" method="POST" action="{{ route('login') }}">
                         @csrf
                         <input type="hidden" name="email" value="admin@admin.com" />
