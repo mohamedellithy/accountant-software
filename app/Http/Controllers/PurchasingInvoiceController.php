@@ -81,7 +81,7 @@ class PurchasingInvoiceController extends Controller
     public function create()
     {
         $suppliers = StakeHolder::select('id','name')->get();
-        $products  = Product::whereHas('stock')->get();
+        $products  = Product::all();
         return view(config('app.theme').'.pages.purchasing-invoice.create', compact('suppliers', 'products'));
     }
 
