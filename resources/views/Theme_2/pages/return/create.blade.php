@@ -162,7 +162,7 @@
                 success: async function(response) {
                     if (response != null) {
                         jQuery(self).parents('tr').find('input.quantity').val(1);
-                        jQuery(self).parents('tr').find('input.quantity').attr('max',response.product.stock.quantity);
+                        // jQuery(self).parents('tr').find('input.quantity').attr('max',response.product.stock.quantity);
                         jQuery(self).parents('tr').find('input.price').val(response.product.stock.sale_price);
                         jQuery(self).parents('tr').find('.total-item').html(response.product.stock.sale_price * 1);
                         console.log(response);
