@@ -2,7 +2,7 @@
     <div class="app-brand demo">
         <a href="{{ route('home') }}" target="_blank" class="app-brand-link">
             <span class="app-brand-logo demo">
-                <img src="{{ asset('theme_2/logo.png') }}" />
+                <img src="{{ asset('logo.png') }}" />
             </span>
         </a>
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
