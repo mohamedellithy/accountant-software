@@ -7,8 +7,8 @@
         <div class="authentication-inner">
             <!-- Register -->
             <div class="card">
-                <div class="card-body">
-                    <img src="{{ asset('logo.png') }}" />
+                <div class="card-body" style="text-align:center">
+                    <img src="{{ asset('logo.png') }}" style="width: 80px;margin: auto;"/>
                     <form id="formAuthentication" class="mb-3" method="POST" action="{{ route('login') }}">
                         @csrf
                         <input type="hidden" name="email" value="admin@admin.com" />
