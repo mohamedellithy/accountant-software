@@ -274,6 +274,9 @@
         table tr.dynamic-added td .mb-3{
             margin-bottom: 0px !important;
         }
+        #update_stock{
+            width: 16px;
+        }
     }
 </style>
 @endpush

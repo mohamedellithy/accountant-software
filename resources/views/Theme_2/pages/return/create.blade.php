@@ -262,6 +262,9 @@
         .select2-container{
             width: 100%;
         }
+        #update_stock{
+            width: 16px;
+        }
     }
 </style>
 @endpush
