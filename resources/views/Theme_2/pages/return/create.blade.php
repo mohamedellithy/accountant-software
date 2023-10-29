@@ -263,7 +263,7 @@
             width: 100%;
         }
         #update_stock{
-            width: 16px;
+            width: 16px !important;
         }
     }
 </style>

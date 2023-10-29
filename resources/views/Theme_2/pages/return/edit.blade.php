@@ -275,7 +275,7 @@
             margin-bottom: 0px !important;
         }
         #update_stock{
-            width: 16px;
+            width: 16px !important;
         }
     }
 </style>
