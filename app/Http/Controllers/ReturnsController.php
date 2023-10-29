@@ -85,9 +85,10 @@ class ReturnsController extends Controller
         ]);
 
         $customerReturn = CustomerReturn::Create([
-            'order_number' => $request->input('order_number'),
-            'customer_id'  => $request->input('customer_id'),
-            'total_price'  => 0,
+            'order_number'     => $request->input('order_number'),
+            'customer_id'      => $request->input('customer_id'),
+            'type_return_bill' => $request->input('type_return_bill'),
+            'total_price'      => 0,
         ]);
 
         array_filter($request->input('addmore'));
@@ -117,6 +118,10 @@ class ReturnsController extends Controller
             $customerReturn->update([
                 'total_price' => $customerReturn->returnitems()->sum(DB::raw("(return_items.quantity * return_items.price)")),
             ]);
+
+            if($request->input('type_return_bill') == 'sale'):
+            else:
+            endif;
         else:
             $customerReturn->delete();
         endif;

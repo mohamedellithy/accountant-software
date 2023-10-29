@@ -9,7 +9,7 @@ class CustomerReturn extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['order_number','customer_id','total_price'];
+    protected $fillable = ['order_number','customer_id','total_price','type_return_bill'];
 
     public function customer()
     {

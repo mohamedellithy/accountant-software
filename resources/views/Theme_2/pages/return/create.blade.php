@@ -25,8 +25,11 @@
                                     name="order_number"  />
                             </div>
                             <div class="mb-3">
-                                <label class="col-sm-3 col-form-label text-sm-end" for="formtabs-country">
-                                    اسم الزبون</label>
+                                <label class="col-sm-3 col-form-label text-sm-end form-label" for="formtabs-country">
+                                    اسم الزبون
+                                    / 
+                                    اسم المورد
+                                </label>
                                 <select type="text" id="selectCustomer" name="customer_id" class="form-control form-select2" required>
                                     <option value=""></option>
                                     @foreach ($customers as $customer)
@@ -42,6 +45,13 @@
                                 <label class="form-label" for="basic-default-company"> رقم الجوال</label>
                                 <input type="text" class="form-control" id="customerphone" placeholder=""
                                     name="customerphone" value="" required />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="basic-default-company">نوع الفاتورة</label>
+                                <select name="type_return_bill" class="form-control">
+                                    <option value="1">فاتورة البيع</option>
+                                    <option value="2">فاتورة الشراء</option>
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <table class="table table-bordered container-table">

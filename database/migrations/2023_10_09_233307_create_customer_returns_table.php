@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('order_number')->nullable();
             $table->double('total_price',8, 2);
             $table->unsignedBigInteger('customer_id')->nullable();
+            $table->enum('type_return_bill',['sale','purchasing'])->default('sale');
             $table->foreign('customer_id')->references('id')->on('stake_holders')->onDelete('set null');
             $table->timestamps();
 
