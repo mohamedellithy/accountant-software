@@ -139,7 +139,16 @@ class PurchasingInvoiceController extends Controller
 
             if($request->input('update_stock')):
                 $stock = Stock::where('product_id',$product->id)->first();
-                $stock->quantity += $value['qty'];
+                if(!$stock):
+                    $stock = new Stock();
+                    $stock->product_id       = $product->id;
+                    $stock->quantity         = $value['qty'];
+                    $stock->purchasing_price = $value['price'];
+                    $stock->sale_price       = $value['price'] + 20;
+                    $stock->supplier_id      = $request->input('supplier_id');
+                else:
+                    $stock->quantity += $value['qty'];
+                endif;
                 $stock->save();
             endif;
 
