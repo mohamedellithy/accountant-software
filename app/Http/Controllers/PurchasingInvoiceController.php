@@ -159,7 +159,7 @@ class PurchasingInvoiceController extends Controller
                 'total_price' => $order->invoice_items()->sum(DB::raw("(invoice_items.qty * invoice_items.price)")) ,
                 'quantity' => $order->invoice_items()->count()
             ]);
-            
+
             PaymentService::create_supplier_payments_by_invoice($order,$request->input('payment_value'));
         else:
             $order->delete();

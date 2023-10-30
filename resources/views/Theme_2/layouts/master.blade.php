@@ -76,6 +76,9 @@
         .select2-container{
             display: block !important;
         }
+    </style>
+    @stack('style')
+    <style>
         @media(max-width:1000px){
             form#filter-data{
                 display: flex !important;
@@ -93,11 +96,9 @@
             .table th , .table td {
                 padding: 10px 10px;
                 font-size: 12px;
-            }
-            
+            }  
         }
     </style>
-    @stack('style')
 </head>
 
 <body id="rtl">
