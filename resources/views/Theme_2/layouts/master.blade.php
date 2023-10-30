@@ -76,6 +76,26 @@
         .select2-container{
             display: block !important;
         }
+        @media(max-width:1000px){
+            form#filter-data{
+                display: flex !important;
+                flex-wrap: wrap;
+            }
+            form#filter-data label{
+                font-size: 11px;
+            }
+            .table:not(.table-dark) tr th:first-child, .table:not(.table-dark) tr th:nth-child(2){
+                background-color:#233446 !important;
+            }
+            .table .crud {
+                padding: 0px 4px;
+            }
+            .table th , .table td {
+                padding: 10px 10px;
+                font-size: 12px;
+            }
+            
+        }
     </style>
     @stack('style')
 </head>
