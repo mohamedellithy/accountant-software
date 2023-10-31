@@ -126,7 +126,7 @@ $filter = request()->query('filter') ?: null; @endphp
                 </div>
                 <br/><br/>
                 <div class="d-flex flex-row justify-content-center">
-                    {{ $orders->links() }}
+                    {{ $orders->onEachSide(2)->links() }}
                 </div>
             </div>
         </div>

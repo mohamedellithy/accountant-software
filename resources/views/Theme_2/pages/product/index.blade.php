@@ -89,7 +89,7 @@
             </div>
             <br/><br/>
             <div class="d-flex flex-row justify-content-center">
-                {{ $products->links() }}
+                {{ $products->onEachSide(2)->links() }}
             </div>
         </div>
     </div>
