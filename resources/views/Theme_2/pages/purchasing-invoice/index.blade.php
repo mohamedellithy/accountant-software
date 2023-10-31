@@ -125,7 +125,7 @@ $filter = request()->query('filter') ?: null; @endphp
                 </table>
                 </div>
                 <br/><br/>
-                <div class="d-flex flex-row justify-content-center">
+                <div class="justify-content-center">
                     {{ $orders->links() }}
                 </div>
             </div>
@@ -133,6 +133,14 @@ $filter = request()->query('filter') ?: null; @endphp
     </div>
 </div>
 @endsection
+
+@push('style')
+<style>
+    .card-body{
+        padding:0px 0px !important;
+    }
+</style>
+@endpush
 
 @push('script')
 <script>
