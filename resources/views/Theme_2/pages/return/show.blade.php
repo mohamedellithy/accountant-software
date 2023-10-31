@@ -207,6 +207,12 @@
         .table:not(.table-dark) tr th:nth-child(2){
             background-color:white !important;
         }
+        .invoice-header .head{
+            font-size: 10px;
+        }
+        .invoice-header .date{
+            font-size: 8px;
+        }
     }
  </style>
  @endpush
