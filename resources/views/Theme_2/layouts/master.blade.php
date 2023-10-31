@@ -97,6 +97,9 @@
                 padding: 10px 10px;
                 font-size: 12px;
             }  
+            .card-body{
+                padding:0px 0px !important;
+            }
         }
     </style>
     @stack('style')
