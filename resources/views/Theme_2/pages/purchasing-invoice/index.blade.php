@@ -12,7 +12,7 @@ $filter = request()->query('filter') ?: null; @endphp
    <div class="card mb-4">
         <div class="card">
             <h5 class="card-header">عرض فواتير الشراء</h5>
-            <div class="card-body py-3 .card-body-mo">
+            <div class="card-body py-3 card-body-mo">
                 <div class="d-flex" style="flex-direction: row-reverse;">
                     <div class="nav-item d-flex align-items-center m-2">
                         <a href="{{ route('admin.purchasing-invoices.create') }}" class="btn btn-success btn-md" style="color:white">اضافة فاتورة جديدة</a>
@@ -138,7 +138,7 @@ $filter = request()->query('filter') ?: null; @endphp
 <style>
     @media(max-width:1000px){
         .card-body-mo{
-            padding:0px 0px !important;
+            padding: 4px 4px !important;
         }
     }
 </style>
