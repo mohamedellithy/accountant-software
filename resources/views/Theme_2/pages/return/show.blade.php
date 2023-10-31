@@ -202,6 +202,12 @@
     .invoice-header .date span{
         padding: 10px;
     }
+    @media(max-width:1000px){
+        .table:not(.table-dark) tr th:first-child, 
+        .table:not(.table-dark) tr th:nth-child(2){
+            background-color:white !important;
+        }
+    }
  </style>
  @endpush
 
