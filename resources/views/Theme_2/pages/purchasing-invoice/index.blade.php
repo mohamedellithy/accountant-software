@@ -25,7 +25,7 @@ $filter = request()->query('filter') ?: null; @endphp
                             <input type="text" class="search form-control border-0 shadow-none" placeholder="البحث ...." @isset($search) value="{{ $search }}" @endisset id="search" name="search" style="background-color:#fff;"/>
                         </div>
 
-                        <div class="nav-item d-flex align-items-center m-2">
+                        {{-- <div class="nav-item d-flex align-items-center m-2">
                             <select name="customer_filter" id="largeSelect" onchange="document.getElementById('filter-data').submit()" class="form-control form-select2">
                                 <option value="">فلتر العميل</option>
                                 @foreach (  $customers as  $customer)
@@ -54,7 +54,7 @@ $filter = request()->query('filter') ?: null; @endphp
                                     <option value="50" @isset($rows) @if ($rows=='50' ) selected @endif @endisset>50</option>
                                     <option value="100" @isset($rows) @if ($rows=='100' ) selected @endif @endisset> 100</option>
                             </select>
-                        </div>
+                        </div> --}}
                     </div>
                 </form>
 
