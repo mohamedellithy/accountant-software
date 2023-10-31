@@ -88,7 +88,7 @@
                 </table>
             </div>
             <br/><br/>
-            <div class="justify-content-center">
+            <div class="d-flex flex-row justify-content-center">
                 {{ $products->links() }}
             </div>
         </div>
