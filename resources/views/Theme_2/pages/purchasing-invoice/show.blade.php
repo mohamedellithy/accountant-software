@@ -211,6 +211,9 @@
         .invoice-header .date{
             font-size: 8px;
         }
+        .card-header .custom{
+            font-size: 11px;
+        }
     }
  </style>
  @endpush
