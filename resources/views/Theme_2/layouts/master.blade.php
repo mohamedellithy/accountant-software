@@ -87,6 +87,9 @@
             .table:not(.table-dark) tr th:first-child, .table:not(.table-dark) tr th:nth-child(2){
                 background-color:#233446 !important;
             }
+            .table:not(.table-dark) tr td:first-child, .table:not(.table-dark) tr td:nth-child(2){
+                background-color:white !important;
+            }
             .table .crud {
                 padding: 0px 4px;
             }
