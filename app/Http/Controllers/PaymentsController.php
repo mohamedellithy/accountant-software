@@ -26,7 +26,7 @@ class PaymentsController extends Controller
         ->withSum('customer_payments','value')
         ->withSum('supplier_payments','value')
         ->withSum('purchasing_invoices','total_price');
-        
+
         $suppliers->when(request('search') != null, function ($q) {
             return $q->where('name', 'like', '%' . request('search') . '%');
         });
@@ -52,7 +52,7 @@ class PaymentsController extends Controller
         ->withSum('customer_payments','value')
         ->withSum('supplier_payments','value')
         ->withSum('purchasing_invoices','total_price');
-        
+
         $customers->when(request('search') != null, function ($q) {
             return $q->where('name', 'like', '%' . request('search') . '%');
         });
@@ -75,7 +75,8 @@ class PaymentsController extends Controller
         $customer = StakeHolder::find($id);
         $customer_payments = CustomerPayment::where('customer_id',$id)->get();
         $supplier_payments = SupplierPayment::where('supplier_id',$id)->get();
-        $payments = $customer_payments->merge($supplier_payments)->sortby('created_at');
+        $payments = $customer_payments->merge($supplier_payments)->sortByDesc('created_at');
+        //dd($payments);
         return view(config('app.theme').'.pages.customer.payments', compact('payments','customer'));
     }
 
@@ -83,8 +84,25 @@ class PaymentsController extends Controller
         $supplier = StakeHolder::find($id);
         $customer_payments = CustomerPayment::where('customer_id',$id)->get();
         $supplier_payments = SupplierPayment::where('supplier_id',$id)->get();
-        $payments = $customer_payments->merge($supplier_payments)->sortby('created_at');
-        return view(config('app.theme').'.pages.supplier.payments', compact('payments','supplier'));   
+        $payments = $customer_payments->merge($supplier_payments)->sortByDesc('created_at');
+        return view(config('app.theme').'.pages.supplier.payments', compact('payments','supplier'));
+    }
+
+    public function stake_holder_add_payments(Request $request,$id){
+        $stake_holder = StakeHolder::find($id);
+        if($request->input('type_payment') == 1):
+            CustomerPayment::create([
+                'customer_id'  => $stake_holder->id,
+                'value'        => $request->input('payment_value')
+            ]);
+        elseif($request->input('type_payment') == 2):
+            SupplierPayment::create([
+                'supplier_id'  => $stake_holder->id,
+                'value'        => $request->input('payment_value')
+            ]);
+        endif;
+
+        return back();
     }
 
     public function delete_customer_payments($id){

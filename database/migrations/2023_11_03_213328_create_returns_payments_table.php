@@ -13,14 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('total__payments', function (Blueprint $table) {
+        Schema::create('returns_payments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('stake_holder_id')->nullable();
             $table->foreign('stake_holder_id')->references('id')->on('stake_holders')->onDelete('Cascade');
-            $table->double('value');
-            $table->double('debit',2); // المدين => destination  // purchasing invoices // -
-            $table->double('credit',2); //  الدائن =>source // order invoices // +
-
+            $table->unsignedBigInteger('r_invoice_id')->nullable();
+            $table->foreign('r_invoice_id')->references('id')->on('returns')->onDelete('Cascade');
+            $table->double('value'); // 100000
+            $table->enum('type_return',['sale','purchasing'])->default('sale');
             $table->timestamps();
         });
     }
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('total__payments');
+        Schema::dropIfExists('returns_payments');
     }
 };

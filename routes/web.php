@@ -56,6 +56,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/download-pdf-balance-bill/{id}', [InvoicesPdfController::class, 'download_pdf_balance_bill'])->name('download-pdf-balance-bill');
         Route::get('/customer-payments-lists/{id}',[PaymentsController::class,'customer_payments_lists'])->name('customer-payments-lists');
         Route::get('/supplier-payments-lists/{id}',[PaymentsController::class,'supplier_payments_lists'])->name('supplier-payments-lists');
+        Route::post('stake-holder/add-payments/{id}',[PaymentsController::class,'stake_holder_add_payments'])->name('stake_holder.add-payments');
     });
 });
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

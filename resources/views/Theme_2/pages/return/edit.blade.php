@@ -268,6 +268,9 @@
         justify-content: space-between;
     }
     @media(max-width:1000px){
+        .select2-container{
+            width: 100% !important;
+        }
         table tr {
             display: grid;
         }

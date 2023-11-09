@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('customer_returns', function (Blueprint $table) {
+        Schema::create('returns', function (Blueprint $table) {
             $table->id();
             $table->string('order_number')->nullable();
             $table->double('total_price',8, 2);
             $table->unsignedBigInteger('customer_id')->nullable();
-            $table->enum('type_return_bill',['sale','purchasing'])->default('sale');
             $table->foreign('customer_id')->references('id')->on('stake_holders')->onDelete('set null');
+            $table->enum('type_return',['sale','purchasing'])->default('sale');
             $table->timestamps();
 
         });
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('customer_returns');
+        Schema::dropIfExists('returns');
     }
 };

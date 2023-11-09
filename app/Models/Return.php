@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CustomerReturn extends Model
+class Return extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['order_number','customer_id','total_price','type_return_bill'];
+    protected $fillable = ['order_number','customer_id','total_price','type_return'];
 
     public function customer()
     {

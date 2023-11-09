@@ -270,7 +270,7 @@
             margin-bottom: 0px !important;
         }
         .select2-container{
-            width: 100%;
+            width: 100% !important;
         }
         #update_stock{
             width: 16px !important;

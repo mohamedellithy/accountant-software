@@ -7,7 +7,7 @@ use App\Models\Product;
 use App\Models\ReturnItem;
 use App\Models\StakeHolder;
 use Illuminate\Http\Request;
-use App\Models\CustomerReturn;
+use App\Models\Return;
 use Illuminate\Support\Facades\DB;
 
 class ReturnsController extends Controller
@@ -19,7 +19,7 @@ class ReturnsController extends Controller
      */
     public function index(Request $request)
     {
-        $customerReturns = CustomerReturn::query();
+        $customerReturns = Return::query();
         $customerReturns = $customerReturns->with('customer', 'returnitems', 'returnitems.product');
         $per_page = 10;
 
@@ -84,7 +84,7 @@ class ReturnsController extends Controller
             'addmore.*.price'      => ['required', 'numeric']
         ]);
 
-        $customerReturn = CustomerReturn::Create([
+        $customerReturn = Return::Create([
             'order_number'     => $request->input('order_number'),
             'customer_id'      => $request->input('customer_id'),
             'type_return_bill' => $request->input('type_return_bill'),
@@ -108,7 +108,11 @@ class ReturnsController extends Controller
 
             if($request->input('update_stock')):
                 $stock = Stock::where('product_id',$product->id)->first();
-                $stock->quantity += $value['quantity'];
+                if($request->input('type_return') == 'sale'):
+                    $stock->quantity += $value['quantity'];
+                else:
+                    $stock->quantity -= $value['quantity'];
+                endif;
                 $stock->save();
             endif;
 
@@ -119,9 +123,13 @@ class ReturnsController extends Controller
                 'total_price' => $customerReturn->returnitems()->sum(DB::raw("(return_items.quantity * return_items.price)")),
             ]);
 
-            if($request->input('type_return_bill') == 'sale'):
-            else:
-            endif;
+            ReturnsPayment::create([
+                'stake_holder_id' => $request->input('customer_id'),
+                'r_invoice_id'    => $customerReturn->id,
+                'value'           => $customerReturn->total_price,
+                'type_return'     => $request->input('type_return')
+            ]);
+            
         else:
             $customerReturn->delete();
         endif;
@@ -137,7 +145,7 @@ class ReturnsController extends Controller
      */
     public function show($id)
     {
-        $customerReturn     = CustomerReturn::with('returnitems','returnitems.product','customer')->where('id',$id)->first();
+        $customerReturn     = Return::with('returnitems','returnitems.product','customer')->where('id',$id)->first();
 
         return view(config('app.theme').'.pages.return.show', compact('customerReturn'));
     }
@@ -150,7 +158,7 @@ class ReturnsController extends Controller
      */
     public function edit($id)
     {
-        $customerReturn     = CustomerReturn::with('returnitems')->where('id',$id)->first();
+        $customerReturn     = Return::with('returnitems')->where('id',$id)->first();
         $customers = StakeHolder::select('id','name')->get();
         $products  = Product::all();
         return view(config('app.theme').'.pages.return.edit', compact('customerReturn','customers','products'));
@@ -172,7 +180,7 @@ class ReturnsController extends Controller
             'addmore.*.price'      => ['required', 'numeric']
         ]);
 
-        $customerReturn = CustomerReturn::where([
+        $customerReturn = Return::where([
             'id' => $id
         ])->first();
 
@@ -190,12 +198,15 @@ class ReturnsController extends Controller
 
             $Return_Items=ReturnItem::where('return_id',$customerReturn->id)->get();
 
-            foreach( $Return_Items as $Return_Item):
-                  $product = Product::with('stock')->where('id', $Return_Item->product_id)->first();
-
+            foreach($Return_Items as $Return_Item):
+                $product = Product::with('stock')->where('id', $Return_Item->product_id)->first();
                 $stock = Stock::where('product_id',$product->id)->first();
 
-                $stock->quantity -= $Return_Item->quantity;
+                if($customerReturn == 'sale'):
+                    $stock->quantity -= $Return_Item->quantity;
+                else:
+                    $stock->quantity += $Return_Item->quantity;
+                endif;
                 $stock->save();
             endforeach;
         endif;
@@ -212,16 +223,16 @@ class ReturnsController extends Controller
                 $value['quantity'] =  1;
             endif;
 
-
             $customerReturn->returnitems()->create($value);
-
-
             if($request->input('update_stock')):
                 $stock = Stock::where('product_id',$product->id)->first();
-                $stock->quantity += $value['quantity'];
+                if($request->input('type_return') == 'sale'):
+                    $stock->quantity += $value['quantity'];
+                else:
+                    $stock->quantity -= $value['quantity'];
+                endif;
                 $stock->save();
             endif;
-
 
         endforeach;
 
@@ -230,6 +241,14 @@ class ReturnsController extends Controller
                 'total_price' => $customerReturn->returnitems()->sum(DB::raw("(return_items.quantity * return_items.price)")),
 
             ]);
+
+            ReturnsPayment::update([
+                'stake_holder_id' => $request->input('customer_id'),
+                'r_invoice_id'    => $customerReturn->id,
+                'value'           => $customerReturn->total_price,
+                'type_return'     => $request->input('type_return')
+            ]);
+
         else:
             $customerReturn->delete();
         endif;
@@ -244,7 +263,7 @@ class ReturnsController extends Controller
      */
     public function destroy($id)
     {
-        $order = CustomerReturn::find($id);
+        $order = Return::find($id);
         $order->returnitems()->delete();
         $order->delete();
         return redirect()->route('admin.return.index');

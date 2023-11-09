@@ -1,5 +1,6 @@
 <!-- Begin Page Content -->
 @extends('Theme_2.layouts.master') @section('content')
+
 <div class="container-fluid">
     <!-- Page Heading -->
     <br />
@@ -17,6 +18,40 @@
                             class="bx bx-link-alt me-1"></i> المدفوعات</a>
                 </li>
             </ul>
+
+            <div class="card">
+                <form action="{{ route('admin.stake_holder.add-payments',['id' => $customer->id]) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card mb-4">
+                                <h5 class="card-header">تنزيل دفعات جديدة</h5>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="mb-3 col-md-5">
+                                            <label class="form-label" for="basic-default-fullname">المبلغ</label>
+                                            <input type="text" class="form-control" id="basic-default-fullname" placeholder=""
+                                                name="payment_value" value="{{ old('payment_value') }}" required />
+                                            @error('name')
+                                                <span class="text-danger w-100 fs-6">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="mb-3 col-md-5">
+                                            <label class="form-label" for="basic-default-fullname">العملية</label>
+                                            <select class="form-control" name="type_payment">
+                                                <option value="1">محصل من العميل قيمة مبيعات</option>
+                                                <option value="2">مدفوع للعميل قيمة مشتريات</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">تنزيل دفعة</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <hr/>
             <div class="card">
                 <h5 class="card-header">
                     مدفوعات العميل {{ $customer->name }}
@@ -44,7 +79,13 @@
                                         @if(isset($payment->s_invoice_id) && !isset($payment->p_invoice_id))
                                             محصل من العميل قيمة مبيعات 
                                         @elseif(!isset($payment->s_invoice_id) && !isset($payment->p_invoice_id))
-                                            بدون فاتورة
+                                            @if(class_basename($payment) == 'CustomerPayment')
+                                                 محصل من العميل قيمة مبيعات  
+                                            @endif
+
+                                            @if(class_basename($payment) == 'SupplierPayment')
+                                                 مدفوع للعميل قيمة مشتريات   
+                                            @endif
                                         @elseif(!isset($payment->s_invoice_id) && isset($payment->p_invoice_id))
                                             مدفوع للعميل قيمة مشتريات
                                         @endif
@@ -55,7 +96,7 @@
                                         @elseif(isset($payment->p_invoice_id))
                                             {{ ' # '.$payment->p_invoice_id }}
                                         @else
-                                            {{ '-' }}
+                                             غير مرفق فاتورة 
                                         @endif
                                     </td>
                                 </tr>
