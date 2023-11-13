@@ -19,7 +19,7 @@
         </div>
         <div class="mb-3 col-md-12">
             <label class="form-label" for="basic-default-company"> الكمية</label>
-            <input type="number" class="form-control" id="basic-default-fullname" placeholder=""
+            <input type="number" class="form-control" id="basic-default-fullname" placeholder="" step=".01"
                 name="quantity"  value="{{ $stock->quantity ?: old('quantity') }}" required/>
             @error('quantity')
                 <span class="text-danger w-100 fs-6">{{ $message }}</span>
