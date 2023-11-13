@@ -20,7 +20,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" for="basic-default-company"> الكمية</label>
-                                <input type="number" class="form-control" id="basic-default-fullname" placeholder=""
+                                <input type="number" class="form-control" id="basic-default-fullname" step=".01" placeholder=""
                                     name="quantity" value="{{ old('quantity') }}" required />
                                 @error('quantity')
                                     <span class="text-danger w-100 fs-6">{{ $message }}</span>
