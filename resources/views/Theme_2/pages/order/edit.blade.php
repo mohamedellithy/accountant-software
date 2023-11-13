@@ -68,7 +68,7 @@
                                                     <div class="mb-3">
                                                         <label class="form-label" for="basic-default-company"> الكمية</label>
                                                         <input type="number"  class="form-control qty" placeholder=""
-                                                            name="addmore[{{ $loop->index }}][qty]" value="{{ $item->qty ?: old('addmore[0][qty]') }}" required />
+                                                            name="addmore[{{ $loop->index }}][qty]" value="{{ $item->qty ?: old('addmore[0][qty]') }}" step=".01" required />
                                                         @error('addmore[{{ $loop->index }}][qty]')
                                                             <span class="text-danger w-100 fs-6">{{ $message }}</span>
                                                         @enderror
