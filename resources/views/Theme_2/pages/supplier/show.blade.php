@@ -187,7 +187,7 @@
                                 <td>
                                     {{ date('Y-m-d h:i:s') }}
                                 </td>
-                                <td colspan="5">
+                                <td colspan="5" style="background-color: transparent !important;">
                                     الرصيد الختامى
                                 </td>
                                 <td>

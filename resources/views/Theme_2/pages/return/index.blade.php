@@ -60,7 +60,7 @@ $filter = request()->query('filter') ?: null; @endphp
                     </div>
                 </form>
             </div>
-            <div class="table-responsive text-nowrap">
+            <div class="table-responsive">
                <table class="table">
                    <thead class="table-light">
                         <tr class="table-dark">

@@ -54,7 +54,7 @@
                 <h5 class="card-header">
                     مدفوعات العميل {{ $supplier->name }}
                 </h5>
-                <div class="table-responsive text-nowrap">
+                <div class="table-responsive">
                     <table class="table table-border">
                         <thead class="table-light">
                             <tr class="table-dark">
