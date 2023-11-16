@@ -68,10 +68,15 @@
                             </div>
                             <div class="date d-flex">
                                 <strong>تحرير في </strong>
-                                <span>12 / 12 / 2012</span>
+                                <span>{{ date('Y/m/d',strtotime($customerReturn->created_at)) }}</span>
                             </div>
                         </div>
                         <br/>
+                        <p> 
+                            <strong>
+                                {{ $customerReturn->type_return == 'sale' ? 'فاتورة مرتجع مبيعات' : 'فاتورة مرتجع مشتريات' }}
+                            </strong>
+                        </p>
                         <div class="d-flex custom" style="justify-content: space-between;">
                             <label>
                                 <strong>
@@ -79,7 +84,7 @@
                                 </strong>
 
                             </label>
-                            <label> <strong class="customsce">فاتورة رقم  ({{ $customerReturn->order_number }}) </strong></label>
+                            <label> <strong class="customsce">فاتورة مرتجع رقم  ({{ $customerReturn->order_number }}) </strong></label>
                         </div>
                     </div>
                     <div class="card-body">
@@ -158,14 +163,7 @@
                                         </a>
                         <div class="d-flex">
                         <button type='button' id='btn' value='Print' onclick='printDiv();' class="btn btn-primary btn-sm mt-2">طباعة الفاتورة</button>&nbsp;&nbsp;
-                        <form action="{{ route('admin.teckScreen') }}" method="post">
-                              @csrf
-                        <input type="hidden" name="phone" value="{{ $customerReturn->customer->phone }}">
-
-                        <input type="hidden" name="url" value="{{ url()->current()  }}">
-
-                        <button type='submit' id='btn' class="btn btn-success btn-sm mt-2">  ارسال الفاتورة على الواتس</button>
-                        </form>
+                        
                         </div>
 
                    </div>

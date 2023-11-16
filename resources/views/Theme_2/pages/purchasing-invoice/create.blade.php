@@ -85,14 +85,18 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <div class="">
-                                                    <button type="button" name="add" id="add"
-                                                        class="btn btn-success btn-sm">+</button>
-                                                </div>
                                             </td>
                                         </tr>
                                     </tbody>
                                     <tfoot>
+                                        <tr>
+                                            <td colspan="5">
+                                                <div class="">
+                                                    <button type="button" name="add" id="add"
+                                                        class="btn btn-success btn-sm"> اضافة صنف اخر</button>
+                                                </div>
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td colspan="3">اجمالى الفاتورة</td>
                                             <td colspan="2"><strong class="invoice-final-result">0</strong> جنيه</td>

@@ -41,14 +41,6 @@
                             <div class="mb-3">
                                 <table class="table table-bordered container-table">
                                     <tbody id="dynamicTable">
-                                        <tr>
-                                            <td colspan="5" style="text-align: left">
-                                                <div class="">
-                                                    <button type="button" name="add" id="add"
-                                                        class="btn btn-success btn-sm">+</button>
-                                                </div>
-                                            </td>
-                                        </tr>
                                         @foreach($order->invoice_items as $item)
                                             <tr class="dynamic-added">
                                                 <td>
@@ -100,6 +92,14 @@
                                         @endforeach
                                     </tbody>
                                     <tfoot>
+                                        <tr>
+                                            <td colspan="5">
+                                                <div class="">
+                                                    <button type="button" name="add" id="add"
+                                                        class="btn btn-success btn-sm"> اضافة صنف اخر</button>
+                                                </div>
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td colspan="3">اجمالى الفاتورة</td>
                                             <td colspan="2"><strong class="invoice-final-result">{{ $order->sub_total }}</strong> جنيه</td>

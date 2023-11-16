@@ -49,8 +49,8 @@
                             <div class="mb-3">
                                 <label class="form-label" for="basic-default-company">نوع الفاتورة</label>
                                 <select name="type_return_bill" class="form-control">
-                                    <option value="1">فاتورة البيع</option>
-                                    <option value="2">فاتورة الشراء</option>
+                                    <option value="sale">فاتورة البيع</option>
+                                    <option value="purchasing">فاتورة الشراء</option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -94,14 +94,18 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <div class="">
-                                                    <button type="button" name="add" id="add"
-                                                        class="btn btn-success btn-sm">+</button>
-                                                </div>
                                             </td>
                                         </tr>
                                     </tbody>
                                     <tfoot>
+                                        <tr>
+                                            <td colspan="5">
+                                                <div class="">
+                                                    <button type="button" name="add" id="add"
+                                                        class="btn btn-success btn-sm"> اضافة صنف اخر</button>
+                                                </div>
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td colspan="3">اجمالى المرتجع</td>
                                             <td colspan="2"><strong class="invoice-final-result">0</strong> جنيه</td>

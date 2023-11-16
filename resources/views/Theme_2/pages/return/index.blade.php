@@ -11,14 +11,14 @@ $filter = request()->query('filter') ?: null; @endphp
    <!-- DataTales Example -->
    <div class="card mb-4">
        <div class="card">
-           <h5 class="card-header">عرض المرتجعات</h5>
-           <div class="card-header py-3 ">
+            <h5 class="card-header">عرض المرتجعات</h5>
+            <div class="card-header py-3 ">
                 <div class="d-flex" style="flex-direction: row-reverse;">
                     <div class="nav-item d-flex align-items-center m-2">
                         <a href="{{ route('admin.returns.create') }}" class="btn btn-success btn-md" style="color:white">اضافة مرتجع جديدة</a>
                     </div>
                 </div>
-                   <form id="filter-data" method="get" class=" justify-content-between">
+                <form id="filter-data" method="get" class=" justify-content-between">
                     <div class="d-flex justify-content-between" style="background-color: #eee;">
                         <div class="nav-item d-flex align-items-center m-2" style="background-color: #fff;padding: 2px;">
                             <i class="bx bx-search fs-4 lh-0"></i>
@@ -59,17 +59,16 @@ $filter = request()->query('filter') ?: null; @endphp
                         </div>
                     </div>
                 </form>
-</div>
-
-
-           <div class="table-responsive text-nowrap">
+            </div>
+            <div class="table-responsive text-nowrap">
                <table class="table">
                    <thead class="table-light">
                         <tr class="table-dark">
-                            <th>كود المرتجع</th>
+                            <th>كود </th>
                             <th>العميل</th>
-                            <th>اجمالى سعر المرتجع</th>
-                            <th>تاريخ المرتجع</th>
+                            <th>اجمالى سعر</th>
+                            <th>نوع فاتورة</th>
+                            <th>تاريخ</th>
                             <th></th>
                         </tr>
                    </thead>
@@ -89,6 +88,10 @@ $filter = request()->query('filter') ?: null; @endphp
 
                                 <td>
                                     {{ formate_price($customerReturn->total_price) }}
+                                </td>
+
+                                <td>
+                                    {{ $customerReturn->type_return == 'sale' ? 'فاتورة بيع' : 'فاتورة شراء' }}
                                 </td>
                                 <td>
                                     <span class="badge bg-label-primary me-1">

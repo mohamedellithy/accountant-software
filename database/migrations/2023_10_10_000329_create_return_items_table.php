@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->double('price');
             $table->unsignedBigInteger('return_id')->nullable();
-            $table->foreign('return_id')->references('id')->on('returns')->onDelete('set null');
+            $table->foreign('return_id')->references('id')->on('returneds')->onDelete('set null');
             $table->timestamps();
         });
     }

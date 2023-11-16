@@ -37,19 +37,22 @@
                                 @error('customer_id')
                                     <span class="text-danger w-100 fs-6">{{ $message }}</span>
                                 @enderror
-
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="basic-default-company"> رقم الجوال</label>
+                                <input type="text" class="form-control" id="customerphone" placeholder=""
+                                    name="customerphone" value="" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="basic-default-company">نوع الفاتورة</label>
+                                <select name="type_return_bill" class="form-control">
+                                    <option value="sale"       @if($customerReturn->type_return == 'sale') selected @endif>فاتورة البيع</option>
+                                    <option value="purchasing" @if($customerReturn->type_return == 'purchasing') selected @endif>فاتورة الشراء</option>
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <table class="table table-bordered container-table">
                                     <tbody id="dynamicTable">
-                                        <tr>
-                                            <td colspan="5" style="text-align: left">
-                                                <div class="">
-                                                    <button type="button" name="add" id="add"
-                                                        class="btn btn-success btn-sm">+</button>
-                                                </div>
-                                            </td>
-                                        </tr>
                                         @foreach($customerReturn->returnitems as $item)
                                             <tr class="dynamic-added">
                                                 <td>
@@ -101,6 +104,14 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
+                                            <td colspan="5">
+                                                <div class="">
+                                                    <button type="button" name="add" id="add"
+                                                        class="btn btn-success btn-sm"> اضافة صنف اخر</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <td colspan="3">اجمالى الفاتورة</td>
                                             <td colspan="2"><strong class="invoice-final-result">{{ $customerReturn->total_price }}</strong> جنيه</td>
                                         </tr>
@@ -137,10 +148,6 @@
                         </div>
                     </div>
                 </div>
-
-
-
-
             </div>
         </form>
     </div>

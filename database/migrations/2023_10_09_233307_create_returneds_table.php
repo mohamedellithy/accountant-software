@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('returns', function (Blueprint $table) {
+        Schema::create('returneds', function (Blueprint $table) {
             $table->id();
             $table->string('order_number')->nullable();
             $table->double('total_price',8, 2);
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('returns');
+        Schema::dropIfExists('returneds');
     }
 };
