@@ -33,4 +33,15 @@ if(!function_exists('formate_price')) {
     }
 }
 
+
+function get_balance_stake_holder($customer){
+    $start_balance     = $customer->balance ?: 0;
+    $total_orders      = $customer->orders()->sum('total_price');
+    $total_purchasing_invoices    = $customer->purchasing_invoices()->sum('total_price');
+    $orders_payments              = $customer->customer_payments()->sum('value');
+    $total_purchasing_payments    = $customer->supplier_payments()->sum('value');
+
+    return $start_balance - $total_orders + $total_purchasing_invoices + $orders_payments - $total_purchasing_payments;
+}
+
 ?>

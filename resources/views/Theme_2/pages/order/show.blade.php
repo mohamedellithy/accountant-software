@@ -93,6 +93,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @php $sub_total = 0 @endphp
                                     @foreach($order->orderItems as $order_item)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
@@ -102,13 +103,14 @@
                                             <td>{{ formate_price($order_item->price) }}</td>
                                             <td>{{ formate_price($order_item->price * $order_item->qty)  }}</td>
                                         </tr>
+                                        @php $sub_total += $order_item->price * $order_item->qty @endphp
                                     @endforeach
                                     <tr style="border-top:2px solid black">
                                         <td></td>
                                         <td>
                                             اجمالى البيان فقط قدرة
                                         </td>
-                                        <td colspan="4" style="text-align: left;padding-left: 56px;">{{ formate_price($order->sub_total) }}</td>
+                                        <td colspan="4" style="text-align: left;padding-left: 56px;">{{ formate_price($sub_total) }}</td>
                                     </tr>
                                     <tr>
                                         <td></td>
@@ -134,10 +136,26 @@
                                     <tr>
                                         <td></td>
                                         <td>
-                                            الباقي
+                                            الباقي من ثمن الفاتورة
                                         </td>
                                         <td colspan="4" style="text-align: left;padding-left: 56px;">
-                                            {{ formate_price($order->total_price - $order->order_payments_sum_value) }}
+                                            {{ formate_price(($order->total_price - $order->order_payments_sum_value)) }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            مبالغ سابقة
+                                        </td>
+                                        <td colspan="4" style="text-align: left;padding-left: 56px;">{{ formate_price(get_balance_stake_holder($order->customer) - ($order->total_price - $order->order_payments_sum_value)) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            اجمالى الباقي
+                                        </td>
+                                        <td colspan="4" style="text-align: left;padding-left: 56px;">
+                                            {{ formate_price(get_balance_stake_holder($order->customer)) }}
                                         </td>
                                     </tr>
                                 </tbody>

@@ -38,7 +38,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive text-nowrap">
-                            <table class="table">
+                            <table class="table" Cellpadding="6px">
                                 <thead class="table-light">
                                     <tr height="25" style="background-color:#eee;">
                                         <th height="15" style="padding:35px !important"></th>
@@ -88,13 +88,29 @@
                                         </td>
                                         <td colspan="4" height="35" align="center">{{ formate_price($order->order_payments_sum_value) }}</td>
                                     </tr>
-                                    <tr height="35">
+                                    <tr>
                                         <td></td>
-                                        <td height="35" align="center">
-                                            الباقي
+                                        <td>
+                                            الباقي من ثمن الفاتورة
                                         </td>
-                                        <td colspan="4" height="35" align="center">
-                                            {{ formate_price($order->total_price - $order->order_payments_sum_value) }}
+                                        <td colspan="4" style="text-align: left;padding-left: 56px;">
+                                            {{ formate_price(($order->total_price - $order->order_payments_sum_value)) }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            مبالغ سابقة
+                                        </td>
+                                        <td colspan="4" style="text-align: left;padding-left: 56px;">{{ formate_price(get_balance_stake_holder($order->customer) - ($order->total_price - $order->order_payments_sum_value)) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            اجمالى الباقي
+                                        </td>
+                                        <td colspan="4" style="text-align: left;padding-left: 56px;">
+                                            {{ formate_price(get_balance_stake_holder($order->customer)) }}
                                         </td>
                                     </tr>
                                 </tbody>

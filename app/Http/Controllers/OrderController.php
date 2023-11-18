@@ -142,6 +142,7 @@ class OrderController extends Controller
 
         if($order->orderitems()->count() == count($request->input('addmore'))):
             $order->update([
+                'sub_total'   => $order->orderitems()->sum(DB::raw("(order_items.qty * order_items.price)")),
                 'total_price' => $order->orderitems()->sum(DB::raw("(order_items.qty * order_items.price)")) - $order->discount,
                 'quantity' => $order->orderitems()->count()
             ]);
