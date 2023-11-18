@@ -19,10 +19,7 @@ class CustomerController extends Controller
     {
         $customers = StakeHolder::query();
 
-        $customers = $customers->where('role','customer');
-
-        $customers = $customers->orWhereHas('orders');
-
+        
         $customers = $customers->withCount('orders','purchasing_invoices');
 
         $customers = $customers->withSum('orders','total_price')
@@ -31,7 +28,12 @@ class CustomerController extends Controller
         $per_page = 10;
         if ($request->has('search')) {
             $customers = $customers->where('name', 'like', '%' . $request->query('search') . '%');
+        } else {
+            $customers = $customers->where('role','customer');
+            $customers = $customers->orWhereHas('orders');
         }
+
+        
         if ($request->has('rows')) {
             $per_page = $request->query('rows');
         }
