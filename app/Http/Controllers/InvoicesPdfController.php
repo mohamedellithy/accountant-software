@@ -107,7 +107,8 @@ class InvoicesPdfController extends Controller
         $pdf::setPrintFooter(false);
         $pdf::setPrintHeader(false);
         $pdf::SetMargins(0,0,0);
+        $pdf::SetAutoPageBreak(TRUE,100);
         $pdf::setHeaderData('',0,'','',array(0,0,0), array(255,255,255) ); 
-        $pdf::Output('كشف-حساب-عميل-'.$id.'.pdf','D');
+        $pdf::Output('كشف-حساب-عميل-'.$customer->name.'.pdf','D');
     }
 }
