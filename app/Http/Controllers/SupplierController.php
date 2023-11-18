@@ -20,15 +20,14 @@ class SupplierController extends Controller
     {
         $suppliers = StakeHolder::query();
 
-        // $suppliers = $suppliers->where('role','supplier');
-
-        // $suppliers = $suppliers->orWhereHas('products');
-
-
         $per_page = 10;
-        if ($request->has('search')) {
+        if ($request->has('search')) {    
             $suppliers = $suppliers->where('name', 'like', '%' . $request->query('search') . '%');
+        } else {
+            $suppliers = $suppliers->where('role','supplier');
+            $suppliers = $suppliers->orWhereHas('products');
         }
+        
         if ($request->has('rows')) {
             $per_page = $request->query('rows');
         }
