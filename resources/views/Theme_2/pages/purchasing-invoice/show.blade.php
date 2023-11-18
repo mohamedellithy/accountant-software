@@ -119,9 +119,23 @@
                                     <tr>
                                         <td></td>
                                         <td>
-                                            اجمالى القيمة المتبقية
+                                            اجمالى الباقي من الفاتورة
                                         </td>
                                         <td colspan="4" style="text-align: left;padding-left: 56px;">{{ formate_price($order->total_price - $order->invoice_payments()->sum('value')) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            مبالغ سابقة
+                                        </td>
+                                        <td colspan="4" style="text-align: left;padding-left: 56px;">{{ formate_price(get_balance_stake_holder($order->supplier) - ($order->total_price - $order->invoice_payments()->sum('value')) ) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            اجمالى الباقي
+                                        </td>
+                                        <td colspan="4" style="text-align: left;padding-left: 56px;">{{ formate_price(get_balance_stake_holder($order->supplier)) }}</td>
                                     </tr>
                                 </tbody>
                             </table>

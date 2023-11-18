@@ -72,7 +72,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive text-nowrap" style="">
-                            <table class="table">
+                            <table class="table" Cellpadding="6px">
                                 <thead class="table-light">
                                     <tr style="background-color:#eee;padding:15px">
                                         <th height="15"></th>
@@ -110,9 +110,23 @@
                                     <tr>
                                         <td height="35"></td>
                                         <td height="35">
-                                            اجمالى القيمة المتبقية
+                                            اجمالى الباقي من الفاتورة
                                         </td>
                                         <td colspan="4" height="35" style="text-align: left;padding-left: 56px;">{{ formate_price($order->total_price - $order->invoice_payments()->sum('value')) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            مبالغ سابقة
+                                        </td>
+                                        <td colspan="4" style="text-align: left;padding-left: 56px;">{{ formate_price(get_balance_stake_holder($order->supplier) - ($order->total_price - $order->invoice_payments()->sum('value')) ) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            اجمالى الباقي
+                                        </td>
+                                        <td colspan="4" style="text-align: left;padding-left: 56px;">{{ formate_price(get_balance_stake_holder($order->supplier)) }}</td>
                                     </tr>
                                 </tbody>
                             </table>
