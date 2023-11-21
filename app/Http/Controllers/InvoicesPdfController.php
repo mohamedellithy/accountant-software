@@ -28,10 +28,10 @@ class InvoicesPdfController extends Controller
     }
 
     public function download_pdf_order_bill($id){
-        $order = Order::with('orderitems','orderitems.product','customer')->withSum('order_payments','value')->where('id',$id)->first();
-        $view = \View::make(config('app.theme').'.pages.order.bills.pdf-bill',compact('order'));
-        $html  = $view->render();
-        $pdf   = new TCPDF();
+        $order  = Order::with('orderitems','orderitems.product','customer')->withSum('order_payments','value')->where('id',$id)->first();
+        $view   = \View::make(config('app.theme').'.pages.order.bills.pdf-bill',compact('order'));
+        $html   = $view->render();
+        $pdf    = new TCPDF();
         $pdf::SetTitle('فاتورة-بيع-رقم-'.$id);
         $pdf::AddPage();
         $pdf::setRTL(true);
@@ -41,14 +41,14 @@ class InvoicesPdfController extends Controller
         $pdf::setPrintHeader(false);
         $pdf::SetMargins(0,0,0);
         $pdf::setHeaderData('',0,'','',array(0,0,0), array(255,255,255) ); 
-        $pdf::Output('فاتورة-بيع-رقم-'.$id.'.pdf','D');
+        $pdf::Output('فاتورة-بيع-رقم-'.$order->customer->name.'-'.$id.'.pdf','D');
     }
 
     public function download_pdf_purchasing_invoices_bill($id){
         $order     = PurchasingInvoice::with('invoice_items','invoice_items.product','supplier')->where('id',$id)->first();
-        $view = \View::make(config('app.theme').'.pages.purchasing-invoice.bills.invoice-bill',compact('order'));
-        $html  = $view->render();
-        $pdf   = new TCPDF();
+        $view      = \View::make(config('app.theme').'.pages.purchasing-invoice.bills.invoice-bill',compact('order'));
+        $html      = $view->render();
+        $pdf       = new TCPDF();
         $pdf::SetTitle('فاتورة-مشتريات-رقم-'.$id);
         $pdf::AddPage();
         $pdf::setRTL(true);
@@ -58,7 +58,7 @@ class InvoicesPdfController extends Controller
         $pdf::setPrintHeader(false);
         $pdf::SetMargins(0,0,0);
         $pdf::setHeaderData('',0,'','',array(0,0,0), array(255,255,255) ); 
-        $pdf::Output('فاتورة-مشتريات-رقم-'.$id.'.pdf','D');
+        $pdf::Output('فاتورة-مشتريات-رقم-'.$order->supplier->name.'-'.$id.'.pdf','D');
     }
 
     public function download_pdf_balance_bill($id){

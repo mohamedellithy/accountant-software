@@ -57,6 +57,15 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/customer-payments-lists/{id}',[PaymentsController::class,'customer_payments_lists'])->name('customer-payments-lists');
         Route::get('/supplier-payments-lists/{id}',[PaymentsController::class,'supplier_payments_lists'])->name('supplier-payments-lists');
         Route::post('stake-holder/add-payments/{id}',[PaymentsController::class,'stake_holder_add_payments'])->name('stake_holder.add-payments');
+        
+        Route::get('edit-customer-payment/{payment_id}',[PaymentsController::class,'edit_customer_payment'])->name('customer-payment.edit');
+        Route::put('update-customer-payment/{payment_id}',[PaymentsController::class,'update_customer_payment'])->name('customer-payment.update');
+        Route::delete('destroy-customer-payment/{payment_id}',[PaymentsController::class,'destroy_customer_payment'])->name('customer-payment.destroy');
+        
+        Route::get('edit-supplier-payment/{payment_id}',[PaymentsController::class,'edit_supplier_payment'])->name('supplier-payment.edit');
+        Route::put('update-supplier-payment/{payment_id}',[PaymentsController::class,'update_supplier_payment'])->name('supplier-payment.update');
+        Route::delete('destroy-supplier-payment/{payment_id}',[PaymentsController::class,'destroy_supplier_payment'])->name('supplier-payment.destroy');
+        
     });
 });
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

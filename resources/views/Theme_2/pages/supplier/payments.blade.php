@@ -62,6 +62,7 @@
                                 <th>قيمة الدفعة</th>
                                 <th>نوع العملية</th>
                                 <th>رقم الفاتورة</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
@@ -97,6 +98,30 @@
                                             غير مرفق فاتورة 
                                         @endif
                                     </td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <a class="crud edit-payment" data-payment-type="{{ class_basename($payment) }}" data-payment-id="{{ $payment->id }}">
+                                                <i class="fas fa-edit text-primary"></i>
+                                            </a>
+                                            @if(class_basename($payment) == 'CustomerPayment')
+                                                <form  method="post" action="{{ route('admin.customer-payment.destroy', $payment->id) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <a class="delete-item crud" data-payment-name="{{ $payment->id }}">
+                                                        <i class="fas fa-trash-alt  text-danger"></i>
+                                                    </a>
+                                                </form>
+                                            @elseif(class_basename($payment) == 'SupplierPayment')
+                                                <form  method="post" action="{{ route('admin.supplier-payment.destroy', $payment->id) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <a class="delete-item crud" data-payment-name="{{ $payment->value }}">
+                                                        <i class="fas fa-trash-alt  text-danger"></i>
+                                                    </a>
+                                                </form>
+                                            @endif
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -111,3 +136,40 @@
 </div>
 <!-- /.container-fluid -->
 @endsection
+
+
+@push('script')
+<script>
+   jQuery('.edit-payment').click(function(){
+       let data_edit = jQuery(this).attr('data-payment-id');
+       let payment_type = jQuery(this).attr('data-payment-type');
+       let Popup = jQuery('#modalCenter').modal('show');
+       let url   = "";
+       if(payment_type == 'SupplierPayment'){
+           url = "{{ route('admin.supplier-payment.edit',':id') }}";
+       } else {
+           url = "{{ route('admin.customer-payment.edit',':id') }}";
+       }
+
+       url = url.replace(':id',data_edit);
+       $.ajax({
+           url:url,
+           type:"GET",
+           success: function(data){
+               if(data.status == true){
+                   jQuery('#modal-content-inner').html(data.view);
+               }
+               console.log(data);
+           }
+       })
+       console.log(Popup);
+   });
+
+   jQuery('.delete-item').click(function(){
+       let customer_name = jQuery(this).attr('data-payment-name');
+       if(confirm('هل متأكد من اتمام حذف المدفوعات قيمة #'+ customer_name)){
+           jQuery(this).parents('form').submit();
+       }
+   });
+</script>
+@endpush

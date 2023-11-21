@@ -114,4 +114,46 @@ class PaymentsController extends Controller
         SupplierPayment::where('id',$id)->delete();
         return back();
     }
+
+    public function edit_customer_payment($payment_id){
+        $payment = CustomerPayment::where('id',$payment_id)->first();
+        return response()->json([
+            'status' => true,
+            'view'   => view(config('app.theme').'.pages.customer.model.payment', compact('payment'))->render()
+        ]);
+    }
+
+    public function update_customer_payment(Request $request,$payment_id){
+        CustomerPayment::where('id',$payment_id)->update([
+            'value' => $request->input('value')
+        ]);
+
+        return back();
+    }
+
+    public function destroy_customer_payment(Request $request,$payment_id){
+        CustomerPayment::where('id',$payment_id)->delete();
+        return back();
+    }
+
+    public function edit_supplier_payment(Request $request,$payment_id){
+        $payment = SupplierPayment::where('id',$payment_id)->first();
+        return response()->json([
+            'status' => true,
+            'view'   => view(config('app.theme').'.pages.customer.model.payment', compact('payment'))->render()
+        ]);
+    }
+
+    public function update_supplier_payment(Request $request,$payment_id){
+        SupplierPayment::where('id',$payment_id)->update([
+            'value' => $request->input('value')
+        ]);
+
+        return back();
+    }
+
+    public function destroy_supplier_payment(Request $request,$payment_id){
+        SupplierPayment::where('id',$payment_id)->delete();
+        return back();
+    }
 }
