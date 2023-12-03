@@ -173,7 +173,7 @@
                                 <div class="mb-3 new-payment" @if($order->payment_type == 'cashe') style="display: none" @endif>
                                     <label class="form-label" for="basic-default-company">اضافة دفعة من الفاتورة</label>
                                     <input type="number" class="form-control" placeholder=""
-                                    name="payment_value" value="{{ $order->total_price - $order->order_payments()->sum('value') }}" max="{{ $order->total_price - $order->order_payments()->sum('value') }}" />
+                                    name="payment_value" value="0"  max="{{ $order->total_price - $order->order_payments()->sum('value') }}" />
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-danger">تعديل الفاتورة</button>

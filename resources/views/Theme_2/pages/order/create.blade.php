@@ -168,7 +168,7 @@
                                 <div class="mb-3 new-payment" style="display: none">
                                     <label class="form-label" for="basic-default-company">اضافة دفعة من الفاتورة</label>
                                     <input type="text" class="form-control" placeholder=""
-                                    name="payment_value" value="" />
+                                    name="payment_value" value="0" />
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary">اضافة الفاتورة</button>

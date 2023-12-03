@@ -13,6 +13,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\PurchasingInvoiceController;
 use App\Http\Controllers\InvoicesPdfController;
+use App\Http\Controllers\SetAccount;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,4 +70,6 @@ Route::group(['middleware' => 'auth'], function () {
     });
 });
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('set-password',[SetAccount::class,'set_password']);
+Route::post('save-password',[SetAccount::class,'save_password'])->name('save-password');
 // Route::get('getPhone/{id}', [OrderController::class])->name('getPhone');

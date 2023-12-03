@@ -42,4 +42,5 @@ class LoginController extends Controller
     {
         return view(config('app.theme').'.auth.login');
     }
+    
 }

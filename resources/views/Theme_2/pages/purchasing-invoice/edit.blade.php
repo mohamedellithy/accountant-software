@@ -124,7 +124,7 @@
                                 <div class="mb-3 new-payment" @if($order->payment_type == 'cashe') style="display: none" @endif>
                                     <label class="form-label" for="basic-default-company">اضافة دفعة من الفاتورة</label>
                                     <input type="text" class="form-control" placeholder=""
-                                    name="payment_value" value="{{ $order->total_price - $order->invoice_payments()->sum('value') }}" max="{{ $order->total_price - $order->invoice_payments()->sum('value') }}"/>
+                                    name="payment_value" value="0"  max="{{ $order->total_price - $order->invoice_payments()->sum('value') }}"/>
                                 </div>
                             </div>
                             <div class="float-end">
