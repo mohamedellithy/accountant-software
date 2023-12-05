@@ -182,6 +182,106 @@
                                             {{ formate_price($balance) }} 
                                         </td>
                                     </tr>
+                                @elseif(isset($order->returned_id))
+                                    @if($order->type_return == 'sale')
+                                        @php $balance = $balance + ($order->quantity * $order->price)  @endphp
+                                        @php $debit  += $order->quantity * $order->price @endphp
+                                    @endif
+                                    @if($order->type_return == 'purchasing')
+                                        @php $balance  = $balance - ($order->quantity * $order->price)  @endphp
+                                        @php $credit  += $order->quantity * $order->price @endphp
+                                    @endif
+                                    <tr>
+                                        <td>
+                                            <strong>
+                                                {{ $order->returned_id }}#
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-label-primary me-1">
+                                                {{ date('Y-m-d',strtotime($order->created_at)) }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            مرتجعات من فاتورة 
+                                            @if($order->type_return == 'purchasing')
+                                               شراء
+                                            @endif
+                                            @if($order->type_return == 'sale')
+                                               بيع
+                                            @endif
+                                        </td>
+                                        <td>
+                                            {{ isset($order->product_name) ? $order->product_name : '-' }} 
+                                        </td>
+                                        <td>
+                                            {{ isset($order->quantity) ? $order->quantity : '-' }} 
+                                        </td>
+                                        <td>
+                                            {{ isset($order->price) ? formate_price($order->price) : '-' }} 
+                                        </td>
+                                        @if($order->type_return == 'purchasing')
+                                            <td>
+                                                {{ isset($order->quantity) ? formate_price($order->quantity * $order->price) : '-' }}
+                                            </td>
+                                            <td>
+                                                - 
+                                            </td>
+                                        @endif
+                                        @if($order->type_return == 'sale')
+                                            <td>
+                                                - 
+                                            </td>
+                                            <td>
+                                                {{ isset($order->quantity) ? formate_price($order->quantity * $order->price) : '-' }}
+                                            </td>
+                                        @endif
+                                        <td style="direction: ltr;">
+                                            {{ formate_price($balance) }} 
+                                        </td>
+                                    </tr>
+                                @elseif(isset($order->returns_payments_id))
+                                    @if($order->type_return == 'sale')
+                                        @php $balance = $balance - $order->payment_values  @endphp
+                                        @php $credit  += $order->payment_values @endphp
+                                    @endif
+                                    @if($order->type_return == 'purchasing')
+                                        @php $balance = $balance + $order->payment_values  @endphp
+                                        @php $debit  += $order->payment_values @endphp
+                                    @endif
+                                    <tr>
+                                        <td>
+                                            <strong>
+                                                -
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-label-primary me-1">
+                                                {{ date('Y-m-d',strtotime($order->created_at)) }}
+                                            </span>
+                                        </td>
+                                        @if($order->type_return == 'purchasing')
+                                            <td colspan="5">
+                                                مبلغ محصل مرتجعات لفاتورة شراء
+                                            </td>
+                                            <td colspan="1">
+                                                {{ formate_price($order->payment_values) }} 
+                                            </td>
+                                        @endif
+
+                                        @if($order->type_return == 'sale')
+                                            <td colspan="4">
+                                                مبلغ مدفوع مرتجعات لفاتورة بيع
+                                            </td>
+                                            <td colspan="2">
+                                                {{ formate_price($order->payment_values) }} 
+                                            </td>
+                                        @endif
+
+                                        <td style="direction: ltr;">
+                                            {{ formate_price($balance) }} 
+                                        </td>
+                                    </tr>
                                 @endif
                             @endforeach
                             <tr style="background-color: #E8F5E9;border: 4px solid #171615;">

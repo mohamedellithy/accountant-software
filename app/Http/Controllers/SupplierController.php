@@ -94,6 +94,7 @@ class SupplierController extends Controller
         ->select('purchasing_invoices.id as purchasing_invoices_id','purchasing_invoices.total_price','invoice_items.qty','invoice_items.price','purchasing_invoices.created_at','products.name as product_name')
         ->groupBy('purchasing_invoices.id','invoice_items.id')
         ->get();
+        
 
 
 
@@ -107,9 +108,25 @@ class SupplierController extends Controller
         ])->select('supplier_payments.id as supplier_payments_id','supplier_payments.value as payment_values','supplier_payments.created_at','supplier_payments.p_invoice_id as id')
           ->get();
 
+        $returned_items = DB::table('returneds')->where('returneds.customer_id',$id)
+          ->join('return_items','returneds.id','=','return_items.return_id')
+          ->join('products','return_items.product_id','=','products.id')
+          ->select('returneds.id as returned_id','returneds.total_price','returneds.type_return','return_items.quantity','return_items.price','returneds.created_at','products.name as product_name')
+          ->groupBy('returneds.id','return_items.id')
+          ->get();
+        
+        $returned_payments = DB::table('returns_payments')->where([
+            'returns_payments.stake_holder_id' => $id
+        ])->select('returns_payments.id as returns_payments_id','returns_payments.value as payment_values','returns_payments.type_return','returns_payments.created_at','returns_payments.r_invoice_id as id')
+          ->get();
+
         $orders = $orders_items->merge($orders_payemnts);
 
         $orders = $orders->merge($invoices_payments);
+
+        $orders = $orders->merge($returned_items);
+
+        $orders = $orders->merge($returned_payments);
 
         $orders = $orders->merge($purchasing_items)->sortBy('created_at');
 
