@@ -132,7 +132,7 @@ class ReturnsController extends Controller
             //     'value'           => $customerReturn->total_price,
             //     'type_return'     => $request->input('type_return_bill')
             // ]);
-            
+
         else:
             $customerReturn->delete();
         endif;
