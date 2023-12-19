@@ -126,12 +126,12 @@ class ReturnsController extends Controller
                 'total_price' => $customerReturn->returnitems()->sum(DB::raw("(return_items.quantity * return_items.price)")),
             ]);
 
-            ReturnsPayment::create([
-                'stake_holder_id' => $request->input('customer_id'),
-                'r_invoice_id'    => $customerReturn->id,
-                'value'           => $customerReturn->total_price,
-                'type_return'     => $request->input('type_return_bill')
-            ]);
+            // ReturnsPayment::create([
+            //     'stake_holder_id' => $request->input('customer_id'),
+            //     'r_invoice_id'    => $customerReturn->id,
+            //     'value'           => $customerReturn->total_price,
+            //     'type_return'     => $request->input('type_return_bill')
+            // ]);
             
         else:
             $customerReturn->delete();
@@ -248,13 +248,13 @@ class ReturnsController extends Controller
 
             ]);
 
-            ReturnsPayment::where([
-                'r_invoice_id'    => $customerReturn->id,
-            ])->update([
-                'stake_holder_id' => $request->input('customer_id'),
-                'value'           => $customerReturn->total_price,
-                'type_return'     => $request->input('type_return_bill')
-            ]);
+            // ReturnsPayment::where([
+            //     'r_invoice_id'    => $customerReturn->id,
+            // ])->update([
+            //     'stake_holder_id' => $request->input('customer_id'),
+            //     'value'           => $customerReturn->total_price,
+            //     'type_return'     => $request->input('type_return_bill')
+            // ]);
 
         else:
             $customerReturn->delete();
