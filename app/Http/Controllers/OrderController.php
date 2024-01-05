@@ -168,6 +168,8 @@ class OrderController extends Controller
         // foreach ($request->addmore as $item) {
         //     $stock[] = Product::where('id', $item->product_id)->value('quantity');
         // }
+
+        dd($request->all());
         $request->validate([
             'order_number'         => ['required','unique:orders,order_number,'.$id],
             'addmore.*.product_id' => 'required',
