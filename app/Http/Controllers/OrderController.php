@@ -181,8 +181,6 @@ class OrderController extends Controller
             'id' => $id
         ])->first();
 
-        dd($request->all(),$order->orderItems());
-
         $old_payment_type = $order->payment_type;
 
         $order->update([
@@ -197,7 +195,7 @@ class OrderController extends Controller
 
         array_filter($request->input('addmore'));
 
-        $order->orderItems()->delete();
+        $order->orderitems()->delete();
 
         foreach($request->input('addmore') as $value):
             $product = Product::with('stock')->where('id', $value['product_id'])->first();
