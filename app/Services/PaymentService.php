@@ -14,10 +14,12 @@ class PaymentService
 {
     public static function create_customer_payments_by_order(Order $order,$payment_value = null){
         
-        if($payment_value === '0') return;
+        //if($payment_value === '0') return;
 
         if($order->payment_type === 'cashe'):
             $payment_value = $order->total_price;
+        else:
+            if($payment_value === '0') return;
         endif;
 
         // check if payments is greater than
@@ -41,10 +43,12 @@ class PaymentService
     }
 
     public static function create_supplier_payments_by_invoice(PurchasingInvoice $invoice,$payment_value = null){
-        if($payment_value === '0') return;
+        //if($payment_value === '0') return;
         
         if($invoice->payment_type === 'cashe'):
             $payment_value = $invoice->total_price;
+        else:
+            if($payment_value === '0') return;
         endif;
 
         // check if payments is greater than
