@@ -169,7 +169,7 @@ class OrderController extends Controller
         //     $stock[] = Product::where('id', $item->product_id)->value('quantity');
         // }
 
-        dd($request->all());
+        
         $request->validate([
             'order_number'         => ['required','unique:orders,order_number,'.$id],
             'addmore.*.product_id' => 'required',
@@ -180,6 +180,8 @@ class OrderController extends Controller
         $order = Order::where([
             'id' => $id
         ])->first();
+
+        dd($request->all(),$order->orderItems());
 
         $old_payment_type = $order->payment_type;
 
