@@ -98,9 +98,9 @@ $filter = request()->query('filter') ?: null; @endphp
                                         <a class="crud" href="{{ route('admin.orders.show',$order->id) }}">
                                             <i class="fas fa-eye text-info"></i>
                                         </a>
-                                        {{-- <a href="{{ route('admin.orders.edit',$order->id) }}" class="crud edit-product" data-product-id="{{ $order->id }}">
+                                        <a href="{{ route('admin.orders.edit',$order->id) }}" class="crud edit-product" data-product-id="{{ $order->id }}">
                                             <i class="fas fa-edit text-primary"></i>
-                                        </a> --}}
+                                        </a>
                                         <form  method="post" action="{{ route('admin.orders.destroy', $order->id) }}">
                                             @csrf
                                             @method('DELETE')

@@ -196,7 +196,7 @@
                         </h6>
                    </div>
                    <div class="card-body">
-                        {{-- <a href="{{ route('admin.orders.edit',$order->id) }}" class="btn btn-danger btn-sm">تعديل الفاتورة</a><br/><br/> --}}
+                        <a href="{{ route('admin.orders.edit',$order->id) }}" class="btn btn-danger btn-sm">تعديل الفاتورة</a><br/><br/>
                         <button class="btn btn-primary btn-sm" onclick="printDiv('DivIdToPrint');">طباعة الفاتورة</button>
                         <a href="{{ route('admin.download-pdf-order-bill',['id' => $order->id]) }}" class="btn btn-success btn-sm">تنزيل الفاتورة</a>
                    </div>

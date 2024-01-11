@@ -175,9 +175,9 @@
                         </h6>
                    </div>
                    <div class="card-body">
-                        {{-- <a href="{{ route('admin.purchasing-invoices.edit',$order->id) }}" class="btn btn-danger btn-sm" data-product-id="{{ $order->id }}">
+                        <a href="{{ route('admin.purchasing-invoices.edit',$order->id) }}" class="btn btn-danger btn-sm" data-product-id="{{ $order->id }}">
                             تعديل الفاتورة
-                        </a> --}}
+                        </a>
                         <a href="{{ route('admin.download-pdf-purchasing-invoices-bill',['id' => $order->id]) }}" class="btn btn-success btn-sm">تنزيل الفاتورة</a>
                    </div>
                </div>
