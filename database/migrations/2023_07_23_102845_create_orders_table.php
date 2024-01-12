@@ -24,6 +24,7 @@ return new class extends Migration
             $table->foreign('customer_id')->references('id')->on('stake_holders')->onDelete('set null');
             $table->enum('order_status', ['pending', 'completed', 'canceled', 'not_completed'])->default('pending');
             $table->enum('payment_type', ['cashe', 'postponed'])->default('cashe');
+            $table->enum('update_stock',['0','1'])->default('0');
             $table->timestamps();
         });
     }

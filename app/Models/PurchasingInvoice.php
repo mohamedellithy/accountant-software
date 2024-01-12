@@ -10,7 +10,7 @@ class PurchasingInvoice extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['order_number','total_price', 'quantity', 'supplier_id','payment_type'];
+    protected $fillable = ['order_number','total_price', 'quantity', 'supplier_id','payment_type','update_stock'];
     public function supplier()
     {
         return $this->belongsTo(StakeHolder::class);

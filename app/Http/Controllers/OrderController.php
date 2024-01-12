@@ -51,7 +51,7 @@ class OrderController extends Controller
 
         $profits = DB::table('order_items')->join('stocks','order_items.product_id','=','stocks.product_id')
         ->select('order_items.order_id',DB::raw('SUM((order_items.price - stocks.purchasing_price) * order_items.qty) as profit'))
-        ->groupBy('order_items.order_id')->pluck('profit','order_id')->toArray(); 
+        ->groupBy('order_items.order_id')->pluck('profit','order_id')->toArray();
         return view(config('app.theme').'.pages.order.index', compact('orders','profits'));
 
     }
@@ -107,6 +107,7 @@ class OrderController extends Controller
             'addmore.*.price'      => ['required', 'numeric']
         ]);
 
+        DB::beginTransaction();
         $order = Order::Create([
             'order_number' => $request->input('order_number'),
             'customer_id'  => $request->input('customer_id'),
@@ -130,6 +131,7 @@ class OrderController extends Controller
             endif;
 
             if($value['qty'] > $product->stock->quantity):
+                DB::rollBack();
                 return redirect()->back()->withErrors([
                     'qty' => ['كمية المنتج ' . $product->name . 'اكبر من المخزون']
                 ]);
@@ -148,9 +150,10 @@ class OrderController extends Controller
             ]);
 
             PaymentService::create_customer_payments_by_order($order,$request->input('payment_value'));
-
+            DB::commit();
         else:
-            $order->delete();
+            DB::rollBack();
+            // $order->delete();
         endif;
         return redirect()->route('admin.orders.index')->with('success_message', 'تم اضافة طلب');
 
@@ -164,12 +167,6 @@ class OrderController extends Controller
      */
     public function update(Request $request,$id)
     {
-        // $stock=array();
-        // foreach ($request->addmore as $item) {
-        //     $stock[] = Product::where('id', $item->product_id)->value('quantity');
-        // }
-
-        
         $request->validate([
             'order_number'         => ['required','unique:orders,order_number,'.$id],
             'addmore.*.product_id' => 'required',
@@ -177,6 +174,7 @@ class OrderController extends Controller
             'addmore.*.price'      => ['required', 'numeric']
         ]);
 
+        DB::beginTransaction();
         $order = Order::where([
             'id' => $id
         ])->first();
@@ -195,7 +193,14 @@ class OrderController extends Controller
 
         array_filter($request->input('addmore'));
 
-        $order->orderitems()->delete();
+        // $order->orderitems()->delete();
+
+        foreach($order->orderitems as $order_item):
+            Stock::where('product_id',$order_item->product_id)->increment('quantity',$order_item->qty);
+            $order_item->delete();
+        endforeach;
+
+        // $order->order_payments()->delete();
 
         foreach($request->input('addmore') as $value):
             $product = Product::with('stock')->where('id', $value['product_id'])->first();
@@ -208,11 +213,13 @@ class OrderController extends Controller
             endif;
 
             if($value['qty'] > $product->stock->quantity):
+                DB::rollBack();
                 return redirect()->back()->withErrors([
                     'qty' => ['كمية المنتج ' . $product->name . 'اكبر من المخزون']
                 ]);
             else:
                 $order->orderitems()->create($value);
+                Stock::where('product_id',$value['product_id'])->decrement('quantity',$value['qty']);
             endif;
         endforeach;
 
@@ -226,8 +233,10 @@ class OrderController extends Controller
             if(($old_payment_type !=  $request->input('payment_type')) || (!$order->order_payments()->exists()) || ($request->has('payment_value')) ):
                 PaymentService::create_customer_payments_by_order($order,$request->input('payment_value'));
             endif;
+            DB::commit();
         else:
-            $order->delete();
+            // $order->delete();
+            DB::rollBack();
         endif;
         return redirect()->back()->with('success_message', 'تم اضافة طلب');
 
@@ -241,10 +250,16 @@ class OrderController extends Controller
      */
     public function destroy($id)
     {
-        $order = Order::find($id);
-        $order->orderItems()->delete();
-        $order->delete();
-        $order->order_payments()->delete();
+        try{
+            DB::beginTransaction();
+            $order = Order::find($id);
+            $order->orderItems()->delete();
+            $order->delete();
+            $order->order_payments()->delete();
+            DB::commit();
+        } catch(Exception $e){
+            DB::rollBack();
+        }
         return redirect()->route('admin.orders.index');
 
     }

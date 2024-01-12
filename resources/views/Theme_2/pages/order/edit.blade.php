@@ -11,9 +11,10 @@
 
             @if (flash()->level === 'error')
                 This was an error.
+                {{ flash()->message }}
             @endif
         @endif
-        <form action="{{ route('admin.orders.update',$order->id) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.orders.update',$order->id) }}" method="POST" enctype="multipart/form-data" novalidate>
             @csrf
             @method('PUT')
             <div class="row">

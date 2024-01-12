@@ -114,12 +114,14 @@ class PurchasingInvoiceController extends Controller
             'addmore.*.price'      => ['required', 'numeric']
         ]);
 
+        DB::beginTransaction();
         $order = PurchasingInvoice::Create([
             'order_number' => $request->input('order_number'),
             'supplier_id'  => $request->input('supplier_id'),
             'total_price'  => 0,
             'quantity'     => count($request->input('addmore')),
-            'payment_type' => $request->input('payment_type')
+            'payment_type' => $request->input('payment_type'),
+            'update_stock' => $request->input('update_stock') ?: '0'
         ]);
 
         array_filter($request->input('addmore'));
@@ -135,8 +137,6 @@ class PurchasingInvoiceController extends Controller
             endif;
 
             $order->invoice_items()->create($value);
-
-
             if($request->input('update_stock')):
                 $stock = Stock::where('product_id',$product->id)->first();
                 if(!$stock):
@@ -161,8 +161,10 @@ class PurchasingInvoiceController extends Controller
             ]);
 
             PaymentService::create_supplier_payments_by_invoice($order,$request->input('payment_value'));
+            DB::commit();
         else:
-            $order->delete();
+            //$order->delete();
+            DB::rollback();
         endif;
         return redirect()->route('admin.purchasing-invoices.index')->with('success_message', 'تم اضافة طلب');
 
@@ -185,23 +187,16 @@ class PurchasingInvoiceController extends Controller
             'addmore.*.price'      => ['required', 'numeric']
         ]);
 
+        DB::beginTransaction();
         $order = PurchasingInvoice::where([
             'id' => $id
         ])->first();
 
         $old_payment_type = $order->payment_type;
 
-        $order->update([
-            'order_number' => $request->input('order_number'),
-            'supplier_id'  => $request->input('supplier_id'),
-            'total_price'  => 0,
-            'quantity'     => count($request->input('addmore')),
-            'payment_type' => $request->input('payment_type')
-        ]);
-
         array_filter($request->input('addmore'));
 
-        if($request->input('update_stock')):
+        if($order->update_stock == '1'):
             $Invoice_Items=InvoiceItems::where('invoice_id',$order->id)->get();
             foreach($Invoice_Items as $Invoice_Item):
                 $product = Product::where('id', $Invoice_Item->product_id)->first();
@@ -212,7 +207,15 @@ class PurchasingInvoiceController extends Controller
         endif;
 
         $order->invoice_items()->delete();
-
+        $order->update([
+            'order_number' => $request->input('order_number'),
+            'supplier_id'  => $request->input('supplier_id'),
+            'total_price'  => 0,
+            'quantity'     => count($request->input('addmore')),
+            'payment_type' => $request->input('payment_type'),
+            'update_stock' => $request->input('update_stock') ?: '0'
+        ]);
+       
         foreach($request->input('addmore') as $value):
             $product = Product::with('stock')->where('id', $value['product_id'])->first();
             if(!isset($value['price'])):
@@ -228,6 +231,7 @@ class PurchasingInvoiceController extends Controller
             if($request->input('update_stock')):
                 $stock = Stock::where('product_id',$product->id)->first();
                 $stock->quantity += $value['qty'];
+                $stock->purchasing_price  = $value['price'];
                 $stock->save();
             endif;
         endforeach;
@@ -241,9 +245,10 @@ class PurchasingInvoiceController extends Controller
             if(($old_payment_type !=  $request->input('payment_type')) || (!$order->invoice_payments()->exists()) || ($request->has('payment_value')) ):
                 PaymentService::create_supplier_payments_by_invoice($order,$request->input('payment_value'));
             endif;
-
+            DB::commit();
         else:
-            $order->delete();
+            //$order->delete();
+            DB::rollback();
         endif;
         return redirect()->back()->with('success_message', 'تم اضافة طلب');
     }
@@ -256,9 +261,15 @@ class PurchasingInvoiceController extends Controller
      */
     public function destroy($id)
     {
-        $order = PurchasingInvoice::find($id);
-        $order->invoice_items()->delete();
-        $order->delete();
+        try{
+            DB::beginTransaction();
+            $order = PurchasingInvoice::find($id);
+            $order->invoice_items()->delete();
+            $order->delete();
+            DB::commit();
+        } catch(Exception $e){
+            DB::rollback();
+        }
         return redirect()->route('admin.purchasing-invoices.index');
 
     }
