@@ -18,7 +18,7 @@
                      <div class="card-body">
                     <p>   الكمية :{{ $product->quantity }}</p>
                     <p>   السعر :{{ $product->price }}</p>
-                    <p>   اسم المورد :{{ $product->supplier->name }}</p>
+                    <p>   اسم المورد :{{ $product->supplier ? $product->supplier->name : '-' }}</p>
                      </div>
                  </div>
              </div>

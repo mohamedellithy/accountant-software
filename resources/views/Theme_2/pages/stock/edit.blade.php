@@ -41,9 +41,10 @@
                                     اسم المورد</label>
                                 <select name="supplier_id" id="formtabs-country" class="form-control"
                                     data-allow-clear="true" required>
+                                    @php $selected_supplier = $product->supplier ? $product->supplier->id : null @endphp
                                     @foreach ($suppliers as $supplier)
                                         <option value="{{ $supplier->id }}"
-                                            {{ $supplier->id == $product->supplier->id ? 'selected' : '' }}> {{ $supplier->name }}
+                                            {{ $supplier->id == $selected_supplier ? 'selected' : '' }}> {{ $supplier->name }}
                                         </option>
 
                                         {{-- <option value={{ $supplier->id }}>{{ $supplier->name }}</option> --}}

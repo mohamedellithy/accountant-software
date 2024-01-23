@@ -129,10 +129,12 @@
                                 <td>{{ formate_price($stock->purchasing_price) }}</td>
                                 <td>{{ formate_price($stock->sale_price - $stock->purchasing_price) }}</td>
                                 <td>
+                                @if($stock->supplier)
                                     {{ $stock->supplier->name }}
                                     <a class="crud" href="{{ route('admin.suppliers.show', $stock->supplier->id) }}">
                                         <i class="far fa-eye"></i>
                                     </a>
+                                @endif
                                 </td>
                                 <td>
                                     <div class="d-flex">
