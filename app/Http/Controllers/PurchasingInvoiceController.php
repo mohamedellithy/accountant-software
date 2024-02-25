@@ -148,6 +148,8 @@ class PurchasingInvoiceController extends Controller
                     $stock->supplier_id      = $request->input('supplier_id');
                 else:
                     $stock->quantity += $value['qty'];
+                    $stock->purchasing_price = $value['price'];
+                    $stock->sale_price       = $value['price'] + 20;
                 endif;
                 $stock->save();
             endif;
@@ -232,6 +234,7 @@ class PurchasingInvoiceController extends Controller
                 $stock = Stock::where('product_id',$product->id)->first();
                 $stock->quantity += $value['qty'];
                 $stock->purchasing_price  = $value['price'];
+                $stock->sale_price        = $value['price'] + 20;
                 $stock->save();
             endif;
         endforeach;
