@@ -51,7 +51,7 @@
                                                         <select type="text" name="addmore[{{ $loop->index }}][product_id]"
                                                             class="form-control form-select2 selectProduct" required>
                                                             @foreach ($products as $product)
-                                                                <option value={{ $product->id }} @if($item->product_id == $product->id) selected @endif>{{ $product->name }}</option>
+                                                                <option value={{ $product->id }} @if($item->product_id == $product->id) selected @endif>{{ $product->name }} ( {{ $product->stock->quantity }} )</option>
                                                             @endforeach
                                                         </select>
 
@@ -290,7 +290,7 @@
             jQuery(`.tr${count_tr}`).find('.total-item').html("0");
 
             products.forEach(function(product){
-                options +=`<option value="${product.id}">${product.name}</option>`;
+                options +=`<option value="${product.id}">${product.name} (${product.stock.quantity})</option>`;
             });
             jQuery(`.tr${count_tr}`).find('.select-product').html(`
                 <label class="form-label" for="basic-default-company"> اسم المنتج</label>
