@@ -74,7 +74,7 @@ class OrderController extends Controller
     public function create()
     {
         $customers = StakeHolder::select('id','name')->get();
-        $products  = Product::whereHas('stock')->get();
+        $products  = Product::whereHas('stock')->with('stock')->get();
         return view(config('app.theme').'.pages.order.create', compact('customers', 'products'));
     }
 
@@ -87,7 +87,7 @@ class OrderController extends Controller
     {
         $order     = Order::with('orderitems')->where('id',$id)->first();
         $customers = StakeHolder::select('id','name')->get();
-        $products  = Product::all();
+        $products  = Product::whereHas('stock')->with('stock')->get();
         return view(config('app.theme').'.pages.order.edit', compact('order','customers','products'));
     }
 
