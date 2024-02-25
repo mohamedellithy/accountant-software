@@ -44,7 +44,7 @@ class PurchasingInvoiceController extends Controller
         $orders->when(request('filter') == 'high-price', function ($q) {
             return $q->orderBy('total_price', 'desc');
         },function ($q) {
-            return $q->orderBy('total_price', 'asc');
+            return $q->orderBy('created_at', 'desc');
         });
 
         if ($request->has('customer_filter') and $request->get('customer_filter') != "") {
