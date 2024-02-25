@@ -257,7 +257,7 @@
             jQuery(`.tr${count_tr}`).find('td:last-child').html(`<button type="button" class="btn btn-danger btn-sm remove-tr">-</button>`);
             jQuery(`.tr${count_tr}`).find('.total-item').html("0");
             products.forEach(function(product){
-                options +=`<option value="${product.id}">${product.name}</option>`;
+                options +=`<option value="${product.id}">${product.name} (${product.stock.quantity}) </option>`;
             });
             jQuery(`.tr${count_tr}`).find('.select-product').html(`
                 <label class="form-label" for="basic-default-company"> اسم المنتج</label>
