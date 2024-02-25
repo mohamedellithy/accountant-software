@@ -53,7 +53,7 @@
                                                     <select type="text" name="addmore[0][product_id]" class="form-control form-select2 selectProduct" required>
                                                         <option>الصنف</option>
                                                         @foreach ($products as $product)
-                                                            <option value={{ $product->id }}>{{ $product->name }} ( $product->stock->quantity ) </option>
+                                                            <option value={{ $product->id }}>{{ $product->name }} ( {{ $product->stock->quantity }} ) </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
