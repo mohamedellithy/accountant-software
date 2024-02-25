@@ -187,11 +187,11 @@
                             <p class="text-dark" style="padding: 13px;background-color:#eee">{{ $order->order_number }}</p>
                         </h6>
                         <h6 class="m-0 font-weight-bold text-primary">
-                            <p>اسم الزبون</p>
+                            <p>اسم العميل</p>
                             <p class="text-dark" style="padding: 13px;background-color:#eee">{{ $order->customer->name }}</p>
                         </h6>
                         <h6 class="m-0 font-weight-bold text-primary">
-                            <p>رقم هاتف الزبون</p>
+                            <p>رقم هاتف العميل</p>
                             <p class="text-dark" style="padding: 13px;background-color:#eee">{{ $order->customer->phone }}</p>
                         </h6>
                    </div>

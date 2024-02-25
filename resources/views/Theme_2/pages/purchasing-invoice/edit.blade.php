@@ -27,7 +27,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="col-sm-3 col-form-label text-sm-end" for="formtabs-country">
-                                    اسم الزبون</label>
+                                    اسم العميل</label>
                                 <select type="text" name="supplier_id" class="form-control form-select2" required>
                                     <option value=""></option>
                                     @foreach ($suppliers as $supplier)
