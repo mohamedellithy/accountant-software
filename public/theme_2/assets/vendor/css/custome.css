@@ -1,4 +1,9 @@
 .menu-vertical .menu-item .menu-toggle::after {
     left: 1rem !important;
-    right:auto !important;
+    right: auto !important;
+}
+
+.table-static {
+    background-color: #00796B !important;
+    color: white !important;
 }

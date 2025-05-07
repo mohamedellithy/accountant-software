@@ -75,18 +75,36 @@
             <h5 class="card-header">عرض الاصناف</h5>
             <div class="card-header py-3 ">
                 <form id="filter-data" method="get" class="d-flex justify-content-between">
-                    <div class="nav-item d-flex align-items-center m-2" style="background-color: #eee;padding: 8px;">
-                        <i class="bx bx-search fs-4 lh-0"></i>
-                        <input type="text" class="search form-control border-0 shadow-none" onblur="document.getElementById('filter-data').submit()" placeholder="البحث ...." @isset($search) value="{{ $search }}" @endisset id="search" name="search" style="background-color: #eee;"/>
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label" for="formtabs-country">اسم الصنف</label>
+                        <select name="filter[product_id]" onchange="document.getElementById('filter-data').submit()" class="form-select2 form-control"
+                            data-allow-clear="true">
+                            <option value="">الكل</option>
+                            @foreach($products as $product)
+                                <option value={{ $product->id }} @isset($filter['product_id']) @if ($filter['product_id'] == $product->id) selected @endif
+                                    @endisset>{{ $product->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label"  for="formtabs-country">اسم المورد</label>
+                        <select name="filter[supplier_id]" id="formtabs-country" onchange="document.getElementById('filter-data').submit()" class="form-select2 form-control"
+                            data-allow-clear="true">
+                            <option value="">الكل</option>
+                            @foreach($suppliers as $supplier)
+                                <option value={{ $supplier->id }} @isset($filter['supplier_id']) @if ($filter['supplier_id'] == $supplier->id) selected @endif
+                                    @endisset>{{ $supplier->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="d-flex">
                         <div class="nav-item d-flex align-items-center m-2">
-                            <select name="filter" id="largeSelect" onchange="document.getElementById('filter-data').submit()" class="form-control">
+                            <select name="filter[price]" id="largeSelect" onchange="document.getElementById('filter-data').submit()" class="form-control">
                                  <option>فلتر الاصناف</option>
-                                 <option value="high-price" @isset($filter) @if ($filter=='high-price' ) selected @endif
+                                 <option value="high-price" @isset($filter['price']) @if ($filter['price']=='high-price' ) selected @endif
                                      @endisset>
                                      الاعلي سعرا</option>
-                                 <option value="low-price" @isset($filter) @if ($filter=='low-price' ) selected @endif
+                                 <option value="low-price" @isset($filter['price']) @if ($filter['price']=='low-price' ) selected @endif
                                      @endisset>
                                      الاقل سعرا</option>
 
@@ -106,6 +124,20 @@
                 </form>
             </div>
             <div class="table-responsive">
+                @if($statics_for_product)
+                    <table class="table table-static table-bordered">
+                        <tbody>
+                            <tr>
+                                <th>الصنف</th>
+                                <td>{{ $statics_for_product?->name }}</td>
+                                <th>اجمالي المخزن</th>
+                                <td>{{ $statics_for_product?->total_qty ?: 0 }} (وحدة / كيلو)</td>
+                                <th>عدد الموردين الصنف</th>
+                                <td>{{ $statics_for_product?->suppliers_count ?: 0 }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                @endif
                 <table class="table">
                     <thead class="table-light">
                         <tr class="table-dark">
@@ -157,7 +189,7 @@
             </div>
             <br/><br/>
             <div class="d-flex flex-row justify-content-center">
-                {{ $stocks->links() }}
+                {{ $stocks->onEachSide(0)->links() }}
             </div>
         </div>
     </div>

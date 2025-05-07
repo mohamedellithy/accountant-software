@@ -8,6 +8,7 @@ use App\Models\Supplier;
 use App\Models\StakeHolder;
 use Illuminate\Http\Request;
 use App\Http\Requests\StockRequest;
+use Illuminate\Support\Facades\DB;
 
 class StockController extends Controller
 {
@@ -19,33 +20,47 @@ class StockController extends Controller
     public function index(Request $request)
     {
         $stocks = Stock::query();
-
         $stocks = $stocks->with('product','supplier');
-
         $per_page = request('rows') ?: 20;
-        if(request('search') != null):
-            $stocks = $stocks->orWhereHas('supplier', function ($query) {
-                $query->where('name', 'like', '%' . request('search') . '%');
-            })->orWhereHas('product', function ($query) {
-                $query->where('name', 'like', '%' . request('search') . '%');
+        $filter_data = $request->all();
+        $stocks->when(isset($filter_data['filter']) && isset($filter_data['filter']['product_id']),function($query) use($filter_data){
+            $query->whereHas('product', function ($query) use($filter_data){
+                $query->where('id',$filter_data['filter']['product_id']);
             });
-        endif;
-
-        if(request('filter') != null):
-            if (request('filter') == 'high-price'):
-                $stocks = $stocks->orderBy('sale_price', 'desc');
-            elseif (request('filter') == 'low-price'):
-                $stocks = $stocks->orderBy('sale_price', 'asc');
-            endif;
-        else:
-            $stocks->orderBy('id', 'desc');
-        endif;
-
-
+        })->when(isset($filter_data['filter']) && isset($filter_data['filter']['supplier_id']),function($query) use($filter_data){
+            $query->whereHas('supplier', function ($query) use($filter_data){
+                $query->where('id',$filter_data['filter']['supplier_id']);
+            });
+        })->when(
+            isset($filter_data['filter']) && isset($filter_data['filter']['price']),
+            function($query) use($filter_data){
+                if($filter_data['filter']['price'] == 'high-price'){
+                    $query->orderBy('sale_price', 'desc');
+                } elseif($filter_data['filter']['price'] == 'low-price') {
+                    $query->orderBy('sale_price', 'asc');
+                }
+            },
+            function($query){
+                $query->orderBy('id', 'desc');
+            }
+        );
         $stocks  = $stocks->paginate($per_page);
-        $suppliers = StakeHolder::all();
-        $products  = Product::all();
-        return view(config('app.theme').'.pages.stock.index', compact('stocks','suppliers','products'));
+        $suppliers = StakeHolder::select('id','name')->get();
+        $products  = Product::select('id','name')->get();
+        $statics_for_product = null;
+        if(isset($filter_data['filter']) && isset($filter_data['filter']['product_id'])){
+            $statics_for_product = Product::where('products.id',$filter_data['filter']['product_id'])
+            ->leftJoin('stocks','products.id','=','stocks.product_id')
+            ->select(
+                'products.id',
+                'products.name',
+                DB::raw('SUM(stocks.quantity) as total_qty'),
+                DB::raw('SUM(stocks.quantity * stocks.purchasing_price) as total_cost_purchasing'),
+                DB::raw('SUM(stocks.quantity * stocks.sale_price) as total_must_profit'),
+                DB::raw('COUNT(stocks.supplier_id) as suppliers_count')
+            )->groupBy('products.id')->first();
+        }
+        return view(config('app.theme').'.pages.stock.index', compact('stocks','suppliers','products','statics_for_product'));
     }
 
     /**
