@@ -1,0 +1,4 @@
+.menu-vertical .menu-item .menu-toggle::after {
+    left: 1rem !important;
+    right:auto !important;
+}

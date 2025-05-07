@@ -36,6 +36,7 @@ class StockRequest extends FormRequest
     // {
     //     return [
     //         'product_id.required'  => 'المنتج مطلوب',
+    //         'product_id.unique'  => '',
     //         'quantity.required'    => 'حقل الكمية مطلوب',
     //         'purchasing_price.required'  => 'حقل سعر البيع مطلوب',
     //         'sale_price.required'  => 'حقل سعر الشراء مطلوب',

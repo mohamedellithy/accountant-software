@@ -11,7 +11,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="mb-3 col-md-4">
-                                <label class="col-sm-3 col-form-label text-sm-end" for="formtabs-country">
+                                <label class="form-label" for="formtabs-country">
                                     اسم الصنف</label>
                                 <select name="product_id" class="form-select2 form-control"
                                     data-allow-clear="true" required>
@@ -48,7 +48,7 @@
                                 @enderror
                             </div>
                             <div class="mb-3 col-md-4">
-                                <label class="col-sm-3 col-form-label text-sm-end" for="formtabs-country">
+                                <label class="form-label"  for="formtabs-country">
                                     اسم المورد</label>
                                 <select name="supplier_id" id="formtabs-country" class="form-select2 form-control"
                                     data-allow-clear="true" required>

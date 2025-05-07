@@ -22,12 +22,7 @@
         </li>
 
         <!-- products -->
-        <li class="menu-item {{ IsActiveOnlyIf(['admin.products.index','admin.products.show','admin.products.create','admin.products.edit']) }}">
-            <a href="{{ route('admin.products.index') }}" class="menu-link menu-toggle">
-                <i class='menu-icon tf-icons bx bxs-category'></i>
-                <div data-i18n="Layouts">الأصناف</div>
-            </a>
-
+        {{-- <li class="menu-item {{ IsActiveOnlyIf(['admin.products.index','admin.products.show','admin.products.create','admin.products.edit']) }}">
             <ul class="menu-sub">
                 <li class="menu-item {{ IsActiveOnlyIf(['admin.products.index','admin.products.edit','admin.products.show']) }}">
                     <a href="{{ route('admin.products.index') }}" class="menu-link">
@@ -35,19 +30,24 @@
                     </a>
                 </li>
             </ul>
-        </li>
+        </li> --}}
 
         <!-- stock  -->
-        <li class="menu-item {{ IsActiveOnlyIf(['admin.stocks.index']) }}">
+        <li class="menu-item {{ IsActiveOnlyIf(['admin.stocks.index','admin.products.index']) }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class='menu-icon tf-icons bx bxs-package'></i>
-                <div data-i18n="Layouts">المخزن</div>
+                <div data-i18n="Layouts">الاصناف و المخزن</div>
             </a>
 
             <ul class="menu-sub">
+                <li class="menu-item {{ IsActiveOnlyIf(['admin.products.index']) }}">
+                    <a href="{{ route('admin.products.index') }}" class="menu-link">
+                        <div data-i18n="Without navbar">الاصناف</div>
+                    </a>
+                </li>
                 <li class="menu-item {{ IsActiveOnlyIf(['admin.stocks.index']) }}">
                     <a href="{{ route('admin.stocks.index') }}" class="menu-link">
-                        <div data-i18n="Without navbar">عرض</div>
+                        <div data-i18n="Without navbar">المخزن</div>
                     </a>
                 </li>
             </ul>
