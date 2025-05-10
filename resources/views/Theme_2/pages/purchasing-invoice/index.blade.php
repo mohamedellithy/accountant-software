@@ -20,10 +20,10 @@ $filter = request()->query('filter') ?: null; @endphp
                 </div>
                 <form id="filter-data" method="get" class=" justify-content-between">
                     <div class="d-flex justify-content-between" style="background-color: #eee;">
-                        <div class="nav-item d-flex align-items-center m-2" style="background-color: #fff;padding: 2px;">
+                        {{-- <div class="nav-item d-flex align-items-center m-2" style="background-color: #fff;padding: 2px;">
                             <i class="bx bx-search fs-4 lh-0"></i>
                             <input type="text" class="search form-control border-0 shadow-none" onblur="document.getElementById('filter-data').submit()" placeholder="البحث ...." @isset($search) value="{{ $search }}" @endisset id="search" name="search" style="background-color:#fff;"/>
-                        </div>
+                        </div> --}}
 
                         {{-- <div class="nav-item d-flex align-items-center m-2">
                             <select name="customer_filter" id="largeSelect" onchange="document.getElementById('filter-data').submit()" class="form-control form-select2">
@@ -32,8 +32,8 @@ $filter = request()->query('filter') ?: null; @endphp
                                     <option value="{{ $customer->id }}" @isset($customer_filter) @if ($customer_filter == $customer->id ) selected @endif @endisset>{{  $customer->name }}</option>
                                 @endforeach
                             </select>
-                        </div>
-
+                        </div>  --}}
+{{--
                         <div class="nav-item d-flex align-items-center m-2">
                             <label style="color: #636481;">من:</label><br>
                             <input type="date" onchange="document.getElementById('filter-data').submit()" class=" form-control" placeholder="من ...." @isset($from) value="{{ $from }}" @endisset id="from" name="from"/>&ensp;

@@ -48,11 +48,11 @@ class OrderController extends Controller
         endif;
 
         $orders  = $orders->paginate($per_page);
-
+        $customers = StakeHolder::select('id','name')->get();
         $profits = DB::table('order_items')->join('stocks','order_items.product_id','=','stocks.product_id')
         ->select('order_items.order_id',DB::raw('SUM((order_items.price - stocks.purchasing_price) * order_items.qty) as profit'))
         ->groupBy('order_items.order_id')->pluck('profit','order_id')->toArray();
-        return view(config('app.theme').'.pages.order.index', compact('orders','profits'));
+        return view(config('app.theme').'.pages.order.index', compact('orders','profits','customers'));
 
     }
 

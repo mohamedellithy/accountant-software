@@ -15,10 +15,24 @@ $filter = request()->query('filter') ?: null; @endphp
                     </div>
                 </div>
                <form id="filter-data" method="get" class="d-flex justify-content-between">
-                   <div class="nav-item d-flex align-items-center m-2" style="background-color: #eee;padding: 8px;">
-                       <i class="bx bx-search fs-4 lh-0"></i>
+                   {{-- <div class="nav-item d-flex align-items-center m-2" style="background-color: #eee;padding: 8px;">
                        <input type="text" class="search form-control border-0 shadow-none" onblur="document.getElementById('filter-data').submit()" placeholder="البحث ...." @isset($search) value="{{ $search }}" @endisset id="search" name="search" style="background-color: #eee;"/>
+                   </div> --}}
+                   <div class="mb-3 col-md-4">
+                        <label class="form-label"  for="formtabs-country">البحث برقم الفاتورة</label>
+                        <input type="text" class="search form-control border-0 shadow-none" onblur="document.getElementById('filter-data').submit()" placeholder="البحث ...." @isset($search) value="{{ $search }}" @endisset id="search" name="search" style="background-color: #eee;"/>
                    </div>
+                   <div class="mb-3 col-md-4">
+                        <label class="form-label"  for="formtabs-country">اسم العميل</label>
+                        <select name="filter[customer_id]" id="formtabs-country" onchange="document.getElementById('filter-data').submit()" class="form-select2 form-control"
+                            data-allow-clear="true">
+                            <option value="">الكل</option>
+                            @foreach($customers as $customer)
+                                <option value={{ $customer->id }} @isset($filter['customer_id']) @if ($filter['customer_id'] == $customer->id) selected @endif
+                                    @endisset>{{ $customer->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                    <div class="d-flex">
                        <div class="nav-item d-flex align-items-center m-2">
                            <select name="filter" id="largeSelect" onchange="document.getElementById('filter-data').submit()" class="form-control">

@@ -33,6 +33,14 @@ if(!function_exists('formate_price')) {
     }
 }
 
+function generateOrderNumber(){
+    $payment_no = (intval(\App\Models\Order::max('id')) ?? 0) + 1;
+    // fill 000
+    $nextPaymentNumber = str_pad($payment_no, 7, '0', STR_PAD_LEFT);
+    // Compose the full serial
+    return $nextPaymentNumber;
+}
+
 
 function get_balance_stake_holder($customer){
     $start_balance     = $customer->balance ?: 0;

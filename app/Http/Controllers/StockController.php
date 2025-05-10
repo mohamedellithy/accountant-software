@@ -56,8 +56,7 @@ class StockController extends Controller
                 'products.name',
                 DB::raw('SUM(stocks.quantity) as total_qty'),
                 DB::raw('SUM(stocks.quantity * stocks.purchasing_price) as total_cost_purchasing'),
-                DB::raw('SUM(stocks.quantity * stocks.sale_price) as total_must_profit'),
-                DB::raw('COUNT(stocks.supplier_id) as suppliers_count')
+                DB::raw('SUM(stocks.quantity * stocks.sale_price) as total_cost_sale')
             )->groupBy('products.id')->first();
         }
         return view(config('app.theme').'.pages.stock.index', compact('stocks','suppliers','products','statics_for_product'));
@@ -71,13 +70,27 @@ class StockController extends Controller
      */
     public function store(StockRequest $request)
     {
-        Stock::create($request->only([
-            'product_id',
-            'quantity',
-            'sale_price',
-            'purchasing_price',
-            'supplier_id'
-        ]));
+        $product_in_stock = Stock::where([
+            'product_id'  => request('product_id')
+        ])->first();
+
+        if($product_in_stock){
+            $product_in_stock->update([
+                'sale_price' => request('sale_price'),
+                'purchasing_price' => request('purchasing_price'),
+                'supplier_id' => request('supplier_id')
+            ]);
+            $product_in_stock->increment('quantity',request('quantity'));
+        } else {
+            Stock::create($request->only([
+                'product_id',
+                'quantity',
+                'sale_price',
+                'purchasing_price',
+                'supplier_id'
+            ]));
+        }
+
         return redirect()->back()->with('success_message', 'تم اضافة صنف');
     }
 

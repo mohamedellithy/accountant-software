@@ -28,10 +28,10 @@ class StockRequest extends FormRequest
             'purchasing_price' => 'required',
             'sale_price'       => 'required',
             'product_id'       => [
-                'required',
-                Rule::unique('stocks','product_id')->ignore($this->stock)->where(function($query){
-                    $query->where('supplier_id',request('supplier_id'));
-                })
+                'required'
+                // Rule::unique('stocks','product_id')->ignore($this->stock)->where(function($query){
+                //     $query->where('supplier_id',request('supplier_id'));
+                // })
             ],
             'quantity'         => 'required|numeric',
             'supplier_id'      => 'required',

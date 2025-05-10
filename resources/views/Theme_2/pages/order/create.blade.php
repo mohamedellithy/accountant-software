@@ -21,7 +21,7 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <label class="form-label" for="basic-default-company">كود الفاتورة</label>
-                                <input type="text" value="{{ \Illuminate\Support\Str::random(10) }}" class="form-control" placeholder=""
+                                <input type="text" value="{{ generateOrderNumber() }}" class="form-control" placeholder=""
                                     name="order_number" required readonly/>
                             </div>
                             <div class="mb-3">

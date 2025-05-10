@@ -132,8 +132,12 @@
                                 <td>{{ $statics_for_product?->name }}</td>
                                 <th>اجمالي المخزن</th>
                                 <td>{{ $statics_for_product?->total_qty ?: 0 }} (وحدة / كيلو)</td>
-                                <th>عدد الموردين الصنف</th>
-                                <td>{{ $statics_for_product?->suppliers_count ?: 0 }}</td>
+                                <th>اجمالي تكلفة الشراء</th>
+                                <td>{{ $statics_for_product?->total_cost_purchasing ?: 0 }}</td>
+                                <th>اجمالي تكلفة البيع</th>
+                                <td>{{ $statics_for_product?->total_cost_sale ?: 0 }}</td>
+                                <th>اجمالي الربح المتوقع</th>
+                                <td>{{ ($statics_for_product?->total_cost_sale ?: 0) - ($statics_for_product?->total_cost_purchasing ?: 0) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -148,6 +152,7 @@
                             <th>سعر الشراء ( الوحدة / الكيلو) </th>
                             <th>قيمة الربح </th>
                             <th>اسم المورد </th>
+                            <th>تاريخ تحديث الصنف</th>
                             <th>العمليات</th>
                         </tr>
                     </thead>
@@ -168,6 +173,7 @@
                                     </a>
                                 @endif
                                 </td>
+                                <td>{{ date('Y-m-d',strtotime($stock->updated_at)) }}</td>
                                 <td>
                                     <div class="d-flex">
                                         <a class="crud edit-stock" data-stock-id="{{ $stock->id }}">
