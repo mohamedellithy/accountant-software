@@ -41,6 +41,22 @@ function generateOrderNumber(){
     return $nextPaymentNumber;
 }
 
+function generatePurchasingOrderNumber(){
+    $payment_no = (intval(\App\Models\PurchasingInvoice::max('id')) ?? 0) + 1;
+    // fill 000
+    $nextPaymentNumber = str_pad($payment_no, 7, '0', STR_PAD_LEFT);
+    // Compose the full serial
+    return $nextPaymentNumber;
+}
+
+function generateReturnOrderNumber(){
+    $payment_no = (intval(\App\Models\Returned::max('id')) ?? 0) + 1;
+    // fill 000
+    $nextPaymentNumber = str_pad($payment_no, 7, '0', STR_PAD_LEFT);
+    // Compose the full serial
+    return $nextPaymentNumber;
+}
+
 
 function get_balance_stake_holder($customer){
     $start_balance     = $customer->balance ?: 0;

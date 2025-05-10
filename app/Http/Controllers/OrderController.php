@@ -37,11 +37,20 @@ class OrderController extends Controller
             });
         });
 
-        $orders->when(request('filter') == 'sort_asc', function ($q) {
+        $data = $request->all();
+        $orders->when(isset($data['filter']) && isset($data['filter']['sort']) && ($data['filter']['sort'] == 'sort_asc'), function ($q) {
             return $q->orderBy('created_at', 'asc');
         },function ($q) {
             return $q->orderBy('created_at', 'desc');
         });
+
+        $orders->when(isset($data['filter']) && isset($data['filter']['customer_id']), function ($q) use($data) {
+            return $q->whereHas('customer', function ($query) use($data){
+                $query->where('id',$data['filter']['customer_id']);
+            });
+        });
+
+        
 
         if ($request->has('rows')):
             $per_page = $request->query('rows');

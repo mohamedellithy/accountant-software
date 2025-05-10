@@ -33,24 +33,16 @@ class PurchasingInvoiceController extends Controller
             });
         });
 
-        if ($request->has('from') and $request->has('to') and $request->get('from') != "" and $request->get('to') != "") {
-
-            $from=$request->get('from');
-            $to=$request->get('to');
-            $orders->whereBetween('created_at',[$from,$to]);
-        }
-
-
-        $orders->when(request('filter') == 'high-price', function ($q) {
-            return $q->orderBy('total_price', 'desc');
+        $data = $request->all();
+        $orders->when(isset($data['filter']) && isset($data['filter']['sort']) && ($data['filter']['sort'] == 'sort_asc'), function ($q) {
+            return $q->orderBy('created_at', 'asc');
         },function ($q) {
             return $q->orderBy('created_at', 'desc');
         });
 
-        if ($request->has('customer_filter') and $request->get('customer_filter') != "") {
-
-            $orders->where('supplier_id',$request->get('customer_filter'));
-        }
+        $orders->when(isset($data['filter']) && isset($data['filter']['supplier_id']), function ($q) use($data) {
+            return $q->where('supplier_id',$data['filter']['supplier_id']);
+        });
 
 
         if ($request->has('rows')):
@@ -58,9 +50,9 @@ class PurchasingInvoiceController extends Controller
         endif;
 
         $orders = $orders->paginate($per_page);
-        $customers = StakeHolder::select('id','name')->orderBy('name', 'asc')->get();
+        $suppliers = StakeHolder::select('id','name')->orderBy('name', 'asc')->get();
 
-        return view(config('app.theme').'.pages.purchasing-invoice.index', compact('orders','customers'));
+        return view(config('app.theme').'.pages.purchasing-invoice.index', compact('orders','suppliers'));
 
     }
     public function ajax_get_supplier_info($id)
@@ -150,6 +142,7 @@ class PurchasingInvoiceController extends Controller
                     $stock->quantity += $value['qty'];
                     $stock->purchasing_price = $value['price'];
                     $stock->sale_price       = $value['price'] + 20;
+                    $stock->supplier_id      = $request->input('supplier_id');
                 endif;
                 $stock->save();
             endif;
@@ -235,6 +228,7 @@ class PurchasingInvoiceController extends Controller
                 $stock->quantity += $value['qty'];
                 $stock->purchasing_price  = $value['price'];
                 $stock->sale_price        = $value['price'] + 20;
+                $stock->supplier_id      = $request->input('supplier_id');
                 $stock->save();
             endif;
         endforeach;

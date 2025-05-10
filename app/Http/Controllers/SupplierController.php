@@ -19,8 +19,16 @@ class SupplierController extends Controller
     public function index(Request $request)
     {
         $suppliers = StakeHolder::query();
-
         $per_page = 10;
+        if ($request->has('rows')) {
+            $per_page = $request->query('rows');
+        }
+
+        $data = $request->all();
+        $suppliers->when(isset($data['filter']) && isset($data['filter']['supplier_id']), function ($q) use($data) {
+            return $q->where('id',$data['filter']['supplier_id']);
+        });
+
         if ($request->has('search')) {    
             $suppliers = $suppliers->where('name', 'like', '%' . $request->query('search') . '%');
         } else {
@@ -28,15 +36,13 @@ class SupplierController extends Controller
             $suppliers = $suppliers->orWhereHas('products');
         }
         
-        if ($request->has('rows')) {
-            $per_page = $request->query('rows');
-        }
 
         $suppliers = $suppliers->withCount('orders','purchasing_invoices')
         ->withSum('orders','total_price')
         ->withSum('purchasing_invoices','total_price');
         $suppliers = $suppliers->paginate($per_page);
-        return view(config('app.theme').'.pages.supplier.index', compact('suppliers'));
+        $suppliers_all = StakeHolder::select('id','name')->get();
+        return view(config('app.theme').'.pages.supplier.index', compact('suppliers','suppliers_all'));
     }
 
     /**

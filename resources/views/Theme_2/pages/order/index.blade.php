@@ -33,16 +33,18 @@ $filter = request()->query('filter') ?: null; @endphp
                             @endforeach
                         </select>
                     </div>
-                   <div class="d-flex">
-                       <div class="nav-item d-flex align-items-center m-2">
-                           <select name="filter" id="largeSelect" onchange="document.getElementById('filter-data').submit()" class="form-control">
-                                <option>فلتر الاصناف</option>
-                                <option value="high-price" @isset($filter) @if ($filter=='high-price' ) selected @endif
+                    <div class="d-flex">
+                    <div class="nav-item d-flex align-items-center m-2">
+                           <select name="filter[sort]" id="largeSelect" onchange="document.getElementById('filter-data').submit()" class="form-control">
+                                <option>فلتر الطلبات</option>
+                                <option value="sort_desc" @isset($filter['sort']) @if ($filter['sort']=='sort_desc' ) selected @endif
                                     @endisset>
-                                    الاعلي سعرا</option>
-                                <option value="low-price" @isset($filter) @if ($filter=='low-price' ) selected @endif
+                                    الأحدث    
+                                </option>
+                                <option value="sort_asc" @isset($filter['sort']) @if ($filter['sort']=='sort_asc' ) selected @endif
                                     @endisset>
-                                    الاقل سعرا</option>
+                                    الأقدم
+                                </option>
 
                             </select>
                        </div>

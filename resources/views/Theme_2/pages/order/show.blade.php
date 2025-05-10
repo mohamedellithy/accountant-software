@@ -56,8 +56,7 @@
                     <div class="card-header py-3">
                         <div class="d-flex invoice-header">
                             <div class="head">
-                                <strong>Green Egypt</strong><br/>
-                                <strong>جرين ايجبت للمبيدات و الاسمدة</strong>
+                                <strong>{{ env('logo_pdf_title') }}</strong>
                             </div>
                             <div class="date d-flex">
                                 <strong>تحرير في </strong>

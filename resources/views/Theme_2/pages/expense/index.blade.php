@@ -49,8 +49,8 @@
             {{-- <h5 class="card-header">عرض الاصناف</h5> --}}
             <div class="card-header py-3 ">
                    <form id="filter-data" method="get" class=" justify-content-between">
-                    <div class="d-flex justify-content-between" style="background-color: #eee;">
-                        <div class="nav-item d-flex align-items-center m-2" style="background-color: #fff;padding: 2px;">
+                    <div class="d-flex justify-content-between" style="">
+                        <div class="nav-item d-flex align-items-center m-2" style="background-color: #fff;padding: 2px;border: 2px solid;">
                             <i class="bx bx-search fs-4 lh-0"></i>
                             <input type="text" class="search form-control border-0 shadow-none" onblur="document.getElementById('filter-data').submit()" placeholder="البحث ...." @isset($search) value="{{ $search }}" @endisset id="search" name="search" style="background-color:#fff;"/>
                         </div>
@@ -60,13 +60,6 @@
                             <input type="date" onchange="document.getElementById('filter-data').submit()" class=" form-control" placeholder="من ...." @isset($from) value="{{ $from }}" @endisset id="from" name="from"/>&ensp;
                                 <label style="color: #636481;">الي:</label><br>
                             <input type="date" onchange="document.getElementById('filter-data').submit()" class=" form-control" placeholder="الي ...." @isset($to) value="{{ $to }}" @endisset id="to" name="to"/>
-                        </div>
-                        <div class="nav-item d-flex align-items-center m-2">
-                            <select name="filter" id="largeSelect" onchange="document.getElementById('filter-data').submit()" class="form-control">
-                                <option value="">فلتر الاصناف</option>
-                                <option value="high-price" @isset($filter) @if ($filter=='high-price' ) selected @endif @endisset> الاعلي سعرا</option>
-                                <option value="low-price" @isset($filter) @if ($filter=='low-price' ) selected @endif @endisset>الاقل سعرا</option>
-                            </select>
                         </div>
                         <div class="nav-item d-flex align-items-center m-2">
                             <label style="padding: 0px 5px;color: #636481;">المعروض</label>

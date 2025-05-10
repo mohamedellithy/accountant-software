@@ -22,7 +22,7 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <label class="form-label" for="basic-default-company">كود الفاتورة</label>
-                                <input type="text" value="{{ $order->order_number }}" class="form-control" placeholder=""
+                                <input type="text" value="{{ $order->order_number  ?: generatePurchasingOrderNumber() }}" class="form-control" placeholder=""
                                     name="order_number"/>
                             </div>
                             <div class="mb-3">

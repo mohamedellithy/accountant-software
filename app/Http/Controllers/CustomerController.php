@@ -26,13 +26,17 @@ class CustomerController extends Controller
         ->withSum('purchasing_invoices','total_price');
 
         $per_page = 10;
-        if ($request->has('search')) {
+        $data = $request->all();
+        $customers->when(isset($data['filter']) && isset($data['filter']['customer_id']), function ($q) use($data) {
+            return $q->where('id',$data['filter']['customer_id']);
+        });
+        
+        if($request->has('search')) {
             $customers = $customers->where('name', 'like', '%' . $request->query('search') . '%');
         } else {
             $customers = $customers->where('role','customer');
             $customers = $customers->orWhereHas('orders');
         }
-
 
         if ($request->has('rows')) {
             $per_page = $request->query('rows');
@@ -40,7 +44,9 @@ class CustomerController extends Controller
 
         $customers = $customers->paginate($per_page);
 
-        return view(config('app.theme').'.pages.customer.index', compact('customers'));
+        $customers_all = StakeHolder::select('id','name')->get();
+
+        return view(config('app.theme').'.pages.customer.index', compact('customers','customers_all'));
     }
 
 
