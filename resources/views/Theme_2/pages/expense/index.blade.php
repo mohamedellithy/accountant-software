@@ -119,8 +119,10 @@
 @endsection
 @push('style')
     <style>
-        .date_from_to_filter{
-            flex-wrap: wrap !important;
+        @media (max-width: 768px) {
+            .date_from_to_filter{
+                flex-wrap: wrap !important;
+            }
         }
     </style>
 @endpush
