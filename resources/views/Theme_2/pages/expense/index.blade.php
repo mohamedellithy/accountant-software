@@ -50,11 +50,6 @@
             <div class="card-header py-3 ">
                    <form id="filter-data" method="get" class=" justify-content-between">
                     <div class="d-flex justify-content-between" style="">
-                        <div class="nav-item d-flex align-items-center m-2" style="background-color: #fff;padding: 2px;border: 2px solid;">
-                            <i class="bx bx-search fs-4 lh-0"></i>
-                            <input type="text" class="search form-control border-0 shadow-none" onblur="document.getElementById('filter-data').submit()" placeholder="البحث ...." @isset($search) value="{{ $search }}" @endisset id="search" name="search" style="background-color:#fff;"/>
-                        </div>
-
                         <div class="nav-item date_from_to_filter d-flex align-items-center m-2">
                             <label style="color: #636481;">من:</label><br>
                             <input type="date" onchange="document.getElementById('filter-data').submit()" class=" form-control" placeholder="من ...." @isset($from) value="{{ $from }}" @endisset id="from" name="from"/>&ensp;
