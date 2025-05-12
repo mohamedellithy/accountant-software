@@ -39,7 +39,7 @@
                                     <span class="text-danger w-100 fs-6">{{ $message }}</span>
                                 @enderror
                             </div>
-                            <div class="mb-3 col-md-4">
+                            <div class="mb-3 col-12 col-md-4">
                                 <label class="form-label" for="basic-default-company"> سعر البيع ( الوحدة / الكيلو ) </label>
                                 <input type="number" step="0.1" class="form-control" id="basic-default-fullname" placeholder=""
                                     name="sale_price" value="{{ old('sale_price') }}" required />
@@ -75,7 +75,7 @@
             <h5 class="card-header">عرض الاصناف</h5>
             <div class="card-header py-3 ">
                 <form id="filter-data" method="get" class="d-flex justify-content-between">
-                    <div class="mb-3 col-md-4">
+                    <div class="mb-3 col-12 col-md-4">
                         <label class="form-label" for="formtabs-country">اسم الصنف</label>
                         <select name="filter[product_id]" onchange="document.getElementById('filter-data').submit()" class="form-select2 form-control"
                             data-allow-clear="true">
@@ -86,7 +86,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="mb-3 col-md-4">
+                    <div class="mb-3 col-12 col-md-4">
                         <label class="form-label"  for="formtabs-country">اسم المورد</label>
                         <select name="filter[supplier_id]" id="formtabs-country" onchange="document.getElementById('filter-data').submit()" class="form-select2 form-control"
                             data-allow-clear="true">
