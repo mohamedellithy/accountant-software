@@ -22,11 +22,11 @@ $filter = request()->query('filter') ?: null; @endphp
                    {{-- <div class="nav-item d-flex align-items-center m-2" style="background-color: #eee;padding: 8px;">
                        <input type="text" class="search form-control border-0 shadow-none" onblur="document.getElementById('filter-data').submit()" placeholder="البحث ...." @isset($search) value="{{ $search }}" @endisset id="search" name="search" style="background-color: #eee;"/>
                    </div> --}}
-                   <div class="mb-3 col-md-4">
+                   <div class="mb-3 col-12 col-md-4">
                         <label class="form-label"  for="formtabs-country">البحث برقم الفاتورة</label>
                         <input type="text" class="search form-control border-0 shadow-none" onblur="document.getElementById('filter-data').submit()" placeholder="البحث ...." @isset($search) value="{{ $search }}" @endisset id="search" name="search" style="background-color: #eee;"/>
                    </div>
-                   <div class="mb-3 col-md-4">
+                   <div class="mb-3 col-12 col-md-4">
                         <label class="form-label"  for="formtabs-country">اسم العميل</label>
                         <select name="filter[supplier_id]" id="formtabs-country" onchange="document.getElementById('filter-data').submit()" class="form-select2 form-control"
                             data-allow-clear="true">
@@ -43,7 +43,7 @@ $filter = request()->query('filter') ?: null; @endphp
                                 <option>فلتر الطلبات</option>
                                 <option value="sort_desc" @isset($filter['sort']) @if ($filter['sort']=='sort_desc' ) selected @endif
                                     @endisset>
-                                    الأحدث    
+                                    الأحدث
                                 </option>
                                 <option value="sort_asc" @isset($filter['sort']) @if ($filter['sort']=='sort_asc' ) selected @endif
                                     @endisset>

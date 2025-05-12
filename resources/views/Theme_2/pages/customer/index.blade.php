@@ -54,7 +54,7 @@ $filter = request()->query('filter') ?: null;
            <h5 class="card-header">عرض العملاء</h5>
            <div class="card-header py-3 ">
                <form id="filter-data" method="get" class="d-flex justify-content-between">
-                   <div class="mb-3 col-md-4">
+                   <div class="mb-3 col-12 col-md-4">
                         <label class="form-label"  for="formtabs-country">اسم العميل</label>
                         <select name="filter[customer_id]" id="formtabs-country" onchange="document.getElementById('filter-data').submit()" class="form-select2 form-control"
                             data-allow-clear="true">
