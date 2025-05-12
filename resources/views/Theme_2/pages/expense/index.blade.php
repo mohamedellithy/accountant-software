@@ -72,7 +72,7 @@
                     <thead class="table-light">
                         <tr class="table-dark">
                             <th>كود المصروف </th>
-                            <th>الاسم</th>
+                            <th>البند</th>
                             <th>المبلغ</th>
                             <th>التاريخ</th>
                             <th>العمليات</th>
