@@ -89,9 +89,11 @@ $filter = request()->query('filter') ?: null; @endphp
                                         </strong>
                                     </td>
                                     <td class="width-16">
-                                        <a class="crud" href="{{ route('admin.suppliers.show', $order->supplier->id) }}">
-                                            {{ $order->supplier ? $order->supplier->name : '-' }}
-                                        </a>
+                                        @if($order?->supplier)
+                                            <a class="crud" href="{{ route('admin.suppliers.show', $order?->supplier?->id) }}">
+                                                {{ $order?->supplier ? $order?->supplier?->name : '-' }}
+                                            </a>
+                                        @endif
                                     </td>
                                     <td>
                                         {{  formate_price($order->total_price) }}

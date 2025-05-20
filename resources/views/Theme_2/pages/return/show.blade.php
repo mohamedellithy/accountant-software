@@ -108,8 +108,6 @@
                                             <td>{{ formate_price($return_item->price * $return_item->quantity)  }}</td>
                                         </tr>
                                     @endforeach
-
-
                                     <tr>
                                         <td></td>
                                         <td>
@@ -149,11 +147,11 @@
                         </h6>
                         <h6 class="m-0 font-weight-bold text-primary">
                             <p>اسم الزبون</p>
-                            <p class="text-dark" style="padding: 13px;background-color:#eee">{{ $customerReturn->customer->name }}</p>
+                            <p class="text-dark" style="padding: 13px;background-color:#eee">{{ $customerReturn?->customer?->name }}</p>
                         </h6>
                         <h6 class="m-0 font-weight-bold text-primary">
                             <p>رقم هاتف الزبون</p>
-                            <p class="text-dark" style="padding: 13px;background-color:#eee">{{ $customerReturn->customer->phone }}</p>
+                            <p class="text-dark" style="padding: 13px;background-color:#eee">{{ $customerReturn?->customer?->phone }}</p>
                         </h6>
                    </div>
                     <div class="card-body">

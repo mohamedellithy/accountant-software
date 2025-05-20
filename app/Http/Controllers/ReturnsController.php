@@ -84,7 +84,8 @@ class ReturnsController extends Controller
             'addmore.*.product_id' => 'required',
             'addmore.*.quantity'        => ['required', 'numeric'],
             'addmore.*.price'      => ['required', 'numeric'],
-            'type_return_bill'          => 'required'
+            'type_return_bill'          => ['required'],
+            'customer_id'         => ['required']
         ]);
 
         $customerReturn = Returned::Create([
@@ -181,7 +182,8 @@ class ReturnsController extends Controller
             'addmore.*.product_id' => 'required',
             'addmore.*.quantity'   => ['required', 'numeric'],
             'addmore.*.price'      => ['required', 'numeric'],
-            'type_return_bill'     => 'required'
+            'type_return_bill'     => ['required'],
+            'customer_id'          => ['required']
         ]);
 
         $customerReturn = Returned::where([

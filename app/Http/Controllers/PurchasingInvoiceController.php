@@ -103,7 +103,8 @@ class PurchasingInvoiceController extends Controller
 
             'addmore.*.product_id' => 'required',
             'addmore.*.qty'        => ['required', 'numeric'],
-            'addmore.*.price'      => ['required', 'numeric']
+            'addmore.*.price'      => ['required', 'numeric'],
+            'supplier_id'          => ['required']
         ]);
 
         DB::beginTransaction();
@@ -179,7 +180,8 @@ class PurchasingInvoiceController extends Controller
         $request->validate([
             'addmore.*.product_id' => 'required',
             'addmore.*.qty'        => ['required', 'numeric'],
-            'addmore.*.price'      => ['required', 'numeric']
+            'addmore.*.price'      => ['required', 'numeric'],
+            'supplier_id'          => ['required']
         ]);
 
         DB::beginTransaction();

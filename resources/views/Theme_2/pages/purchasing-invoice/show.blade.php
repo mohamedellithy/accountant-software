@@ -166,11 +166,11 @@
                         </h6>
                         <h6 class="m-0 font-weight-bold text-primary">
                             <p>اسم العميل</p>
-                            <p class="text-dark" style="padding: 13px;background-color:#eee">{{ $order->supplier->name }}</p>
+                            <p class="text-dark" style="padding: 13px;background-color:#eee">{{ $order?->supplier?->name }}</p>
                         </h6>
                         <h6 class="m-0 font-weight-bold text-primary">
                             <p>رقم هاتف العميل</p>
-                            <p class="text-dark" style="padding: 13px;background-color:#eee">{{ $order->supplier->phone }}</p>
+                            <p class="text-dark" style="padding: 13px;background-color:#eee">{{ $order?->supplier?->phone }}</p>
                         </h6>
                    </div>
                    <div class="card-body">

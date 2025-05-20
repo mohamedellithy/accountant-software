@@ -113,7 +113,8 @@ class OrderController extends Controller
             'order_number'         => ['required','unique:orders,order_number'],
             'addmore.*.product_id' => 'required',
             'addmore.*.qty'        => ['required', 'numeric'],
-            'addmore.*.price'      => ['required', 'numeric']
+            'addmore.*.price'      => ['required', 'numeric'],
+            'customer_id'          => ['required']
         ]);
 
         DB::beginTransaction();
@@ -180,7 +181,8 @@ class OrderController extends Controller
             'order_number'         => ['required','unique:orders,order_number,'.$id],
             'addmore.*.product_id' => 'required',
             'addmore.*.qty'        => ['required', 'numeric'],
-            'addmore.*.price'      => ['required', 'numeric']
+            'addmore.*.price'      => ['required', 'numeric'],
+            'customer_id'          => ['required']
         ]);
 
         DB::beginTransaction();

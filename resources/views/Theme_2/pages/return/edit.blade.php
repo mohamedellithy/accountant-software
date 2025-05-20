@@ -31,7 +31,7 @@
                                 <select type="text" name="customer_id" class="form-control form-select2" required>
                                     <option value=""></option>
                                     @foreach ($customers as $customer)
-                                        <option value={{ $customer->id }} @if($customerReturn->customer_id == $customer->id) selected @endif>{{ $customer->name }}</option>
+                                        <option value={{ $customer->id }} @if($customerReturn?->customer_id == $customer->id) selected @endif>{{ $customer->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('customer_id')

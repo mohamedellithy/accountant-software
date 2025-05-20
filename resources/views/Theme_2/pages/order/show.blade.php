@@ -165,7 +165,9 @@
                                 <strong>
                                     المستلم /
                                 </strong>
-                                {{ $order->customer->name }}
+                                @if($order?->customer)
+                                    {{ $order?->customer?->name }}
+                                @endif
                             </label>
                             <label>
                                 <strong class="signature">
@@ -183,15 +185,15 @@
                    <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">
                             <p>فاتورة رقم</p>
-                            <p class="text-dark" style="padding: 13px;background-color:#eee">{{ $order->order_number }}</p>
+                            <p class="text-dark" style="padding: 13px;background-color:#eee">{{ $order?->order_number }}</p>
                         </h6>
                         <h6 class="m-0 font-weight-bold text-primary">
                             <p>اسم العميل</p>
-                            <p class="text-dark" style="padding: 13px;background-color:#eee">{{ $order->customer->name }}</p>
+                            <p class="text-dark" style="padding: 13px;background-color:#eee">{{ $order?->customer?->name }}</p>
                         </h6>
                         <h6 class="m-0 font-weight-bold text-primary">
                             <p>رقم هاتف العميل</p>
-                            <p class="text-dark" style="padding: 13px;background-color:#eee">{{ $order->customer->phone }}</p>
+                            <p class="text-dark" style="padding: 13px;background-color:#eee">{{ $order?->customer?->phone }}</p>
                         </h6>
                    </div>
                    <div class="card-body">
@@ -225,7 +227,7 @@
                             }
                         </style>
                         <h5>تواريخ الدفعات</h5>
-                        <p>دفعات السيد / {{ $order->customer->name }}</p>
+                        <p>دفعات السيد / {{ $order?->customer?->name }}</p>
                         <p>رقم الطلبية / {{ $order->order_number }}</p>
                         <table class="table table-border table-payments" style="width:100%">
                             <thead>
@@ -290,7 +292,7 @@
     }
 
     @media(max-width:1000px){
-        .table:not(.table-dark) tr th:first-child, 
+        .table:not(.table-dark) tr th:first-child,
         .table:not(.table-dark) tr th:nth-child(2){
             background-color:white !important;
         }

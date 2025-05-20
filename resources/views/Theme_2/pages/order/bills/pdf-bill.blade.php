@@ -26,7 +26,7 @@
                                 <strong class="customfir">
                                      المطلوب من السيد /
                                 </strong>
-                                {{ $order->customer->name }}
+                                {{ $order?->customer?->name }}
                             </label>
                             <label style="margin-left:0px !important">
                                 <strong class="customsce">
@@ -120,7 +120,7 @@
                                 <strong>
                                     المستلم /
                                 </strong>
-                                {{ $order->customer->name }}
+                                {{ $order?->customer?->name }}
                             </label>
                             <label>
                                 <strong class="signature">

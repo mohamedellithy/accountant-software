@@ -31,7 +31,7 @@
                                 <select type="text" name="supplier_id" class="form-control form-select2" required>
                                     <option value=""></option>
                                     @foreach ($suppliers as $supplier)
-                                        <option value={{ $supplier->id }} @if($order->supplier_id == $supplier->id) selected @endif>{{ $supplier->name }}</option>
+                                        <option value={{ $supplier->id }} @if($order?->supplier_id == $supplier->id) selected @endif>{{ $supplier->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('supplier_id')

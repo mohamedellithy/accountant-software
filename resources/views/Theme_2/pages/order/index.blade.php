@@ -85,9 +85,11 @@ $filter = request()->query('filter') ?: null; @endphp
                                     </strong>
                                 </td>
                                 <td class="width-16">
-                                    <a class="crud" href="{{ route('admin.customers.show', $order->customer->id) }}">
-                                        {{ $order->customer ? $order->customer->name : '-' }}
-                                    </a>
+                                    @if($order?->customer)
+                                        <a class="crud" href="{{ route('admin.customers.show', $order?->customer?->id) }}">
+                                            {{ $order?->customer ? $order?->customer?->name : '-' }}
+                                        </a>
+                                    @endif
                                 </td>
                                 <td>
                                     {{ formate_price($order->discount) }}
