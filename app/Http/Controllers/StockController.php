@@ -20,7 +20,9 @@ class StockController extends Controller
     public function index(Request $request)
     {
         $stocks = Stock::query();
-        $stocks = $stocks->with('product','supplier');
+        $stocks = $stocks->with(['product','supplier' => function($q){
+            $q->withTrashed();
+        }]);
         $per_page = request('rows') ?: 20;
         $filter_data = $request->all();
         $stocks->when(isset($filter_data['filter']) && isset($filter_data['filter']['product_id']),function($query) use($filter_data){
