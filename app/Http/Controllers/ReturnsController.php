@@ -153,7 +153,12 @@ class ReturnsController extends Controller
      */
     public function show($id)
     {
-        $customerReturn     = Returned::with('returnitems','returnitems.product','customer')->where('id',$id)->first();
+        $customerReturn     = Returned::with([
+            'returnitems',
+            'returnitems.product',
+            'customer' => function($q){
+                $q->withTrashed();
+            }])->where('id',$id)->first();
 
         return view(config('app.theme').'.pages.return.show', compact('customerReturn'));
     }
