@@ -75,7 +75,7 @@ $filter = request()->query('filter') ?: null; @endphp
                                 </td>
                                 <td class="width-16">
                                     @if($customerReturn?->customer)
-                                        <a class="crud" href="{{ route('admin.customer.show', $customerReturn?->customer?->id) }}">
+                                        <a class="crud" href="{{ route('admin.customers.show', $customerReturn?->customer?->id) }}">
                                             {{ $customerReturn?->customer ? $customerReturn?->customer?->name : '-' }}
                                         </a>
                                     @endif
