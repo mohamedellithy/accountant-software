@@ -25,7 +25,13 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $orders = Order::query();
-        $orders = $orders->with('customer', 'orderitems', 'orderitems.product')->withSum('order_payments','value');
+        $orders = $orders->with([
+            'customer' => function($q){
+                $q->withTrashed();
+            },
+            'orderitems',
+            'orderitems.product'
+        ])->withSum('order_payments','value');
         $per_page = 10;
         $orders->when(request('order_status') != null, function ($q) {
             return $q->where('order_status', request('order_status'));
@@ -283,7 +289,10 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $order     = Order::with('orderitems','orderitems.product','customer')->withSum('order_payments','value')->where('id',$id)->first();
+        $order     = Order::with(['orderitems','orderitems.product',
+        'customer' => function($q){
+            $q->withTrashed();
+        }])->withSum('order_payments','value')->where('id',$id)->first();
         return view(config('app.theme').'.pages.order.show', compact('order'));
     }
 }

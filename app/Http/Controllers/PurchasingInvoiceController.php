@@ -24,7 +24,13 @@ class PurchasingInvoiceController extends Controller
     public function index(Request $request)
     {
         $orders = PurchasingInvoice::query();
-        $orders = $orders->with('supplier', 'invoice_items', 'invoice_items.product')->withSum('invoice_payments','value');;
+        $orders = $orders->with([
+            'supplier' => function($q){
+                $q->withTrashed();
+            },
+            'invoice_items',
+            'invoice_items.product'
+        ])->withSum('invoice_payments','value');;
         $per_page = 10;
 
         $orders->when(request('search') != null, function ($q) {
@@ -281,7 +287,12 @@ class PurchasingInvoiceController extends Controller
      */
     public function show($id)
     {
-        $order     = PurchasingInvoice::with('invoice_items','invoice_items.product','supplier')->where('id',$id)->first();
+        $order     = PurchasingInvoice::with([
+        'invoice_items',
+        'invoice_items.product',
+        'supplier' => function($q){
+            $q->withTrashed();
+        }])->where('id',$id)->first();
         return view(config('app.theme').'.pages.purchasing-invoice.show', compact('order'));
 
     }
