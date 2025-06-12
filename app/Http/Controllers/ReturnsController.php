@@ -21,7 +21,11 @@ class ReturnsController extends Controller
     public function index(Request $request)
     {
         $customerReturns = Returned::query();
-        $customerReturns = $customerReturns->with('customer', 'returnitems', 'returnitems.product');
+        $customerReturns = $customerReturns->with([
+            'customer' => function($q){
+                $q->withTrashed();
+            },
+            'returnitems', 'returnitems.product']);
         $per_page = 10;
 
 
