@@ -90,9 +90,13 @@ $filter = request()->query('filter') ?: null; @endphp
                                     </td>
                                     <td class="width-16">
                                         @if($order?->supplier)
-                                            <a class="crud" href="{{ route('admin.suppliers.show', $order?->supplier?->id) }}">
+                                            @if($order?->supplier?->deleted_at == null)
+                                                <a class="crud" href="{{ route('admin.suppliers.show', $order?->supplier?->id) }}">
+                                                    {{ $order?->supplier ? $order?->supplier?->name : '-' }}
+                                                </a>
+                                            @else
                                                 {{ $order?->supplier ? $order?->supplier?->name : '-' }}
-                                            </a>
+                                            @endif 
                                         @endif
                                     </td>
                                     <td>

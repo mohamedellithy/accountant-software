@@ -86,9 +86,13 @@ $filter = request()->query('filter') ?: null; @endphp
                                 </td>
                                 <td class="width-16">
                                     @if($order?->customer)
-                                        <a class="crud" href="{{ route('admin.customers.show', $order?->customer?->id) }}">
+                                        @if($order?->customer?->deleted_at == null)
+                                            <a class="crud" href="{{ route('admin.customers.show', $order?->customer?->id) }}">
+                                                {{ $order?->customer ? $order?->customer?->name : '-' }}
+                                            </a>
+                                        @else
                                             {{ $order?->customer ? $order?->customer?->name : '-' }}
-                                        </a>
+                                        @endif
                                     @endif
                                 </td>
                                 <td>

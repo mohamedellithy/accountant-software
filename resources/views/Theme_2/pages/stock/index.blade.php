@@ -168,9 +168,11 @@
                                 <td>
                                 @if($stock?->supplier)
                                     {{ $stock?->supplier?->name }}
-                                    <a class="crud" href="{{ route('admin.suppliers.show', $stock?->supplier?->id) }}">
-                                        <i class="far fa-eye"></i>
-                                    </a>
+                                    @if($stock?->supplier?->deleted_at == null)
+                                        <a class="crud" href="{{ route('admin.suppliers.show', $stock?->supplier?->id) }}">
+                                            <i class="far fa-eye"></i>
+                                        </a>
+                                    @endif
                                 @endif
                                 </td>
                                 <td>{{ date('Y-m-d',strtotime($stock->updated_at)) }}</td>
