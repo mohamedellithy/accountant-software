@@ -18,34 +18,26 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         $customers = StakeHolder::query();
-
-
         $customers = $customers->withCount('orders','purchasing_invoices');
-
         $customers = $customers->withSum('orders','total_price')
         ->withSum('purchasing_invoices','total_price');
-
         $per_page = 10;
         $data = $request->all();
         $customers->when(isset($data['filter']) && isset($data['filter']['customer_id']), function ($q) use($data) {
-            return $q->where('id',$data['filter']['customer_id']);
+            $q->where('id',$data['filter']['customer_id']);
+        },function($q){
+            $q->where(function($qb){
+                $qb->where('role','customer')
+                ->orWhereHas('orders');
+            });
         });
-        
-        if($request->has('search')) {
-            $customers = $customers->where('name', 'like', '%' . $request->query('search') . '%');
-        } else {
-            $customers = $customers->where('role','customer');
-            $customers = $customers->orWhereHas('orders');
-        }
 
         if ($request->has('rows')) {
             $per_page = $request->query('rows');
         }
 
         $customers = $customers->paginate($per_page);
-
         $customers_all = StakeHolder::select('id','name')->get();
-
         return view(config('app.theme').'.pages.customer.index', compact('customers','customers_all'));
     }
 

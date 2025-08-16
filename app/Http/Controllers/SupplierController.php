@@ -27,16 +27,13 @@ class SupplierController extends Controller
         $data = $request->all();
         $suppliers->when(isset($data['filter']) && isset($data['filter']['supplier_id']), function ($q) use($data) {
             return $q->where('id',$data['filter']['supplier_id']);
+        },function($q){
+            $q->where(function($qb){
+                $qb->where('role','supplier')
+                ->orWhereHas('products');
+            });
         });
-
-        if ($request->has('search')) {    
-            $suppliers = $suppliers->where('name', 'like', '%' . $request->query('search') . '%');
-        } else {
-            $suppliers = $suppliers->where('role','supplier');
-            $suppliers = $suppliers->orWhereHas('products');
-        }
         
-
         $suppliers = $suppliers->withCount('orders','purchasing_invoices')
         ->withSum('orders','total_price')
         ->withSum('purchasing_invoices','total_price');

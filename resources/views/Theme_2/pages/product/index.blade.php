@@ -63,7 +63,7 @@
                     <tbody class="table-border-bottom-0">
                         @foreach($products as $product)
                             <tr class="table-light">
-                                <td>{{ $product->id }}</td>
+                                <td>{{ IndexList($products,$loop) }}</td>
                                 <td>{{ $product->name }}</td>
                                 <td>
                                     <div class="d-flex">

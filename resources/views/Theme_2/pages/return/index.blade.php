@@ -57,6 +57,7 @@ $filter = request()->query('filter') ?: null; @endphp
                <table class="table">
                    <thead class="table-light">
                         <tr class="table-dark">
+                            <th>No</th>
                             <th>كود </th>
                             <th>العميل</th>
                             <th>اجمالى سعر</th>
@@ -68,6 +69,7 @@ $filter = request()->query('filter') ?: null; @endphp
                    <tbody class="table-border-bottom-0">
                         @foreach ($customerReturns as $customerReturn)
                             <tr>
+                               <td>{{ IndexList($customerReturns,$loop) }}</td>  
                                 <td class="width-16">
                                     <strong>
                                         {{ $customerReturn->order_number }}#

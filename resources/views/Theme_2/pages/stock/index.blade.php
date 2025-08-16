@@ -159,7 +159,7 @@
                     <tbody class="table-border-bottom-0">
                         @foreach($stocks as $stock)
                             <tr class="table-light">
-                                <td>{{ $stock->product->id }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ $stock->product->name }}</td>
                                 <td>{{ $stock->quantity }}</td>
                                 <td>{{ formate_price($stock->sale_price) }}</td>

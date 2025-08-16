@@ -68,4 +68,8 @@ function get_balance_stake_holder($customer){
     return $start_balance - $total_orders + $total_purchasing_invoices + $orders_payments - $total_purchasing_payments;
 }
 
+function IndexList($collection,$loop){
+    return ($collection->total()- $loop->index ) - (($collection->currentpage()-1) * $collection->perpage() );
+}
+
 ?>

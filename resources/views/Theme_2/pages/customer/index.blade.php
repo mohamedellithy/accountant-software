@@ -83,6 +83,7 @@ $filter = request()->query('filter') ?: null;
                <table class="table">
                    <thead class="table-light">
                        <tr class="table-dark">
+                            <th>No</th>
                             <th>كود العميل</th>
                             <th>اسم العميل</th>
                             <th>رقم الهاتف</th>
@@ -95,6 +96,7 @@ $filter = request()->query('filter') ?: null;
                    <tbody class="table-border-bottom-0">
                        @foreach($customers as $customer)
                            <tr class="table-light">
+                               <td>{{ IndexList($customers,$loop) }}</td>
                                <td>{{ $customer->id }}</td>
                                <td>{{ $customer->name }}</td>
                                <td>{{ $customer->phone }}</td>
