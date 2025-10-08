@@ -123,3 +123,27 @@
     text-align: center;
     margin-top: 1rem;
 }
+
+@media print {
+    @page {
+        size: 80mm auto !important; /* width: 8 cm (80mm), height: auto */
+        margin: 0 !important; /* remove default margins */
+    }
+
+    body {
+        width: 80mm !important;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+    }
+
+    .receipt {
+        width: 100% !important;
+        padding: 4mm !important;
+    }
+
+    /* Optional: Remove headers/footers from Chrome print */
+    @page :footer { display: none !important }
+    @page :header { display: none !important }
+}

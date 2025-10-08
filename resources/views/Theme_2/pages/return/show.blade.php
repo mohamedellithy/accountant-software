@@ -11,56 +11,7 @@
             <div class="col-lg-8">
                  <!-- Basic Card Example -->
                 <div class="card mb-4" id="DivIdToPrint">
-
-<style>
-  @media screen, print {
-  .body-print #DivIdToPrint{
-    width: 551px !important;
-    border: 2px solid red !important;
-    }
-      .body-print table{
-        border:1px solid;
-        width:100%;
-        margin-top:10px
-      }
-     .body-print .table-light th{
-        color: #566a7f !important;
-        border-left: 1px solid;
-    }
-     .body-print .table tr{
-        border : 1px solid gray
-    }
-     .body-print .table td{
-        border: 1px solid #cac7c7;
-        text-align: center;
-    }
-     .body-print .invoice-header{
-        flex-direction: row !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-
-    }
-
-     .body-print .invoice-header .date{
-        margin-right:600px !important;
-
-    }
-     .body-print .invoice-header .date span{
-        padding: 10px;
-    }
-     .body-print .footer .signature{
-        margin-right:410px !important;
-
-    }
-     .body-print .custom .customsce{
-        margin-right:510px !important;
-
-    }
-
-  }
- </style>
                     <div class="card-header py-3">
-
                         <div class="d-flex invoice-header">
                             <div class="">
                                 <strong>{{ env('logo_pdf_title') }}</strong>
@@ -71,7 +22,7 @@
                             </div>
                         </div>
                         <br/>
-                        <p> 
+                        <p>
                             <strong>
                                 {{ $customerReturn->type_return == 'sale' ? 'فاتورة مرتجع مبيعات' : 'فاتورة مرتجع مشتريات' }}
                             </strong>
@@ -115,8 +66,6 @@
                                         </td>
                                         <td colspan="4" style="text-align: left;padding-left: 56px;">{{ formate_price($customerReturn->total_price) }}</td>
                                     </tr>
-
-
                                 </tbody>
                             </table>
                         </div>
@@ -155,14 +104,12 @@
                         </h6>
                    </div>
                     <div class="card-body">
-                    <a href="{{ route('admin.purchasing-invoices.edit',$customerReturn->id) }}" class="btn btn-danger btn-sm">
-                                        تعديل الفاتورة
-                                        </a>
+                        <a href="{{ route('admin.purchasing-invoices.edit',$customerReturn->id) }}" class="btn btn-danger btn-sm">
+                            تعديل الفاتورة
+                        </a>
                         <div class="d-flex">
-                        <button type='button' id='btn' value='Print' onclick='printDiv();' class="btn btn-primary btn-sm mt-2">طباعة الفاتورة</button>&nbsp;&nbsp;
-                        
+                            <button type='button' id='btn' value='Print' onclick='printDiv("DivIdToPrint");' class="btn btn-primary btn-sm mt-2">طباعة الفاتورة</button>&nbsp;&nbsp;
                         </div>
-
                    </div>
 
                </div>
@@ -198,7 +145,7 @@
         padding: 10px;
     }
     @media(max-width:1000px){
-        .table:not(.table-dark) tr th:first-child, 
+        .table:not(.table-dark) tr th:first-child,
         .table:not(.table-dark) tr th:nth-child(2){
             background-color:white !important;
         }
@@ -216,24 +163,4 @@
  @endpush
 
 @push('script')
-    <script type="text/javascript">
-     function printDiv()
-{
-
-  var divToPrint=document.getElementById('DivIdToPrint');
-
-  var newWin=window.open('','Print-Window');
-
-  newWin.document.open();
-
-  newWin.document.write('<html><body class="body-print" dir="rtl" onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
-
-  newWin.document.close();
-
-  setTimeout(function(){newWin.close();},10);
-
-}
-
-
-</script>
 @endpush

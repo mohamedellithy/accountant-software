@@ -11,48 +11,6 @@
             <div class="col-lg-8">
                  <!-- Basic Card Example -->
                 <div class="card mb-4" id="DivIdToPrint">
-                    <style>
-                        @media print {
-                            #DivIdToPrint{
-                                width: 551px !important;
-                                border: 2px solid red !important;
-                            }
-                            table{
-                                border:1px solid;
-                                width:100%;
-                                margin-top:10px
-                            }
-                            .table-light th{
-                                color: #566a7f !important;
-                                border-left: 1px solid;
-                            }
-                            .table tr{
-                                border : 1px solid gray
-                            }
-                            .table td{
-                                border: 1px solid #cac7c7;
-                                text-align: center;
-                            }
-                            .invoice-header{
-                                flex-direction: row !important;
-                                justify-content: space-between !important;
-                                align-items: center !important;
-                            }
-
-                            .invoice-header .date{
-                                margin-right:600px !important;
-                            }
-                            .invoice-header .date span{
-                                padding: 10px;
-                            }
-                            .footer .signature{
-                                margin-right:410px !important;
-                            }
-                            .custom .customsce{
-                                margin-right:510px !important;
-                            }
-                        }
-                    </style>
                     <div class="card-header py-3">
                         <div class="d-flex invoice-header">
                             <div class="head">
@@ -208,24 +166,6 @@
                         <a href="{{ route('admin.download-pdf-payments-bill',['id' => $order->id]) }}" class="btn btn-success btn-sm">تنزيل المدفوعات</a>
                     </div>
                     <div class="card-body" id="paymentsOrder">
-                        <style>
-                            @media print{
-                                .table-payments{
-                                    with:100%;
-                                    text-align: right !important;
-                                    border:1px solid gray !important;
-                                }
-                                .table-payments tr td,
-                                .table-payments th td {
-                                    text-align: right !important;
-                                }
-                                .table-payments tr td
-                                {
-                                    margin:0px;
-                                    border:1px solid gray !important;
-                                }
-                            }
-                        </style>
                         <h5>تواريخ الدفعات</h5>
                         <p>دفعات السيد / {{ $order?->customer?->name }}</p>
                         <p>رقم الطلبية / {{ $order->order_number }}</p>

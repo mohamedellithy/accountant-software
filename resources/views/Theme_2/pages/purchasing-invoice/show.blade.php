@@ -14,48 +14,6 @@
 
                  <!-- Basic Card Example -->
                 <div class="card mb-4" id="DivIdToPrint">
-                    <style>
-                    @media print {
-                        #DivIdToPrint{
-                            width: 551px !important;
-                            border: 2px solid red !important;
-                        }
-                        table{
-                            border:1px solid;
-                            width:100%;
-                            margin-top:10px
-                        }
-                        .table-light th{
-                            color: #566a7f !important;
-                            border-left: 1px solid;
-                        }
-                        .table tr{
-                            border : 1px solid gray
-                        }
-                        .table td{
-                            border: 1px solid #cac7c7;
-                            text-align: center;
-                        }
-                        .invoice-header{
-                            flex-direction: row !important;
-                            justify-content: space-between !important;
-                            align-items: center !important;
-                        }
-
-                        .invoice-header .date{
-                            margin-right:600px !important;
-                        }
-                        .invoice-header .date span{
-                            padding: 10px;
-                        }
-                        .footer .signature{
-                            margin-right:410px !important;
-                        }
-                        .custom .customsce{
-                            margin-right:510px !important;
-                        }
-                    }
-                    </style>
                     <div class="card-header py-3">
 
                         <div class="d-flex invoice-header"style="">
@@ -214,7 +172,7 @@
         padding: 10px;
     }
     @media(max-width:1000px){
-        .table:not(.table-dark) tr th:first-child, 
+        .table:not(.table-dark) tr th:first-child,
         .table:not(.table-dark) tr th:nth-child(2){
             background-color:white !important;
         }

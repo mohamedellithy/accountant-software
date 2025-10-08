@@ -100,6 +100,30 @@
                 font-size: 12px;
             }
         }
+
+        @media print {
+            @page {
+                size: 80mm auto !important; /* width: 8 cm (80mm), height: auto */
+                margin: 0 !important; /* remove default margins */
+            }
+
+            body {
+                width: 80mm !important;
+                margin: 0;
+                padding: 0;
+                font-family: Arial, sans-serif;
+                font-size: 12px;
+            }
+
+            .receipt {
+                width: 100% !important;
+                padding: 4mm !important;
+            }
+
+            /* Optional: Remove headers/footers from Chrome print */
+            @page :footer { display: none !important }
+            @page :header { display: none !important }
+        }
     </style>
     @stack('style')
 </head>
@@ -199,12 +223,228 @@
 
         // print div
         function printDiv(element_id){
-           var divToPrint=document.getElementById(element_id);
-           var newWin=window.open('','Print-Window');
-           newWin.document.open();
-           newWin.document.write('<html><body dir="rtl" onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
-           newWin.document.close();
-           setTimeout(function(){newWin.close();},10);
+            var divToPrint=document.getElementById(element_id);
+            var newWin=window.open('','Print-Window','width=400,height=600');
+            const printStyles = `
+                <style>
+                    @media print and (max-width: 200px) {
+                        .table{
+                            with:100%;
+                            text-align: right;
+                            border:1px solid gray !important;
+                        }
+                        .table tr td,
+                        .table th td {
+                            text-align: right;
+                            font-size: 11px;
+                            font-weight: bold;
+                        }
+                        .table tr td
+                        {
+                            margin:0px;
+                            border:1px solid gray !important;
+                        }
+                        .table-responsive {
+                            overflow-x: visible;
+                            min-height: 225px;
+                        }
+                        .text-nowrap {
+                            white-space: nowrap !important;
+                        }
+                        .card {
+                            box-shadow: 0px 0px;
+                            border-radius: 0px;
+                            background-clip: padding-box;
+                            position: relative;
+                            display: flex;
+                            flex-direction: column;
+                            min-width: 0;
+                            word-wrap: break-word;
+                            background-color: #fff;
+                            border: 0 solid #d9dee3;
+                        }
+                        .card-body{
+                            flex: 1 1 auto;
+                            padding: 1.5rem 1.5rem;
+                        }
+                        .card-header {
+                            padding: 1.5rem 1.5rem;
+                            margin-bottom: 0;
+                            background-color: transparent;
+                            border-bottom: 0 solid #d9dee3;
+                        }
+                        .py-3 {
+                            padding-top: 1rem !important;
+                            padding-bottom: 1rem !important;
+                        }
+                        .card-header, .card-footer {
+                            border-color: #d9dee3;
+                        }
+                        table {
+                            caption-side: bottom;
+                            border-collapse: collapse;
+                        }
+                        .table {
+                            --bs-table-bg: transparent;
+                            --bs-table-accent-bg: transparent;
+                            --bs-table-striped-color: #697a8d;
+                            --bs-table-striped-bg: #f9fafb;
+                            --bs-table-active-color: #697a8d;
+                            --bs-table-active-bg: rgba(67, 89, 113, 0.1);
+                            --bs-table-hover-color: #697a8d;
+                            --bs-table-hover-bg: rgba(67, 89, 113, 0.06);
+                            width: 100%;
+                            color: #697a8d;
+                            vertical-align: middle;
+                            border-color: #d9dee3;
+                        }
+                        .table>thead {
+                            vertical-align: bottom;
+                        }
+                        .table tr {
+                            border: 1px solid gray;
+                        }
+                        .table-light th {
+                            color: #566a7f !important;
+                            border-left: 1px solid lightgray;
+                            padding: 6px 3px;
+                            text-transform: uppercase;
+                            font-size: 0.75rem;
+                            letter-spacing: 1px;
+                        }
+                        .table> :not(caption)>*>* {
+                            background-color: var(--bs-table-bg);
+                            box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+                        }
+                    }
+
+                    .table{
+                        with:100%;
+                        text-align: right;
+                        border:1px solid gray !important;
+                    }
+                    .table tr td,
+                    .table th td {
+                        text-align: right;
+                        font-size: 11px;
+                        font-weight: bold;
+                    }
+                    .table tr td
+                    {
+                        margin:0px;
+                        border:1px solid gray !important;
+                    }
+                    .table-responsive {
+                        overflow-x: visible;
+                        min-height: 225px;
+                    }
+                    .text-nowrap {
+                        white-space: nowrap !important;
+                    }
+                    .card {
+                        box-shadow: 0px 0px;
+                        border-radius: 0px;
+                        background-clip: padding-box;
+                        position: relative;
+                        display: flex;
+                        flex-direction: column;
+                        min-width: 0;
+                        word-wrap: break-word;
+                        background-color: #fff;
+                        border: 0 solid #d9dee3;
+                    }
+                    .card-body{
+                        flex: 1 1 auto;
+                        padding: 1.5rem 1.5rem;
+                    }
+                    .card-header {
+                        padding: 1.5rem 1.5rem;
+                        margin-bottom: 0;
+                        background-color: transparent;
+                        border-bottom: 0 solid #d9dee3;
+                    }
+                    .py-3 {
+                        padding-top: 1rem !important;
+                        padding-bottom: 1rem !important;
+                    }
+                    .card-header, .card-footer {
+                        border-color: #d9dee3;
+                    }
+                    table {
+                        caption-side: bottom;
+                        border-collapse: collapse;
+                    }
+                    .table {
+                        --bs-table-bg: transparent;
+                        --bs-table-accent-bg: transparent;
+                        --bs-table-striped-color: #697a8d;
+                        --bs-table-striped-bg: #f9fafb;
+                        --bs-table-active-color: #697a8d;
+                        --bs-table-active-bg: rgba(67, 89, 113, 0.1);
+                        --bs-table-hover-color: #697a8d;
+                        --bs-table-hover-bg: rgba(67, 89, 113, 0.06);
+                        width: 100%;
+                        color: #697a8d;
+                        vertical-align: middle;
+                        border-color: #d9dee3;
+                    }
+                    .table>thead {
+                        vertical-align: bottom;
+                    }
+                    .table tr {
+                        border: 1px solid gray;
+                    }
+                    .table-light th {
+                        color: #566a7f !important;
+                        border-left: 1px solid lightgray;
+                        padding: 6px 3px;
+                        text-transform: uppercase;
+                        font-size: 0.75rem;
+                        letter-spacing: 1px;
+                    }
+                    .table> :not(caption)>*>* {
+                        background-color: var(--bs-table-bg);
+                        box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+                    }
+
+                    @media print and (max-width: 800px) {
+                        .table tr td,
+                        .table th td {
+                            font-size: .75em;
+                            font-weight: bold;
+                        }
+                    }
+
+                    @media print and (min-width:800px){
+                        .table tr td,
+                        .table th td {
+                            font-size: 1.2em;
+                            font-weight: bold;
+                            padding:15px;
+                            border: 3px solid gray;
+                        }
+                        .table-light th{
+                            font-size: 1rem;
+                            padding: 15px 22px;
+                        }
+                    }
+                </style>
+           `;
+            newWin.document.open();
+            newWin.document.write(`
+                <html dir="rtl">
+                    <head>
+                        <title>Print</title>
+                        ${printStyles}
+                    </head>
+                    <body onload="window.print(); window.close();">
+                        <div class="card-body">
+                            ${divToPrint.innerHTML}
+                        </div>
+                    </body>
+                </html>
+            `);
+            newWin.document.close();
         }
     </script>
     @stack('script')
