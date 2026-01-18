@@ -406,7 +406,13 @@
                         background-color: var(--bs-table-bg);
                         box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
                     }
-
+                    .footer table{
+                        border:0px !important;
+                    }
+                    .card-body{
+                        padding-top: 0.3;
+                        padding-bottom: 0.3;
+                    }
                     @media print and (max-width: 800px) {
                         .table tr td,
                         .table th td {
@@ -437,7 +443,7 @@
                         <title>Print</title>
                         ${printStyles}
                     </head>
-                    <body onload="window.print(); window.close();">
+                    <body onload="window.print();window.close()">
                         <div class="card-body">
                             ${divToPrint.innerHTML}
                         </div>

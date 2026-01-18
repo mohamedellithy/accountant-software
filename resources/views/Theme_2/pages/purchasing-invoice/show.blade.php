@@ -111,6 +111,21 @@
                                 ............................................................
                             </label>
                         </div>
+                        <hr/>
+                        <div class="d-flex footer">
+                            <table class="table table-borderless" style="width:100%">
+                                <tr style="border: 0px;color: #566a7f;">
+                                    <th style="color: #566a7f !important;text-align: center;">
+                                        <strong>ادارة</strong>
+                                        <p style="padding: 0px;margin: 0px;">م . {{ env('manager_name') }}</p>
+                                    </th>
+                                    <th style="color: #566a7f !important;text-align: center;">
+                                        <strong>رقم التليفون</strong>
+                                        <p style="padding: 0px;margin: 0px;">{{ env('phone_number') }}</p>
+                                    </th>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
