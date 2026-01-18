@@ -15,6 +15,7 @@
                         <div class="d-flex invoice-header">
                             <div class="head">
                                 <strong>{{ env('logo_pdf_title') }}</strong>
+                                <p>(م/ت)  {{ env('phone_number') }}</p>
                             </div>
                             <div class="date d-flex">
                                 <strong>تحرير في </strong>
