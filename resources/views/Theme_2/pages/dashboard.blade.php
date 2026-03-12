@@ -3,58 +3,95 @@
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
     <div class="row">
-        <div class="col-lg-6 col-md-4 order-1">
-            <div class="row">
-                <div class="col-md-12">
-                    <h5>الاصناف و المخزن</h5>
-                </div>
-                <div class="col-lg-6 col-md-12 col-6 mb-4">
-                    <a href="{{ route('admin.products.index') }}">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="/theme_2/assets/img/icons/unicons/chart-success.png" alt="chart success" class="rounded" />
-                                    </div>
-                                </div>
-                                <span class="fw-semibold d-block mb-1">
-                                    الاصناف
-                                </span>
-                                <h3 class="card-title mb-2">
-                                    {{ $count_products }}
-                                </h3>
-                                <small class="text-danger fw-semibold"><i
-                                        class="bx bx-up-arrow-alt"></i>
-                                        صنف
-                                </small>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-6 col-md-12 col-6 mb-4">
-                    <a href="{{ route('admin.stocks.index') }}">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="/theme_2/assets/img/icons/unicons/chart.png" alt="Credit Card" class="rounded" />
-                                    </div>
-                                </div>
-                                <span>المخزن</span>
-                                <h3 class="card-title text-nowrap mb-1">
-                                    {{ $count_stocks }}
-                                </h3>
-                                <small class="text-danger fw-semibold"><i
-                                        class="bx bx-up-arrow-alt"></i>
-                                        صنف
-                                </small>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
+        <div class="col-md-12">
+            <h5>الاصناف و المخزن</h5>
         </div>
-        <!-- Total Revenue -->
+        <div class="col-lg-3 col-md-12 col-6 mb-4">
+            <a href="{{ route('admin.products.index') }}">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title d-flex align-items-start justify-content-between">
+                            <div class="avatar flex-shrink-0">
+                                <img src="/theme_2/assets/img/icons/unicons/chart-success.png" alt="chart success" class="rounded" />
+                            </div>
+                        </div>
+                        <span class="fw-semibold d-block mb-1">
+                            الاصناف
+                        </span>
+                        <h3 class="card-title mb-2">
+                            {{ $count_products }}
+                        </h3>
+                        <small class="text-danger fw-semibold"><i
+                                class="bx bx-up-arrow-alt"></i>
+                                صنف
+                        </small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-12 col-6 mb-4">
+            <a href="{{ route('admin.stocks.index') }}">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title d-flex align-items-start justify-content-between">
+                            <div class="avatar flex-shrink-0">
+                                <img src="/theme_2/assets/img/icons/unicons/chart.png" alt="Credit Card" class="rounded" />
+                            </div>
+                        </div>
+                        <span>المخزن</span>
+                        <h3 class="card-title text-nowrap mb-1">
+                            {{ $count_stocks }}
+                        </h3>
+                        <small class="text-danger fw-semibold"><i
+                                class="bx bx-up-arrow-alt"></i>
+                                صنف
+                        </small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-12 col-6 mb-4">
+            <a href="{{ route('admin.stocks.index') }}">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title d-flex align-items-start justify-content-between">
+                            <div class="avatar flex-shrink-0">
+                                <img src="/theme_2/assets/img/icons/unicons/chart.png" alt="Credit Card" class="rounded" />
+                            </div>
+                        </div>
+                        <span>الاصناف المنتهية</span>
+                        <h3 class="card-title text-nowrap mb-1">
+                            {{ $count_low_of_stock }}
+                        </h3>
+                        <small class="text-danger fw-semibold"><i
+                                class="bx bx-up-arrow-alt"></i>
+                                منتهية
+                        </small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-12 col-6 mb-4">
+            <a href="{{ route('admin.stocks.index') }}">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title d-flex align-items-start justify-content-between">
+                            <div class="avatar flex-shrink-0">
+                                <img src="/theme_2/assets/img/icons/unicons/chart.png" alt="Credit Card" class="rounded" />
+                            </div>
+                        </div>
+                        <span>اجمالي فى المخزن</span>
+                        <h3 class="card-title text-nowrap mb-1">
+                            {{ formate_price($cost_total_stocks) }}
+                        </h3>
+                        <small class="text-danger fw-semibold"><i
+                                class="bx bx-up-arrow-alt"></i>
+                                اجمالي المخزن
+                        </small>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
     <div class="row">
         <!--/ Total Revenue -->

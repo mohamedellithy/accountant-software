@@ -23,16 +23,26 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $statics['count_products']   = \App\Models\Product::count();
-        $statics['count_stocks']     = \App\Models\Stock::count();
+        // stocks
+        $statics['count_products']         = \App\Models\Product::count();
+        $statics['count_stocks']           = \App\Models\Stock::count();
+        $statics['count_low_of_stock']     = \App\Models\Stock::where('quantity','<=',0)->count();
+        $statics['cost_total_stocks']      = \App\Models\Stock::sum(DB::raw('quantity * purchasing_price'));
+
+        // invoices
         $statics['sales_total']      = \App\Models\Order::sum('total_price');
         $statics['purchasing_total'] = \App\Models\PurchasingInvoice::sum('total_price');
         $statics['return_total']     = \App\Models\ReturnItem::sum(\DB::raw('return_items.quantity * return_items.price'));
         $statics['expenses_total']   = \App\Models\Expense::sum('price');
+        
+        // payments
         $statics['customer_payments_total']   = \App\Models\CustomerPayment::sum('value');
         $statics['supplier_payments_total']   = \App\Models\SupplierPayment::sum('value');
+
+        // stackHolders
         $statics['customer_counts']           = \App\Models\StakeHolder::customer()->count();
         $statics['supplier_counts']           = \App\Models\StakeHolder::supplier()->count();
+
         // total_must_collect
         $total_must_collect        = \App\Models\Order::select(DB::raw('COALESCE(SUM(total_price),0) as sales_total'))
         ->selectSub(function($query){
@@ -77,6 +87,8 @@ class HomeController extends Controller
         $total_must_paid->return_purchasing_total - 
         $total_must_paid->discounts_total - 
         $total_must_paid->supplier_payments_total;
+
+        // return 
         return view('Theme_2.pages.dashboard')->with($statics);
     }
 }
