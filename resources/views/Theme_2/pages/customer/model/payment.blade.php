@@ -2,8 +2,10 @@
 <!-- Basic Layout -->
 @if(class_basename($payment) == 'CustomerPayment')
 <form action="{{ route('admin.customer-payment.update',['payment_id' => $payment->id]) }}" method="POST" enctype="multipart/form-data">
-@else
+@elseif(class_basename($payment) == 'SupplierPayment')
 <form action="{{ route('admin.supplier-payment.update',['payment_id' => $payment->id]) }}" method="POST" enctype="multipart/form-data">
+@elseif(class_basename($payment) == 'DiscountOnStackHolder')
+<form action="{{ route('admin.user-discounts.update',['payment_id' => $payment->id]) }}" method="POST" enctype="multipart/form-data">
 @endif
     @method('PUT')
     @csrf
@@ -18,6 +20,10 @@
                         @error('value')
                             <span class="text-danger w-100 fs-6">{{ $message }}</span>
                         @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="basic-default-fullname">ملاحظة</label>
+                        <textarea class="form-control" name="description" placeholder="ملاحظات عن الدفعة">{{ $payment?->description }}</textarea>
                     </div>
                 </div>
             </div>

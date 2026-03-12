@@ -97,9 +97,6 @@ class SupplierController extends Controller
         ->select('purchasing_invoices.id as purchasing_invoices_id','purchasing_invoices.total_price','invoice_items.qty','invoice_items.price','purchasing_invoices.created_at','products.name as product_name')
         ->groupBy('purchasing_invoices.id','invoice_items.id')
         ->get();
-        
-
-
 
         $orders_payemnts = DB::table('customer_payments')->where([
             'customer_payments.customer_id' => $id
@@ -123,6 +120,15 @@ class SupplierController extends Controller
         ])->select('returns_payments.id as returns_payments_id','returns_payments.value as payment_values','returns_payments.type_return','returns_payments.created_at','returns_payments.r_invoice_id as id')
           ->get();
 
+        $disounts = DB::table('discount_on_stack_holders')->where([
+            'discount_on_stack_holders.user_id' => $id
+        ])->select(
+            'discount_on_stack_holders.id as discount_id',
+            'discount_on_stack_holders.value as payment_values',
+            'discount_on_stack_holders.created_at',
+            'discount_on_stack_holders.description')
+        ->get();
+
         $orders = $orders_items->merge($orders_payemnts);
 
         $orders = $orders->merge($invoices_payments);
@@ -130,6 +136,8 @@ class SupplierController extends Controller
         $orders = $orders->merge($returned_items);
 
         $orders = $orders->merge($returned_payments);
+        
+        $orders = $orders->merge($disounts);
 
         $orders = $orders->merge($purchasing_items)->sortBy('created_at');
 

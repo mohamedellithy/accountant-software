@@ -281,6 +281,29 @@
                                             {{ formate_price($balance) }} 
                                         </td>
                                     </tr>
+                                @elseif(isset($order->discount_id))
+                                    @php $balance = $balance - $order->payment_values  @endphp
+                                    <tr>
+                                        <td>
+                                            <strong>
+                                                -
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-label-primary me-1">
+                                                {{ date('Y-m-d',strtotime($order->created_at)) }}
+                                            </span>
+                                        </td>
+                                        <td colspan="4">
+                                            مبلغ مخصم  / {{ $order?->description }}
+                                        </td>
+                                        <td colspan="2">
+                                            {{ formate_price($order->payment_values) }} 
+                                        </td>
+                                        <td style="direction: ltr;">
+                                            {{ formate_price($balance) }} 
+                                        </td>
+                                    </tr>
                                 @endif
                             @endforeach
                             <tr style="background-color: #E8F5E9;border: 4px solid #171615;">

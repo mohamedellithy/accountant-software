@@ -453,6 +453,11 @@
             newWin.document.close();
         }
     </script>
+    <script>
+        jQuery("form").on('submit',function(){
+            jQuery("form button[type='submit']").attr('disabled',true);
+        });
+    </script>
     @stack('script')
 
 </body>

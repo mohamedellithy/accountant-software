@@ -9,7 +9,7 @@ class CustomerPayment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['customer_id','s_invoice_id','value'];
+    protected $fillable = ['customer_id','s_invoice_id','value','description'];
 
     public function order()
     {

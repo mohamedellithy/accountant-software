@@ -77,39 +77,43 @@ class CustomerController extends Controller
         ->join('order_items','orders.id','=','order_items.order_id')
         ->join('products','order_items.product_id','=','products.id')
         ->select('orders.id as order_id','orders.total_price','order_items.qty','order_items.price','orders.created_at','products.name as product_name')
-        ->groupBy('orders.id','order_items.id')
-        ->get();
+        ->groupBy('orders.id','order_items.id')->get();
 
         $purchasing_items = DB::table('purchasing_invoices')->where('purchasing_invoices.supplier_id',$id)
         ->join('invoice_items','purchasing_invoices.id','=','invoice_items.invoice_id')
         ->join('products','invoice_items.product_id','=','products.id')
         ->select('purchasing_invoices.id as purchasing_invoices_id','purchasing_invoices.total_price','invoice_items.qty','invoice_items.price','purchasing_invoices.created_at','products.name as product_name')
-        ->groupBy('purchasing_invoices.id','invoice_items.id')
-        ->get();
+        ->groupBy('purchasing_invoices.id','invoice_items.id')->get();
 
 
 
         $orders_payemnts = DB::table('customer_payments')->where([
             'customer_payments.customer_id' => $id
-        ])->select('customer_payments.id as customer_payments_id','customer_payments.value as payment_values','customer_payments.created_at','customer_payments.s_invoice_id as id')
-          ->get();
+        ])->select('customer_payments.id as customer_payments_id','customer_payments.value as payment_values','customer_payments.created_at','customer_payments.s_invoice_id as id')->get();
 
         $invoices_payments = DB::table('supplier_payments')->where([
             'supplier_payments.supplier_id' => $id
-        ])->select('supplier_payments.id as supplier_payments_id','supplier_payments.value as payment_values','supplier_payments.created_at','supplier_payments.p_invoice_id as id')
-          ->get();
+        ])->select('supplier_payments.id as supplier_payments_id','supplier_payments.value as payment_values','supplier_payments.created_at','supplier_payments.p_invoice_id as id')->get();
 
         $returned_items = DB::table('returneds')->where('returneds.customer_id',$id)
           ->join('return_items','returneds.id','=','return_items.return_id')
           ->join('products','return_items.product_id','=','products.id')
           ->select('returneds.id as returned_id','returneds.total_price','returneds.type_return','return_items.quantity','return_items.price','returneds.created_at','products.name as product_name')
-          ->groupBy('returneds.id','return_items.id')
-          ->get();
+          ->groupBy('returneds.id','return_items.id')->get();
         
         $returned_payments = DB::table('returns_payments')->where([
             'returns_payments.stake_holder_id' => $id
         ])->select('returns_payments.id as returns_payments_id','returns_payments.value as payment_values','returns_payments.type_return','returns_payments.created_at','returns_payments.r_invoice_id as id')
-          ->get();
+        ->get();
+
+        $disounts = DB::table('discount_on_stack_holders')->where([
+            'discount_on_stack_holders.user_id' => $id
+        ])->select(
+            'discount_on_stack_holders.id as discount_id',
+            'discount_on_stack_holders.value as payment_values',
+            'discount_on_stack_holders.created_at',
+            'discount_on_stack_holders.description')
+        ->get();
 
         $orders = $orders_items->merge($orders_payemnts);
 
@@ -118,10 +122,10 @@ class CustomerController extends Controller
         $orders = $orders->merge($returned_items);
 
         $orders = $orders->merge($returned_payments);
+
+        $orders = $orders->merge($disounts);
         
         $orders = $orders->merge($purchasing_items)->sortBy('created_at');
-
-        //dd($orders);
 
         return view(config('app.theme').'.pages.customer.show', compact('customer','orders'));
 

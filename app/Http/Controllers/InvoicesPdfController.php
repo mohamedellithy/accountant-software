@@ -103,6 +103,15 @@ class InvoicesPdfController extends Controller
         ])->select('returns_payments.id as returns_payments_id','returns_payments.value as payment_values','returns_payments.type_return','returns_payments.created_at','returns_payments.r_invoice_id as id')
           ->get();
 
+        $disounts = DB::table('discount_on_stack_holders')->where([
+            'discount_on_stack_holders.user_id' => $id
+        ])->select(
+            'discount_on_stack_holders.id as discount_id',
+            'discount_on_stack_holders.value as payment_values',
+            'discount_on_stack_holders.created_at',
+            'discount_on_stack_holders.description')
+        ->get();
+
         $orders = $orders_items->merge($orders_payemnts);
 
         $orders = $orders->merge($invoices_payments);
@@ -110,6 +119,7 @@ class InvoicesPdfController extends Controller
         $orders = $orders->merge($returned_items);
 
         $orders = $orders->merge($returned_payments);
+        $orders = $orders->merge($disounts);
 
         $orders = $orders->merge($purchasing_items)->sortBy('created_at');   
 

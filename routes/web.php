@@ -66,6 +66,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('edit-supplier-payment/{payment_id}',[PaymentsController::class,'edit_supplier_payment'])->name('supplier-payment.edit');
         Route::put('update-supplier-payment/{payment_id}',[PaymentsController::class,'update_supplier_payment'])->name('supplier-payment.update');
         Route::delete('destroy-supplier-payment/{payment_id}',[PaymentsController::class,'destroy_supplier_payment'])->name('supplier-payment.destroy');
+
+        Route::get('edit-user-discounts/{payment_id}',[PaymentsController::class,'edit_user_discounts'])->name('user-discounts.edit');
+        Route::put('update-user-discounts/{payment_id}',[PaymentsController::class,'update_user_discounts'])->name('user-discounts.update');
+        Route::delete('destroy-user-discounts/{payment_id}',[PaymentsController::class,'delete_user_discounts'])->name('user-discounts.destroy');
         
     });
 });

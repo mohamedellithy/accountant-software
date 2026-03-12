@@ -72,4 +72,21 @@ function IndexList($collection,$loop){
     return ($collection->total()- $loop->index ) - (($collection->currentpage()-1) * $collection->perpage() );
 }
 
+
+function CustomPaginateData($allData,$perPage = 10){
+    // Pagination يدوي
+    $page = request()->get('page', 1);
+    $offset = ($page - 1) * $perPage;
+
+    $paginatedData = new \Illuminate\Pagination\LengthAwarePaginator(
+        $allData->slice($offset, $perPage), // البيانات للصفحة الحالية
+        $allData->count(),                  // العدد الكلي
+        $perPage,
+        $page,
+        ['path' => request()->url(), 'query' => request()->query()]
+    );
+
+    return $paginatedData;
+}
+
 ?>
