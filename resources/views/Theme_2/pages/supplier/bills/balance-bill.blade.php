@@ -267,7 +267,11 @@
                                             </td>
                                         </tr>
                                     @elseif(isset($order->discount_id))
-                                        @php $balance = $balance - $order->payment_values  @endphp
+                                        @if($balance <= 0)
+                                            @php $balance = $balance + $order->payment_values  @endphp
+                                        @else
+                                            @php $balance = $balance - $order->payment_values  @endphp
+                                        @endif
                                         <tr>
                                             <td>
                                                 <strong>
