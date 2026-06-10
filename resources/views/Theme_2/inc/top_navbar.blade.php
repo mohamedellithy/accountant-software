@@ -11,7 +11,7 @@
         <!-- Organization Name -->
         <div class="navbar-nav align-items-center">
             <span class="nav-item fw-bold fs-4 ms-2 header-org-name">
-                {{ get_setting('logo_pdf_title', env('logo_pdf_title', 'الندى للتنمية الزراعية')) }}
+                {{ get_setting('logo_pdf_title', env('logo_pdf_title', 'للتنمية الزراعية')) }}
             </span>
         </div>
         <ul class="navbar-nav flex-row align-items-center ms-auto">

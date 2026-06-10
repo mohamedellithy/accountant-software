@@ -10,7 +10,7 @@
                 <div class="card-body p-4 text-white text-end">
                     <div class="row align-items-center">
                         <div class="col-md-9 text-start">
-                            <h3 class="fw-bold mb-1 text-white" style="font-family: 'Cairo', sans-serif !important;">نظام الندى للتنمية الزراعية المحاسبي</h3>
+                            <h3 class="fw-bold mb-1 text-white" style="font-family: 'Cairo', sans-serif !important;">{{ get_setting('logo_pdf_title', env('logo_pdf_title', 'للتنمية الزراعية')) }}</h3>
                             <p class="mb-0 opacity-80" style="font-size: 14px; font-family: 'Cairo', sans-serif !important;">مرحباً بك مجدداً في لوحة المتابعة المالية الفورية وإدارة المخازن والمبيعات الشاملة.</p>
                         </div>
                         <div class="col-md-3 text-end d-none d-md-block">
