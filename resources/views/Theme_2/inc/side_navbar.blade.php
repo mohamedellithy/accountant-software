@@ -21,157 +21,108 @@
             </a>
         </li>
 
-        <!-- products -->
-        {{-- <li class="menu-item {{ IsActiveOnlyIf(['admin.products.index','admin.products.show','admin.products.create','admin.products.edit']) }}">
-            <ul class="menu-sub">
-                <li class="menu-item {{ IsActiveOnlyIf(['admin.products.index','admin.products.edit','admin.products.show']) }}">
-                    <a href="{{ route('admin.products.index') }}" class="menu-link">
-                        <div data-i18n="Without navbar">كل الاصناف</div>
-                    </a>
-                </li>
-            </ul>
-        </li> --}}
-
-        <!-- stock  -->
-        <li class="menu-item {{ IsActiveOnlyIf(['admin.stocks.index','admin.products.index']) }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class='menu-icon tf-icons bx bxs-package'></i>
-                <div data-i18n="Layouts">الاصناف و المخزن</div>
+        <!-- Products -->
+        <li class="menu-item {{ IsActiveOnlyIf(['admin.products.index','admin.products.show','admin.products.create','admin.products.edit']) }}">
+            <a href="{{ route('admin.products.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-box"></i>
+                <div>الاصناف</div>
             </a>
-
-            <ul class="menu-sub">
-                <li class="menu-item {{ IsActiveOnlyIf(['admin.products.index']) }}">
-                    <a href="{{ route('admin.products.index') }}" class="menu-link">
-                        <div data-i18n="Without navbar">الاصناف</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ IsActiveOnlyIf(['admin.stocks.index']) }}">
-                    <a href="{{ route('admin.stocks.index') }}" class="menu-link">
-                        <div data-i18n="Without navbar">المخزن</div>
-                    </a>
-                </li>
-            </ul>
         </li>
 
-        <!-- invoices orders  -->
+        <!-- Stock -->
+        <li class="menu-item {{ IsActiveOnlyIf(['admin.stocks.index']) }}">
+            <a href="{{ route('admin.stocks.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-store-alt"></i>
+                <div>المخزن</div>
+            </a>
+        </li>
+
+        <!-- Sale Invoices -->
         <li class="menu-item {{ IsActiveOnlyIf(['admin.orders.index','admin.orders.create','admin.orders.edit','admin.orders.show']) }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class='menu-icon tf-icons bx bxs-package'></i>
-                <div data-i18n="Layouts">فواتير البيع</div>
+            <a href="{{ route('admin.orders.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-receipt"></i>
+                <div>فواتير البيع</div>
             </a>
-
-            <ul class="menu-sub">
-                <li class="menu-item {{ IsActiveOnlyIf(['admin.orders.index','admin.orders.show','admin.orders.edit']) }}">
-                    <a href="{{ route('admin.orders.index') }}" class="menu-link">
-                        <div data-i18n="Without navbar">عرض</div>
-                    </a>
-                </li>
-            </ul>
         </li>
 
-        <!-- invoices purchasing -->
+        <!-- Purchasing Invoices -->
         <li class="menu-item {{ IsActiveOnlyIf(['admin.purchasing-invoices.index','admin.purchasing-invoices.create','admin.purchasing-invoices.edit','admin.purchasing-invoices.show']) }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class='menu-icon tf-icons bx bxs-package'></i>
-                <div data-i18n="Layouts">فواتير الشراء</div>
+            <a href="{{ route('admin.purchasing-invoices.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-cart"></i>
+                <div>فواتير الشراء</div>
             </a>
-
-            <ul class="menu-sub">
-                <li class="menu-item {{ IsActiveOnlyIf(['admin.purchasing-invoices.index','admin.purchasing-invoices.show','admin.purchasing-invoices.edit']) }}">
-                    <a href="{{ route('admin.purchasing-invoices.index') }}" class="menu-link">
-                        <div data-i18n="Without navbar">عرض</div>
-                    </a>
-                </li>
-            </ul>
         </li>
 
-        <!--customers  -->
+        <!-- Customers -->
         <li class="menu-item {{ IsActiveOnlyIf(['admin.customers.index','admin.customers.create','admin.customers.edit','admin.customers.show']) }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class='menu-icon tf-icons bx bxs-package'></i>
-                <div data-i18n="Layouts">العملاء</div>
+            <a href="{{ route('admin.customers.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-group"></i>
+                <div>العملاء</div>
             </a>
-
-            <ul class="menu-sub">
-                <li class="menu-item {{ IsActiveOnlyIf(['admin.customers.index','admin.customers.show','admin.customers.edit']) }}">
-                    <a href="{{ route('admin.customers.index') }}" class="menu-link">
-                        <div data-i18n="Without navbar">عرض</div>
-                    </a>
-                </li>
-            </ul>
         </li>
 
-        <!--suppliers  -->
+        <!-- المطلوب تحصيله (عملاء) -->
+        <li class="menu-item {{ IsActiveOnlyIf(['admin.customers.debts']) }}">
+            <a href="{{ route('admin.customers.debts') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-money"></i>
+                <div>المطلوب تحصيله (عملاء)</div>
+            </a>
+        </li>
+
+        <!-- Suppliers -->
         <li class="menu-item {{ IsActiveOnlyIf(['admin.suppliers.index','admin.suppliers.create','admin.suppliers.edit','admin.suppliers.show']) }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class='menu-icon tf-icons bx bxs-package'></i>
-                <div data-i18n="Layouts">الموردين</div>
+            <a href="{{ route('admin.suppliers.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bxs-truck"></i>
+                <div>الموردين</div>
             </a>
-
-            <ul class="menu-sub">
-                <li class="menu-item {{ IsActiveOnlyIf(['admin.suppliers.index','admin.suppliers.show','admin.suppliers.edit']) }}">
-                    <a href="{{ route('admin.suppliers.index') }}" class="menu-link">
-                        <div data-i18n="Without navbar">عرض</div>
-                    </a>
-                </li>
-            </ul>
         </li>
 
-         <!-- Returns -->
+        <!-- المطلوب تسديده (موردين) -->
+        <li class="menu-item {{ IsActiveOnlyIf(['admin.suppliers.debts']) }}">
+            <a href="{{ route('admin.suppliers.debts') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-credit-card"></i>
+                <div>المطلوب تسديده (موردين)</div>
+            </a>
+        </li>
+
+        <!-- Returns -->
         <li class="menu-item {{ IsActiveOnlyIf(['admin.returns.index','admin.returns.create','admin.returns.edit','admin.returns.show']) }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class='menu-icon tf-icons bx bxs-package'></i>
-                <div data-i18n="Layouts">المرتجعات</div>
+            <a href="{{ route('admin.returns.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-undo"></i>
+                <div>المرتجعات</div>
             </a>
-
-            <ul class="menu-sub">
-                <li class="menu-item {{ IsActiveOnlyIf(['admin.returns.index','admin.returns.show','admin.returns.edit']) }}">
-                    <a href="{{ route('admin.returns.index') }}" class="menu-link">
-                        <div data-i18n="Without navbar">عرض</div>
-                    </a>
-                </li>
-            </ul>
         </li>
-
-
 
         <!-- Expenses -->
         <li class="menu-item {{ IsActiveOnlyIf(['admin.expenses.index','admin.expenses.create','admin.expenses.edit','admin.expenses.show']) }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class='menu-icon tf-icons bx bxs-package'></i>
-                <div data-i18n="Layouts">المصروفات</div>
+            <a href="{{ route('admin.expenses.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-money-withdraw"></i>
+                <div>المصروفات</div>
             </a>
-
-            <ul class="menu-sub">
-                <li class="menu-item {{ IsActiveOnlyIf(['admin.expenses.index','admin.expenses.show','admin.expenses.edit']) }}">
-                    <a href="{{ route('admin.expenses.index') }}" class="menu-link">
-                        <div data-i18n="Without navbar">عرض</div>
-                    </a>
-                </li>
-            </ul>
         </li>
 
-        <!-- payments -->
-        <li class="menu-item {{ IsActiveOnlyIf(['admin.payments.customers-index','admin.payments.suppliers-index']) }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class='menu-icon tf-icons bx bxs-package'></i>
-                <div data-i18n="Layouts">المدفوعات</div>
+        <!-- Customers Payments -->
+        <li class="menu-item {{ IsActiveOnlyIf(['admin.payments.customers-index']) }}">
+            <a href="{{ route('admin.payments.customers-index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-wallet"></i>
+                <div>مدفوعات العملاء</div>
             </a>
-
-            <ul class="menu-sub">
-                <li class="menu-item {{ IsActiveOnlyIf(['admin.payments.customers-index']) }}">
-                    <a href="{{ route('admin.payments.customers-index') }}" class="menu-link">
-                        <div data-i18n="Without navbar">مدفوعات العملاء</div>
-                    </a>
-                </li>
-
-                <li class="menu-item {{ IsActiveOnlyIf(['admin.payments.suppliers-index']) }}">
-                    <a href="{{ route('admin.payments.suppliers-index') }}" class="menu-link">
-                        <div data-i18n="Without navbar">مدفوعات الموردين</div>
-                    </a>
-                </li>
-            </ul>
         </li>
 
+        <!-- Suppliers Payments -->
+        <li class="menu-item {{ IsActiveOnlyIf(['admin.payments.suppliers-index']) }}">
+            <a href="{{ route('admin.payments.suppliers-index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-wallet"></i>
+                <div>مدفوعات الموردين</div>
+            </a>
+        </li>
+
+        <!-- Settings -->
+        <li class="menu-item {{ IsActiveOnlyIf(['admin.settings.index']) }}">
+            <a href="{{ route('admin.settings.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-cog"></i>
+                <div data-i18n="Analytics">إعدادات الفاتورة</div>
+            </a>
+        </li>
     </ul>
 </aside>

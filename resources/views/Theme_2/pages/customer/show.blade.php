@@ -17,15 +17,21 @@
                             class="bx bx-link-alt me-1"></i> المدفوعات</a>
                 </li>
             </ul>
-            <div class="card">
-                <h5 class="card-header">
-                    كشف حساب {{ $customer->name }}
+            <div class="card" id="customer-statement-card">
+                <h5 class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                    <span>كشف حساب {{ $customer->name }}</span>
+                    <div class="d-flex gap-2 no-print mt-2 mt-md-0">
+                        <a href="{{ route('admin.download-pdf-balance-bill',['id' => $customer->id]) }}" class="btn btn-sm btn-outline-success">
+                            <i class="bx bx-download me-1"></i>تنزيل كشف الحساب (PDF)
+                        </a>
+                        <button onclick="window.print()" class="btn btn-sm btn-success">
+                            <i class="bx bx-printer me-1"></i>طباعة الصفحة الحالية
+                        </button>
+                        <a href="{{ route('admin.customers.show', [$customer->id, 'print_all' => 1]) }}" target="_blank" class="btn btn-sm btn-dark">
+                            <i class="bx bx-file me-1"></i>طباعة الكشف كاملاً
+                        </a>
+                    </div>
                 </h5>
-                <ul>
-                    <li>
-                        <a href="{{ route('admin.download-pdf-balance-bill',['id' => $customer->id]) }}" class="btn btn-success btn-sm">تنزيل كشف الحساب</a>
-                    </li>
-                </ul>
                 <div class="table-responsive">
                     <table class="table table-border">
                         <thead class="table-light">
@@ -42,9 +48,10 @@
                             </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
-                            <?php $balance = $customer->balance ?: 0; ?>
+                            <?php $balance = $page_initial_balance; ?>
                             <?php $credit = 0; ?>
                             <?php $debit = 0; ?>
+                            <?php $applied_discounts = []; ?>
                             <tr>
                                 <td></td>
                                 <td>
@@ -98,6 +105,38 @@
                                             {{ formate_price($balance) }} 
                                         </td>
                                     </tr>
+                                    @if(isset($order->discount) && $order->discount > 0 && !in_array($order->order_id, $applied_discounts))
+                                        @php $balance = $balance + $order->discount @endphp
+                                        @php $debit += $order->discount @endphp
+                                        @php $applied_discounts[] = $order->order_id @endphp
+                                        <tr>
+                                            <td>
+                                                <strong>
+                                                    {{ $order->order_id }}#
+                                                </strong>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-label-primary me-1">
+                                                    {{ date('Y-m-d',strtotime($order->created_at)) }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                خصم مبيعات
+                                            </td>
+                                            <td>
+                                                خصم على فاتورة مبيعات رقم {{ $order->order_id }}#
+                                            </td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>
+                                                {{ formate_price($order->discount) }}
+                                            </td>
+                                            <td style="direction: ltr;">
+                                                {{ formate_price($balance) }}
+                                            </td>
+                                        </tr>
+                                    @endif
                                 @elseif(isset($order->purchasing_invoices_id))
                                     @php $balance = $balance + ($order->qty * $order->price)  @endphp
                                     @php $debit  += $order->qty * $order->price @endphp
@@ -173,10 +212,17 @@
                                             </span>
                                         </td>
                                         <td colspan="4">
-                                            تم دفع كاش للعميل 
+                                            @if($customer->role === 'supplier')
+                                                تم دفع كاش للمورد
+                                            @else
+                                                تم دفع كاش للعميل
+                                            @endif
                                         </td>
-                                        <td colspan="2">
+                                        <td>
                                             {{ formate_price($order->payment_values) }} 
+                                        </td>
+                                        <td>
+                                            -
                                         </td>
                                         <td style="direction: ltr;">
                                             {{ formate_price($balance) }} 
@@ -273,8 +319,11 @@
                                             <td colspan="4">
                                                 مبلغ مدفوع مرتجعات لفاتورة بيع
                                             </td>
-                                            <td colspan="2">
-                                                {{ formate_price($order->payment_values) }} 
+                                            <td>
+                                                {{ formate_price($order->payment_values) }}
+                                            </td>
+                                            <td>
+                                                -
                                             </td>
                                         @endif
 
@@ -283,10 +332,13 @@
                                         </td>
                                     </tr>
                                 @elseif(isset($order->discount_id))
-                                    @if($balance <= 0)
+                                    @php $is_negative = $balance <= 0; @endphp
+                                    @if($is_negative)
                                         @php $balance = $balance + $order->payment_values  @endphp
+                                        @php $debit += $order->payment_values @endphp
                                     @else
                                         @php $balance = $balance - $order->payment_values  @endphp
+                                        @php $credit += $order->payment_values @endphp
                                     @endif
                                     <tr>
                                         <td>
@@ -302,9 +354,21 @@
                                         <td colspan="4">
                                             مبلغ مخصم  / {{ $order?->description }}
                                         </td>
-                                        <td colspan="2">
-                                            {{ formate_price($order->payment_values) }} 
-                                        </td>
+                                        @if($is_negative)
+                                            <td>
+                                                -
+                                            </td>
+                                            <td>
+                                                {{ formate_price($order->payment_values) }}
+                                            </td>
+                                        @else
+                                            <td>
+                                                {{ formate_price($order->payment_values) }}
+                                            </td>
+                                            <td>
+                                                -
+                                            </td>
+                                        @endif
                                         <td style="direction: ltr;">
                                             {{ formate_price($balance) }} 
                                         </td>
@@ -331,9 +395,11 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="d-flex flex-row justify-content-center">
-                    {{-- {{ $orders->links() }} --}}
+                @if(!$print_all)
+                <div class="d-flex flex-row justify-content-center no-print mt-3 mb-3">
+                    {{ $orders->links('Theme_2.inc.custom_pagination') }}
                 </div>
+                @endif
             </div>
         </div>
         {{-- <div class="col-md-12">
@@ -376,4 +442,72 @@
     </div>
 </div>
 <!-- /.container-fluid -->
+
+@push('style')
+<style>
+    @media print {
+        /* Hide sidebar, navbar, footer, actions, pagination, etc. */
+        .layout-menu, 
+        .layout-navbar, 
+        .nav-pills, 
+        .no-print, 
+        footer, 
+        .content-footer, 
+        .btn, 
+        .pagination,
+        .show-notify {
+            display: none !important;
+        }
+        /* Expand the layout containers to full screen */
+        .layout-wrapper, 
+        .layout-container, 
+        .layout-page, 
+        .content-wrapper, 
+        .container-fluid, 
+        .card {
+            padding: 0 !important;
+            margin: 0 !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        .table-responsive {
+            overflow: visible !important;
+        }
+        body {
+            background-color: #fff !important;
+            color: #000 !important;
+        }
+        /* Custom table styling for print */
+        .table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+        }
+        .table th, .table td {
+            border: 1px solid #ddd !important;
+            padding: 8px !important;
+            color: #000 !important;
+        }
+        .table-dark th {
+            background-color: #f2f2f2 !important;
+            color: #000 !important;
+        }
+    }
+</style>
+@endpush
+
+@if($print_all)
+    @push('script')
+    <script>
+        $(document).ready(function() {
+            setTimeout(function() {
+                window.print();
+            }, 500);
+        });
+    </script>
+    @endpush
+@endif
+
 @endsection

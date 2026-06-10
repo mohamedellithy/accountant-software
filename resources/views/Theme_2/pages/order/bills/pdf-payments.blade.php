@@ -53,9 +53,13 @@
                     <tr>
                         <td height="25" style="color:black !important">المتبقي</td>
                         <td height="25" style="color:black !important">{{ formate_price($order->total_price - $order->order_payments_sum_value) }}</td>
-                    </tr>
                 </tbody>
             </table>
+        </div>
+        <div style="text-align: center; margin-top: 30px; border-top: 1px dashed #ccc; padding-top: 10px; font-size: 10px; color: #666;">
+            <span>تم تطوير هذا النظام بواسطة <strong>multi-solutions</strong> لحلول البرمجيات وتكنولوجيا المعلومات</span>
+            <br/>
+            <span>واتساب / جوال: 201026051966 - 201080766906</span>
         </div>
     </body>
 </html>

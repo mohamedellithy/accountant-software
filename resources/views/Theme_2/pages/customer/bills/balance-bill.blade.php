@@ -51,8 +51,7 @@
                                     </td>
                                     <td style="direction: ltr;border:1px solid black">
                                         {{ formate_price($balance) }}
-                                    </td>
-                                </tr>
+                                <?php $applied_discounts = []; ?>
                                 @foreach ($orders as $order)
                                     @if(isset($order->order_id))
                                         @php $balance  = $balance - ($order->qty * $order->price)  @endphp
@@ -90,6 +89,38 @@
                                                 {{ formate_price($balance) }}
                                             </td>
                                         </tr>
+                                        @if(isset($order->discount) && $order->discount > 0 && !in_array($order->order_id, $applied_discounts))
+                                            @php $balance = $balance + $order->discount @endphp
+                                            @php $debit += $order->discount @endphp
+                                            @php $applied_discounts[] = $order->order_id @endphp
+                                            <tr style="border:1px solid black !important">
+                                                <td style='border:1px solid black !important'>
+                                                    <strong>
+                                                        {{ $order->order_id }}#
+                                                    </strong>
+                                                </td>
+                                                <td style='border:1px solid black !important'>
+                                                    <span class="badge bg-label-primary me-1">
+                                                        {{ date('Y-m-d',strtotime($order->created_at)) }}
+                                                    </span>
+                                                </td>
+                                                <td style='border:1px solid black !important'>
+                                                    خصم مبيعات
+                                                </td>
+                                                <td style='border:1px solid black !important'>
+                                                    خصم على فاتورة مبيعات رقم {{ $order->order_id }}#
+                                                </td>
+                                                <td style='border:1px solid black !important'>-</td>
+                                                <td style='border:1px solid black !important'>-</td>
+                                                <td style='border:1px solid black !important'>-</td>
+                                                <td style='border:1px solid black !important'>
+                                                    {{ formate_price($order->discount) }}
+                                                </td>
+                                                <td style="direction: ltr;border:1px solid black !important">
+                                                    {{ formate_price($balance) }}
+                                                </td>
+                                            </tr>
+                                        @endif
                                     @elseif(isset($order->purchasing_invoices_id))
                                         @php $balance = $balance + ($order->qty * $order->price)  @endphp
                                         @php $debit  += $order->qty * $order->price @endphp
@@ -165,10 +196,17 @@
                                                 </span>
                                             </td>
                                             <td colspan="4" style='border-left:1px solid black !important;border-right:1px solid black !important'>
-                                                تم دفع كاش للعميل
+                                                @if($customer->role === 'supplier')
+                                                    تم دفع كاش للمورد
+                                                @else
+                                                    تم دفع كاش للعميل
+                                                @endif
                                             </td>
-                                            <td colspan="2" style='border:1px solid black !important'>
+                                            <td style='border:1px solid black !important'>
                                                 {{ formate_price($order->payment_values) }}
+                                            </td>
+                                            <td style='border:1px solid black !important'>
+                                                -
                                             </td>
                                             <td style="direction: ltr;border:1px solid black !important">
                                                 {{ formate_price($balance) }}
@@ -260,44 +298,58 @@
                                                     {{ formate_price($order->payment_values) }} 
                                                 </td>
                                             @endif
-    
+        
                                             @if($order->type_return == 'sale')
                                                 <td colspan="4" style="border:1px solid black">
                                                     مبلغ مدفوع مرتجعات لفاتورة بيع
                                                 </td>
-                                                <td colspan="2" style="border:1px solid black">
-                                                    {{ formate_price($order->payment_values) }} 
+                                                <td style="border:1px solid black">
+                                                    {{ formate_price($order->payment_values) }}
+                                                </td>
+                                                <td style="border:1px solid black">
+                                                    -
                                                 </td>
                                             @endif
-    
+        
                                             <td style="direction: ltr;border:1px solid black">
                                                 {{ formate_price($balance) }} 
                                             </td>
                                         </tr>
                                     @elseif(isset($order->discount_id))
-                                        @if($balance <= 0)
+                                        @php $is_negative = $balance <= 0; @endphp
+                                        @if($is_negative)
                                             @php $balance = $balance + $order->payment_values  @endphp
+                                            @php $debit += $order->payment_values @endphp
                                         @else
                                             @php $balance = $balance - $order->payment_values  @endphp
+                                            @php $credit += $order->payment_values @endphp
                                         @endif
-                                        <tr>
-                                            <td>
+                                        <tr style="border:1px solid black">
+                                            <td style="border:1px solid black">
                                                 <strong>
                                                     -
                                                 </strong>
                                             </td>
-                                            <td>
+                                            <td style="border:1px solid black">
                                                 <span class="badge bg-label-primary me-1">
                                                     {{ date('Y-m-d',strtotime($order->created_at)) }}
                                                 </span>
                                             </td>
-                                            <td colspan="4">
+                                            <td colspan="4" style="border:1px solid black">
                                                 مبلغ مخصم  / {{ $order?->description }}
                                             </td>
-                                            <td colspan="2">
-                                                {{ formate_price($order->payment_values) }} 
-                                            </td>
-                                            <td style="direction: ltr;">
+                                            @if($is_negative)
+                                                <td style="border:1px solid black">-</td>
+                                                <td style="border:1px solid black">
+                                                    {{ formate_price($order->payment_values) }} 
+                                                </td>
+                                            @else
+                                                <td style="border:1px solid black">
+                                                    {{ formate_price($order->payment_values) }} 
+                                                </td>
+                                                <td style="border:1px solid black">-</td>
+                                            @endif
+                                            <td style="direction: ltr;border:1px solid black">
                                                 {{ formate_price($balance) }} 
                                             </td>
                                         </tr>

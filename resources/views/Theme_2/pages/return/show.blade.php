@@ -12,9 +12,17 @@
                  <!-- Basic Card Example -->
                 <div class="card mb-4" id="DivIdToPrint">
                     <div class="card-header py-3">
-                        <div class="d-flex invoice-header">
-                            <div class="">
-                                <strong>{{ env('logo_pdf_title') }}</strong>
+                        <div class="d-flex invoice-header" style="align-items: center; justify-content: space-between;">
+                            <div class="d-flex align-items-center">
+                                @if(get_setting('logo'))
+                                    <div style="margin-left: 15px;">
+                                        <img src="{{ get_setting('logo') }}" alt="Logo" style="max-height: 55px; max-width: 150px; object-fit: contain;">
+                                    </div>
+                                @endif
+                                <div class="head">
+                                    <strong style="font-size: 16px; display: block;">{{ get_setting('logo_pdf_title', env('logo_pdf_title')) }}</strong>
+                                    <p style="margin: 3px 0 0 0;">(م/ت)  {{ get_setting('phone_number', env('phone_number')) }} @if(get_setting('telephone')) - {{ get_setting('telephone') }} @endif</p>
+                                </div>
                             </div>
                             <div class="date d-flex">
                                 <strong>تحرير في </strong>

@@ -54,12 +54,21 @@ class CustomerController extends Controller
             'role' => 'customer'
         ]);
 
-        StakeHolder::create($request->only([
+        $customer = StakeHolder::create($request->only([
             'name',
             'phone',
             'role',
             'balance'
         ]));
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'تم إضافة العميل بنجاح',
+                'customer' => $customer
+            ]);
+        }
+
         return redirect()->back()->with('success_message', 'تم اضافة عميل');
     }
 
@@ -76,7 +85,7 @@ class CustomerController extends Controller
         $orders_items = DB::table('orders')->where('orders.customer_id',$id)
         ->join('order_items','orders.id','=','order_items.order_id')
         ->join('products','order_items.product_id','=','products.id')
-        ->select('orders.id as order_id','orders.total_price','order_items.qty','order_items.price','orders.created_at','products.name as product_name')
+        ->select('orders.id as order_id','orders.total_price','orders.discount','order_items.qty','order_items.price','orders.created_at','products.name as product_name')
         ->groupBy('orders.id','order_items.id')->get();
 
         $purchasing_items = DB::table('purchasing_invoices')->where('purchasing_invoices.supplier_id',$id)
@@ -127,7 +136,66 @@ class CustomerController extends Controller
         
         $orders = $orders->merge($purchasing_items)->sortBy('created_at');
 
-        return view(config('app.theme').'.pages.customer.show', compact('customer','orders'));
+        // حساب الرصيد التراكمي الجاري لكل حركة في المجموعة الكاملة
+        $balance = $customer->balance ?: 0;
+        $applied_discounts = [];
+        foreach ($orders as $order) {
+            if (isset($order->order_id)) {
+                $balance = $balance - ($order->qty * $order->price);
+                if (isset($order->discount) && $order->discount > 0 && !in_array($order->order_id, $applied_discounts)) {
+                    $balance = $balance + $order->discount;
+                    $applied_discounts[] = $order->order_id;
+                }
+            } elseif (isset($order->purchasing_invoices_id)) {
+                $balance = $balance + ($order->qty * $order->price);
+            } elseif (isset($order->customer_payments_id)) {
+                $balance = $balance + $order->payment_values;
+            } elseif (isset($order->supplier_payments_id)) {
+                $balance = $balance - $order->payment_values;
+            } elseif (isset($order->returned_id)) {
+                if ($order->type_return == 'sale') {
+                    $balance = $balance + ($order->quantity * $order->price);
+                }
+                if ($order->type_return == 'purchasing') {
+                    $balance = $balance - ($order->quantity * $order->price);
+                }
+            } elseif (isset($order->returns_payments_id)) {
+                if ($order->type_return == 'sale') {
+                    $balance = $balance - $order->payment_values;
+                }
+                if ($order->type_return == 'purchasing') {
+                    $balance = $balance + $order->payment_values;
+                }
+            } elseif (isset($order->discount_id)) {
+                if ($balance <= 0) {
+                    $balance = $balance + $order->payment_values;
+                } else {
+                    $balance = $balance - $order->payment_values;
+                }
+            }
+            $order->running_balance = $balance;
+        }
+
+        $print_all = $request->has('print_all');
+
+        if ($print_all) {
+            $page_initial_balance = $customer->balance ?: 0;
+        } else {
+            $perPage = 20;
+            $page = $request->get('page', 1);
+
+            if ($page == 1) {
+                $page_initial_balance = $customer->balance ?: 0;
+            } else {
+                $prev_index = ($page - 1) * $perPage - 1;
+                $prev_order = $orders->values()->get($prev_index);
+                $page_initial_balance = $prev_order ? $prev_order->running_balance : ($customer->balance ?: 0);
+            }
+
+            $orders = CustomPaginateData($orders, $perPage);
+        }
+
+        return view(config('app.theme').'.pages.customer.show', compact('customer', 'orders', 'page_initial_balance', 'print_all'));
 
     }
 
@@ -182,5 +250,62 @@ class CustomerController extends Controller
         $customerOrders = Order::where('customer_id', $id)->where('order_status','completed')->with('orderitems', 'orderitems.product')->get();
         return view('pages.admin.customer.customerorder', compact('customers','customerOrders'));
 
+    }
+
+    public function debtsReport(Request $request)
+    {
+        $query = StakeHolder::where('role', 'customer');
+
+        if ($request->has('search') && $request->search != '') {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $allCustomers = $query->get();
+
+        $customers = $allCustomers->filter(function($customer) {
+            $balance = get_balance_stake_holder($customer);
+            $customer->current_balance = $balance;
+            return $balance < 0;
+        });
+
+        $total_debts = $customers->sum(function($customer) {
+            return abs($customer->current_balance);
+        });
+
+        $perPage = 20;
+        $totalCount = $customers->count();
+        $page = $request->get('page', 1);
+        $offset = ($page - 1) * $perPage;
+
+        $paginatedItems = $customers->slice($offset, $perPage);
+        foreach ($paginatedItems as $customer) {
+            $last_order = $customer->orders()->latest('created_at')->first();
+            $last_purchase = $customer->purchasing_invoices()->latest('created_at')->first();
+            $last_cust_payment = $customer->customer_payments()->latest('created_at')->first();
+            $last_supp_payment = $customer->supplier_payments()->latest('created_at')->first();
+
+            $dates = [];
+            if ($last_order) $dates[] = $last_order->created_at;
+            if ($last_purchase) $dates[] = $last_purchase->created_at;
+            if ($last_cust_payment) $dates[] = $last_cust_payment->created_at;
+            if ($last_supp_payment) $dates[] = $last_supp_payment->created_at;
+
+            $last_date = !empty($dates) ? max($dates) : null;
+            $customer->last_transaction_date = $last_date ? \Carbon\Carbon::parse($last_date)->format('Y-m-d') : '-';
+        }
+
+        $paginatedCustomers = new \Illuminate\Pagination\LengthAwarePaginator(
+            $paginatedItems,
+            $totalCount,
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        return view(config('app.theme').'.pages.customer.debts', [
+            'customers' => $paginatedCustomers,
+            'total_debts' => $total_debts,
+            'search' => $request->search
+        ]);
     }
 }

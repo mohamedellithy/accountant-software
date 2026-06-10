@@ -1,21 +1,33 @@
- <!-- Begin Page Content -->
+<!-- Begin Page Content -->
  @extends('Theme_2.layouts.master')
 
  @section('content')
     <div class="container-fluid">
         <!-- Page Heading -->
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">{{ $order->order_no }}</h1>
+            <h1 class="h3 mb-0 text-gray-800">{{ $order->order_number }}</h1>
         </div>
+        @php
+            $current_balance = $order->customer ? get_balance_stake_holder($order->customer) : 0;
+            $current_invoice_remaining = $order->total_price - $order->order_payments_sum_value;
+            $previous_balance = $current_balance + $current_invoice_remaining;
+        @endphp
         <div class="row">
             <div class="col-lg-8">
                  <!-- Basic Card Example -->
                 <div class="card mb-4" id="DivIdToPrint">
                     <div class="card-header py-3">
-                        <div class="d-flex invoice-header">
-                            <div class="head">
-                                <strong>{{ env('logo_pdf_title') }}</strong>
-                                <p>(م/ت)  {{ env('phone_number') }}</p>
+                        <div class="d-flex invoice-header" style="align-items: center; justify-content: space-between;">
+                            <div class="d-flex align-items-center">
+                                @if(get_setting('logo'))
+                                    <div style="margin-left: 15px;">
+                                        <img src="{{ get_setting('logo') }}" alt="Logo" style="max-height: 55px; max-width: 150px; object-fit: contain;">
+                                    </div>
+                                @endif
+                                <div class="head">
+                                    <strong style="font-size: 16px; display: block;">{{ get_setting('logo_pdf_title', env('logo_pdf_title')) }}</strong>
+                                    <p style="margin: 3px 0 0 0;">(م/ت)  {{ get_setting('phone_number', env('phone_number')) }} @if(get_setting('telephone')) - {{ get_setting('telephone') }} @endif</p>
+                                </div>
                             </div>
                             <div class="date d-flex">
                                 <strong>تحرير في </strong>
@@ -105,7 +117,7 @@
                                         <td>
                                             مبالغ سابقة
                                         </td>
-                                        <td colspan="4" style="text-align: left;padding-left: 56px;">{{ formate_price(abs(get_balance_stake_holder($order->customer)) - ($order->total_price - $order->order_payments_sum_value)) }}</td>
+                                        <td colspan="4" style="text-align: left;padding-left: 56px;">{{ formate_price(-$previous_balance) }}</td>
                                     </tr>
                                     <tr>
                                         <td></td>
@@ -113,7 +125,7 @@
                                             اجمالى الباقي
                                         </td>
                                         <td colspan="4" style="text-align: left;padding-left: 56px;">
-                                            {{ formate_price(get_balance_stake_holder($order->customer)) }}
+                                            {{ formate_price(-$current_balance) }}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -139,13 +151,13 @@
                         <div class="d-flex footer">
                             <table class="table table-borderless" style="width:100%">
                                 <tr style="border: 0px;color: #566a7f;">
-                                    <th style="color: #566a7f !important;text-align: center;">
+                                    <th style="color: #566a7f !important;text-align: center; border: none !important;">
                                         <strong>ادارة</strong>
-                                        <p style="padding: 0px;margin: 0px;">م . {{ env('manager_name') }}</p>
+                                        <p style="padding: 0px;margin: 0px;">م . {{ get_setting('manager_name', env('manager_name')) }}</p>
                                     </th>
-                                    <th style="color: #566a7f !important;text-align: center;">
+                                    <th style="color: #566a7f !important;text-align: center; border: none !important;">
                                         <strong>رقم التليفون</strong>
-                                        <p style="padding: 0px;margin: 0px;">{{ env('phone_number') }}</p>
+                                        <p style="padding: 0px;margin: 0px;">{{ get_setting('phone_number', env('phone_number')) }} @if(get_setting('telephone')) / {{ get_setting('telephone') }} @endif</p>
                                     </th>
                                 </tr>
                             </table>

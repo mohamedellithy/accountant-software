@@ -77,9 +77,9 @@
             display: block !important;
         }
         @media(max-width:1000px){
-            form#filter-data{
-                display: flex !important;
-                flex-wrap: wrap;
+            .card-header form#filter-data,
+            .card-body form#filter-data{
+                display: none !important;
             }
             form#filter-data label{
                 font-size: 11px;
@@ -123,7 +123,55 @@
             /* Optional: Remove headers/footers from Chrome print */
             @page :footer { display: none !important }
             @page :header { display: none !important }
+    </style>
+    
+    <!-- Dynamic Navbar & Sidebar Customization Styles -->
+    <style>
+        @php
+            $sidebar_color = get_setting('sidebar_color', '#1e293b');
+            $navbar_color = get_setting('navbar_color', '#ffffff');
+        @endphp
+        
+        .bg-menu-theme {
+            background-color: {{ $sidebar_color }} !important;
         }
+        .bg-menu-theme .menu-inner-shadow {
+            background: linear-gradient({{ $sidebar_color }} 41%, rgba(30, 41, 59, 0.11) 95%, rgba(30, 41, 59, 0)) !important;
+        }
+        .app-brand .layout-menu-toggle {
+            border-color: {{ $sidebar_color }} !important;
+        }
+        
+        .layout-navbar, .bg-navbar-theme {
+            background-color: {{ $navbar_color }} !important;
+        }
+
+        /* Adjust Navbar text color for contrast if it is dark */
+        @if(color_is_dark($navbar_color))
+            .bg-navbar-theme .navbar-search-wrapper .search-input,
+            .bg-navbar-theme .navbar-nav > .nav-link,
+            .bg-navbar-theme .navbar-nav > .nav-item > .nav-link,
+            .bg-navbar-theme .navbar-nav .show > .nav-link,
+            .bg-navbar-theme .navbar-nav .active > .nav-link,
+            .bg-navbar-theme .navbar-nav .nav-link i {
+                color: #f8fafc !important;
+            }
+            .bg-navbar-theme .navbar-search-wrapper .navbar-search-icon {
+                color: #cbd5e1 !important;
+            }
+            .bg-navbar-theme .header-org-name {
+                color: #f8fafc !important;
+            }
+        @else
+            .bg-navbar-theme .navbar-search-wrapper .search-input,
+            .bg-navbar-theme .navbar-nav > .nav-link,
+            .bg-navbar-theme .navbar-nav > .nav-item > .nav-link {
+                color: #697a8d !important;
+            }
+            .bg-navbar-theme .header-org-name {
+                color: #2e7d32 !important;
+            }
+        @endif
     </style>
     @stack('style')
 </head>
@@ -455,10 +503,284 @@
     </script>
     <script>
         jQuery("form").on('submit',function(){
-            jQuery("form button[type='submit']").attr('disabled',true);
+            if (jQuery(this).hasClass('ajax-form') || this.id === 'quickAddCustomerForm' || this.id === 'quickAddSupplierForm') {
+                return;
+            }
+            jQuery(this).find("button[type='submit'], input[type='submit']").attr('disabled',true);
         });
-    </script>
-    @stack('script')
+
+        jQuery(document).ready(function($) {
+            // --- MOBILE FILTERS DYNAMIC POPUP ---
+            if ($(window).width() < 992) {
+                var $filterForm = $('#filter-data');
+                if ($filterForm.length > 0) {
+                    // Create and insert mobile filter trigger button right before the filter form (above the table)
+                    var $filterTrigger = $('<button type="button" class="btn btn-outline-primary w-100 mb-3 d-lg-none py-2 fw-bold" data-bs-toggle="modal" data-bs-target="#mobileFilterModal"><i class="bx bx-filter-alt me-2 fs-5"></i>تصفية وترشيح النتائج</button>');
+                    $filterForm.before($filterTrigger);
+                    
+                    // Append filter form to the bottom sheet modal body
+                    $filterForm.appendTo('#mobileFilterModalBody');
+                    
+                    // Format the form elements nicely inside the bottom sheet modal
+                    $filterForm.removeClass('d-flex justify-content-between').addClass('row g-3');
+                    $filterForm.find('.col-12, .col-md-4, .col-md-3, .nav-item, .mb-3').each(function() {
+                        $(this).removeClass('col-md-4 col-md-3 d-flex align-items-center m-2').addClass('col-12 mb-2');
+                    });
+                    $filterForm.find('.d-flex').each(function() {
+                        if (!$(this).hasClass('filters-fields')) {
+                            $(this).removeClass('d-flex').addClass('row g-2 m-0 p-0');
+                        }
+                    });
+                    $filterForm.find('select, input').addClass('form-control-lg');
+                    
+                    // Ensure Select2 dropdown works inside the modal
+                    if ($.fn.select2) {
+                        $filterForm.find('.form-select2').select2({
+                            dropdownParent: $('#mobileFilterModal')
+                        });
+                    }
+                }
+            }
+
+            // Bind Apply button in filter modal to submit the form
+            $('#mobileFilterModal .btn-primary').on('click', function() {
+                $('#filter-data').submit();
+            });
+
+            // --- MOBILE TABLE ACTIONS DYNAMIC POPUP ---
+            var $activeTd = null;
+            
+            $('table tbody tr').each(function() {
+                var $row = $(this);
+                var $lastTd = $row.find('td:last-child');
+                var $actions = $lastTd.find('> a, > button, > form, div.d-flex > a, div.d-flex > button, div.d-flex > form');
+                if ($actions.length > 0) {
+                    $actions.addClass('d-none d-lg-inline-flex m-1');
+                    var $mobileBtn = $('<button type="button" class="btn btn-sm btn-outline-primary d-lg-none py-1 px-2 mobile-actions-trigger-btn" style="font-size:12px; font-weight:600;"><i class="bx bx-dots-vertical-rounded"></i> الإجراءات</button>');
+                    $lastTd.append($mobileBtn);
+                }
+            });
+
+            $(document).on('click', '.mobile-actions-trigger-btn', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                var $btn = $(this);
+                var $td = $btn.parent();
+                $activeTd = $td;
+                
+                var $row = $btn.closest('tr');
+                var $table = $row.closest('table');
+                
+                // Find entity name dynamically
+                var entityName = "";
+                var nameColIndex = -1;
+                $table.find('thead th').each(function(index) {
+                    var text = $(this).text().trim();
+                    if (text.indexOf('اسم') !== -1 || text.indexOf('الاسم') !== -1 || text.indexOf('البيان') !== -1) {
+                        nameColIndex = index;
+                        return false;
+                    }
+                });
+                if (nameColIndex !== -1) {
+                    entityName = $row.find('td').eq(nameColIndex).text().trim().replace(/\s+/g, ' ');
+                }
+                
+                // Find entity code dynamically
+                var entityCode = "";
+                var codeColIndex = -1;
+                $table.find('thead th').each(function(index) {
+                    var text = $(this).text().trim();
+                    if (text.indexOf('كود') !== -1 || text.indexOf('رقم') !== -1) {
+                        codeColIndex = index;
+                        return false;
+                    }
+                });
+                if (codeColIndex !== -1) {
+                    entityCode = $row.find('td').eq(codeColIndex).text().trim().replace(/\s+/g, ' ');
+                }
+                
+                // Fallback for code
+                if (!entityCode) {
+                    entityCode = $row.find('td:first-child').text().trim().replace(/\s+/g, ' ');
+                }
+                
+                var label = "";
+                if (entityName) {
+                    label = 'خيارات: ' + entityName;
+                    if (entityCode) {
+                        label += ' (' + entityCode + ')';
+                    }
+                } else {
+                    label = 'خيارات سجل رقم ' + (entityCode || ($row.index() + 1));
+                }
+                
+                $('#mobileActionsModalLabel').html('<i class="bx bx-cog me-2"></i>' + label);
+                
+                // Save original parent, HTML and classes before modifying
+                $td.find('.d-none').each(function() {
+                    var $el = $(this);
+                    if (!$el.data('original-parent')) {
+                        $el.data('original-parent', $el.parent());
+                    }
+                    if (!$el.data('original-html')) {
+                        $el.data('original-html', $el.html());
+                    }
+                    if (!$el.data('original-class')) {
+                        $el.data('original-class', $el.attr('class'));
+                    }
+                    if ($el.is('form')) {
+                        var $inner = $el.find('a, button');
+                        if ($inner.length && !$inner.data('original-html')) {
+                            $inner.data('original-html', $inner.html());
+                        }
+                        if ($inner.length && !$inner.data('original-class')) {
+                            $inner.data('original-class', $inner.attr('class'));
+                        }
+                    }
+                });
+
+                var $modalBody = $('#mobileActionsModalBody');
+                $modalBody.empty();
+                
+                // Move elements to modal
+                $td.find('.d-none').appendTo($modalBody).removeClass('d-none');
+                
+                // Style and label each action beautifully
+                $modalBody.children().each(function() {
+                    var $el = $(this);
+                    var isForm = $el.is('form');
+                    var $actionEl = isForm ? $el.find('a, button') : $el;
+                    
+                    var html = $actionEl.html() || '';
+                    var isDelete = $actionEl.hasClass('delete-item') || html.indexOf('fa-trash') !== -1 || html.indexOf('bx-trash') !== -1;
+                    var isEdit = $actionEl.hasClass('edit-customer') || $actionEl.hasClass('edit-supplier') || $actionEl.hasClass('edit-product') || $actionEl.hasClass('edit-stock') || $actionEl.hasClass('edit-expense') || $actionEl.hasClass('edit-payment') || html.indexOf('fa-edit') !== -1 || html.indexOf('bx-edit') !== -1;
+                    var isView = html.indexOf('fa-eye') !== -1 || html.indexOf('bx-show') !== -1 || ($actionEl.attr('href') && $actionEl.attr('href').indexOf('show') !== -1);
+                    
+                    // Reset class and set layout
+                    $actionEl.removeClass().addClass('btn w-100 mb-3 py-3 px-4 text-start d-flex align-items-center justify-content-between');
+                    
+                    if (isDelete) {
+                        $actionEl.addClass('btn-label-danger');
+                        $actionEl.html(`
+                            <div class="d-flex align-items-center">
+                                <i class="bx bx-trash me-3 fs-3 text-danger"></i>
+                                <div class="text-start">
+                                    <div class="fw-bold text-danger fs-5">حذف السجل</div>
+                                    <small class="text-muted">حذف هذا السجل نهائياً من قاعدة البيانات</small>
+                                </div>
+                            </div>
+                            <i class="bx bx-chevron-left text-danger"></i>
+                        `);
+                    } else if (isEdit) {
+                        $actionEl.addClass('btn-label-primary');
+                        $actionEl.html(`
+                            <div class="d-flex align-items-center">
+                                <i class="bx bx-edit me-3 fs-3 text-primary"></i>
+                                <div class="text-start">
+                                    <div class="fw-bold text-primary fs-5">تعديل البيانات</div>
+                                    <small class="text-muted">تعديل وتحديث تفاصيل هذا السجل</small>
+                                </div>
+                            </div>
+                            <i class="bx bx-chevron-left text-primary"></i>
+                        `);
+                    } else if (isView) {
+                        $actionEl.addClass('btn-label-success');
+                        $actionEl.html(`
+                            <div class="d-flex align-items-center">
+                                <i class="bx bx-show me-3 fs-3 text-success"></i>
+                                <div class="text-start">
+                                    <div class="fw-bold text-success fs-5">عرض التفاصيل</div>
+                                    <small class="text-muted">عرض البيانات التفصيلية وكشف الحركات</small>
+                                </div>
+                            </div>
+                            <i class="bx bx-chevron-left text-success"></i>
+                        `);
+                    } else {
+                        var currentText = $actionEl.text().trim() || "إجراء إضافي";
+                        $actionEl.addClass('btn-label-secondary');
+                        $actionEl.html(`
+                            <div class="d-flex align-items-center">
+                                <i class="bx bx-cog me-3 fs-3 text-secondary"></i>
+                                <div class="text-start">
+                                    <div class="fw-bold text-secondary fs-5">${currentText}</div>
+                                    <small class="text-muted">تنفيذ هذا الإجراء المخصص</small>
+                                </div>
+                            </div>
+                            <i class="bx bx-chevron-left text-secondary"></i>
+                        `);
+                    }
+                });
+                
+                $('#mobileActionsModal').modal('show');
+            });
+ 
+            $('#mobileActionsModal').on('hidden.bs.modal', function () {
+                if ($activeTd) {
+                    // Restore original HTML, classes and parent
+                    $('#mobileActionsModalBody').children().each(function() {
+                        var $el = $(this);
+                        
+                        var origHtml = $el.data('original-html');
+                        var origClass = $el.data('original-class');
+                        if (origHtml) $el.html(origHtml);
+                        if (origClass) $el.attr('class', origClass);
+                        
+                        if ($el.is('form')) {
+                            var $inner = $el.find('a, button');
+                            var innerHtml = $inner.data('original-html');
+                            var innerClass = $inner.data('original-class');
+                            if (innerHtml) $inner.html(innerHtml);
+                            if (innerClass) $inner.attr('class', innerClass);
+                        }
+                        
+                        var $parent = $el.data('original-parent');
+                        if ($parent && $parent.length) {
+                            $el.appendTo($parent).addClass('d-none');
+                        } else {
+                            $el.appendTo($activeTd).addClass('d-none');
+                        }
+                    });
+                    
+                    $activeTd = null;
+                }
+            });
+        });
+   </script>
+   @stack('script')
+
+    <!-- Mobile Filter Modal -->
+    <div class="modal fade bottom-sheet" id="mobileFilterModal" aria-labelledby="mobileFilterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="mobileFilterModalLabel">تصفية وترشيح النتائج</h5>
+                </div>
+                <div class="modal-body" id="mobileFilterModalBody">
+                    <!-- Filters move here -->
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-primary w-100 py-2" data-bs-dismiss="modal">تطبيق وعرض</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Actions Modal -->
+    <div class="modal fade bottom-sheet" id="mobileActionsModal" tabindex="-1" aria-labelledby="mobileActionsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="mobileActionsModalLabel">إجراءات الصف</h5>
+                </div>
+                <div class="modal-body" id="mobileActionsModalBody">
+                    <!-- Actions move here -->
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 

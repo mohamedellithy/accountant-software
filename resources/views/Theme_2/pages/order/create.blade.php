@@ -25,8 +25,12 @@
                                     name="order_number" required readonly/>
                             </div>
                             <div class="mb-3">
-                                <label class="col-sm-3 col-form-label text-sm-end" for="formtabs-country">
-                                    اسم العميل</label>
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <label class="form-label mb-0" for="selectCustomer">اسم العميل</label>
+                                    <button type="button" class="btn btn-xs btn-outline-primary py-0 px-2" data-bs-toggle="modal" data-bs-target="#quickAddCustomerModal">
+                                        <i class="bx bx-plus me-1"></i>عميل جديد
+                                    </button>
+                                </div>
                                 <select type="text" id="selectCustomer" name="customer_id" class="form-control form-select2" required>
                                     <option value=""></option>
                                     @foreach ($customers as $customer)
@@ -178,9 +182,84 @@
             </div>
         </form>
     </div>
+
+    <!-- Quick Add Customer Modal -->
+    <div class="modal fade" id="quickAddCustomerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold"><i class="bx bx-user-plus me-2"></i>إضافة عميل جديد سريع</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="quickAddCustomerForm" class="ajax-form" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="alert alert-danger d-none" id="quickCustomerErrors"></div>
+                        <div class="mb-3">
+                            <label class="form-label" for="quick_customer_name">اسم العميل</label>
+                            <input type="text" id="quick_customer_name" name="name" class="form-control" placeholder="أدخل اسم العميل..." required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="quick_customer_phone">رقم الهاتف</label>
+                            <input type="text" id="quick_customer_phone" name="phone" class="form-control" placeholder="أدخل رقم الهاتف..." required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="quick_customer_balance">الرصيد المبدأي</label>
+                            <input type="number" id="quick_customer_balance" name="balance" class="form-control" placeholder="0" value="0" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-primary" id="btnSubmitQuickCustomer">حفظ وإدراج في الفاتورة</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 @push('script')
     <script type="text/javascript">
+        jQuery('#quickAddCustomerForm').on('submit', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            let $form = jQuery(this);
+            let $btn = jQuery('#btnSubmitQuickCustomer');
+            let $errorsDiv = jQuery('#quickCustomerErrors');
+            
+            $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> جاري الحفظ...');
+            $errorsDiv.addClass('d-none').empty();
+
+            jQuery.ajax({
+                url: "{{ route('admin.customers.store') }}",
+                type: "POST",
+                data: $form.serialize(),
+                success: function(response) {
+                    $btn.prop('disabled', false).html('حفظ وإدراج في الفاتورة');
+                    if (response.success) {
+                        let newOption = new Option(response.customer.name, response.customer.id, true, true);
+                        jQuery('#selectCustomer').append(newOption).trigger('change');
+                        jQuery('#customerphone').val(response.customer.phone);
+                        $form[0].reset();
+                        jQuery('#quickAddCustomerModal').modal('hide');
+                    }
+                },
+                error: function(xhr) {
+                    $btn.prop('disabled', false).html('حفظ وإدراج في الفاتورة');
+                    let errors = xhr.responseJSON.errors;
+                    let errorHtml = '<ul>';
+                    if (errors) {
+                        jQuery.each(errors, function(key, val) {
+                            errorHtml += '<li>' + val[0] + '</li>';
+                        });
+                    } else {
+                        errorHtml += '<li>حدث خطأ ما، يرجى المحاولة لاحقاً.</li>';
+                    }
+                    errorHtml += '</ul>';
+                    $errorsDiv.removeClass('d-none').html(errorHtml);
+                }
+            });
+        });
+
         jQuery('#selectCustomer').on('change', function() {
             let customer_id = jQuery(this).val();
             let url = "{{ route('admin.ajax_get_customer_info', ':id') }}";

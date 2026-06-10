@@ -103,7 +103,7 @@ $filter = request()->query('filter') ?: null;
                                <td>{{ formate_price($supplier->balance) }}</td>
                                <td>
                                     {{ $supplier->orders_count + $supplier->purchasing_invoices_count }} طلبية
-                                    <a class="crud" href="{{ route('admin.orders.show', $supplier->id) }}">
+                                    <a class="crud" href="{{ route('admin.purchasing-invoices.index', ['filter' => ['supplier_id' => $supplier->id]]) }}">
                                         <i class="far fa-eye"></i>
                                     </a>
                                </td>
@@ -134,7 +134,7 @@ $filter = request()->query('filter') ?: null;
            </div>
            <br/><br/>
            <div class="d-flex flex-row justify-content-center">
-               {{ $suppliers->links() }}
+               {{ $suppliers->links('Theme_2.inc.custom_pagination') }}
            </div>
        </div>
    </div>

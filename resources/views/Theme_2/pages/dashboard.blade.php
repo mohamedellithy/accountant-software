@@ -2,346 +2,379 @@
 
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
-    <div class="row">
-        <div class="col-md-12">
-            <h5>الاصناف و المخزن</h5>
-        </div>
-        <div class="col-lg-3 col-md-12 col-6 mb-4">
-            <a href="{{ route('admin.products.index') }}">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card-title d-flex align-items-start justify-content-between">
-                            <div class="avatar flex-shrink-0">
-                                <img src="/theme_2/assets/img/icons/unicons/chart-success.png" alt="chart success" class="rounded" />
-                            </div>
+    
+    <!-- Welcome Header Banner -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card overflow-hidden" style="border: none; background: linear-gradient(135deg, #059669 0%, #1e293b 100%) !important; box-shadow: 0 8px 20px rgba(5, 150, 105, 0.15) !important;">
+                <div class="card-body p-4 text-white text-end">
+                    <div class="row align-items-center">
+                        <div class="col-md-9 text-start">
+                            <h3 class="fw-bold mb-1 text-white" style="font-family: 'Cairo', sans-serif !important;">نظام الندى للتنمية الزراعية المحاسبي</h3>
+                            <p class="mb-0 opacity-80" style="font-size: 14px; font-family: 'Cairo', sans-serif !important;">مرحباً بك مجدداً في لوحة المتابعة المالية الفورية وإدارة المخازن والمبيعات الشاملة.</p>
                         </div>
-                        <span class="fw-semibold d-block mb-1">
-                            الاصناف
-                        </span>
-                        <h3 class="card-title mb-2">
-                            {{ $count_products }}
-                        </h3>
-                        <small class="text-danger fw-semibold"><i
-                                class="bx bx-up-arrow-alt"></i>
-                                صنف
-                        </small>
+                        <div class="col-md-3 text-end d-none d-md-block">
+                            <i class="bx bx-trending-up text-white" style="font-size: 70px; opacity: 0.15;"></i>
+                        </div>
                     </div>
                 </div>
-            </a>
+            </div>
         </div>
-        <div class="col-lg-3 col-md-12 col-6 mb-4">
-            <a href="{{ route('admin.stocks.index') }}">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card-title d-flex align-items-start justify-content-between">
-                            <div class="avatar flex-shrink-0">
-                                <img src="/theme_2/assets/img/icons/unicons/chart.png" alt="Credit Card" class="rounded" />
-                            </div>
+    </div>
+
+    <!-- Main Financial Highlight Cards -->
+    <div class="row mb-3">
+        <!-- Collectable Card -->
+        <div class="col-lg-3 col-md-6 col-12 mb-4">
+            <div class="card h-100 shadow-sm" style="border-right: 5px solid #10b981 !important;">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="avatar p-2 rounded" style="background-color: rgba(16, 185, 129, 0.1);">
+                            <i class="bx bx-receipt text-success fs-3"></i>
                         </div>
-                        <span>المخزن</span>
-                        <h3 class="card-title text-nowrap mb-1">
-                            {{ $count_stocks }}
-                        </h3>
-                        <small class="text-danger fw-semibold"><i
-                                class="bx bx-up-arrow-alt"></i>
-                                صنف
-                        </small>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-muted d-block mb-1" style="font-size: 13px; font-weight: 600;">المطلوب تحصيله من العملاء</span>
+                        <h4 class="card-title mb-1 text-success fw-bold" style="font-size: 20px;">
+                            {{ formate_price($total_must_collect) }}
+                        </h4>
+                        <div class="d-flex justify-content-between align-items-center mt-2 pt-2 border-top">
+                            <small class="text-muted">مستحقات آجلة</small>
+                            <a href="{{ route('admin.customers.debts') }}" class="btn btn-xs btn-label-success py-1">
+                                عرض التقرير <i class="bx bx-left-arrow-alt ms-1"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </a>
+            </div>
         </div>
-        <div class="col-lg-3 col-md-12 col-6 mb-4">
-            <a href="{{ route('admin.stocks.index') }}">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card-title d-flex align-items-start justify-content-between">
-                            <div class="avatar flex-shrink-0">
-                                <img src="/theme_2/assets/img/icons/unicons/chart.png" alt="Credit Card" class="rounded" />
-                            </div>
+        
+        <!-- Payable Card -->
+        <div class="col-lg-3 col-md-6 col-12 mb-4">
+            <div class="card h-100 shadow-sm" style="border-right: 5px solid #ef4444 !important;">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="avatar p-2 rounded" style="background-color: rgba(239, 68, 68, 0.1);">
+                            <i class="bx bx-credit-card-front text-danger fs-3"></i>
                         </div>
-                        <span>الاصناف المنتهية</span>
-                        <h3 class="card-title text-nowrap mb-1">
-                            {{ $count_low_of_stock }}
-                        </h3>
-                        <small class="text-danger fw-semibold"><i
-                                class="bx bx-up-arrow-alt"></i>
-                                منتهية
-                        </small>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-muted d-block mb-1" style="font-size: 13px; font-weight: 600;">المطلوب تسديده للموردين</span>
+                        <h4 class="card-title mb-1 text-danger fw-bold" style="font-size: 20px;">
+                            {{ formate_price($total_must_paid) }}
+                        </h4>
+                        <div class="d-flex justify-content-between align-items-center mt-2 pt-2 border-top">
+                            <small class="text-muted">التزامات محاسبية</small>
+                            <a href="{{ route('admin.suppliers.debts') }}" class="btn btn-xs btn-label-danger py-1">
+                                عرض التقرير <i class="bx bx-left-arrow-alt ms-1"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </a>
+            </div>
         </div>
-        <div class="col-lg-3 col-md-12 col-6 mb-4">
-            <a href="{{ route('admin.stocks.index') }}">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card-title d-flex align-items-start justify-content-between">
-                            <div class="avatar flex-shrink-0">
-                                <img src="/theme_2/assets/img/icons/unicons/chart.png" alt="Credit Card" class="rounded" />
-                            </div>
+        
+        <!-- Stock Value Card -->
+        <div class="col-lg-3 col-md-6 col-12 mb-4">
+            <div class="card h-100 shadow-sm" style="border-right: 5px solid #3b82f6 !important;">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="avatar p-2 rounded" style="background-color: rgba(59, 130, 246, 0.1);">
+                            <i class="bx bx-store-alt text-info fs-3"></i>
                         </div>
-                        <span>اجمالي فى المخزن</span>
-                        <h3 class="card-title text-nowrap mb-1">
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-muted d-block mb-1" style="font-size: 13px; font-weight: 600;">إجمالي قيمة المخزون الحالي</span>
+                        <h4 class="card-title mb-1 text-info fw-bold" style="font-size: 20px;">
                             {{ formate_price($cost_total_stocks) }}
-                        </h3>
-                        <small class="text-danger fw-semibold"><i
-                                class="bx bx-up-arrow-alt"></i>
-                                اجمالي المخزن
-                        </small>
+                        </h4>
+                        <div class="d-flex justify-content-between align-items-center mt-2 pt-2 border-top">
+                            <small class="text-muted">قيمة البضاعة</small>
+                            <a href="{{ route('admin.stocks.index') }}" class="btn btn-xs btn-label-info py-1">
+                                عرض المخزن <i class="bx bx-left-arrow-alt ms-1"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </a>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <!--/ Total Revenue -->
-        <div class="col-12 col-md-12 col-lg-12 order-3 order-md-2">
-            <div class="row">
-                <div class="col-md-12">
-                    <h5>تقرير الحساب</h5>
-                </div>
-                <div class="col-lg-3 col-md-12 col-6 mb-4">
-                    <a href="#">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="{{ asset('/theme_2/assets/img/icons/unicons/paypal.png') }}" alt="Credit Card" class="rounded" />
-                                    </div>
-                                </div>
-                                <span class="d-block mb-1">اجمالي المبلغ المطلوب تحصيله</span>
-                                <h3 class="card-title text-nowrap mb-2">
-                                    {{ formate_price($total_must_collect) }}
-                                </h3>
-                                <small class="text-danger fw-semibold"><i
-                                        class="bx bx-up-arrow-alt"></i> 
-                                         المطلوب تحصيله
-                                </small>
-                            </div>
+        
+        <!-- Expenses Card -->
+        <div class="col-lg-3 col-md-6 col-12 mb-4">
+            <div class="card h-100 shadow-sm" style="border-right: 5px solid #f59e0b !important;">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="avatar p-2 rounded" style="background-color: rgba(245, 158, 11, 0.1);">
+                            <i class="bx bx-wallet text-warning fs-3"></i>
                         </div>
-                    </a>
-                </div>
-                <div class="col-lg-3 col-md-12 col-6 mb-4">
-                    <a href="#">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="{{ asset('/theme_2/assets/img/icons/unicons/paypal.png') }}" alt="Credit Card" class="rounded" />
-                                    </div>
-                                </div>
-                                <span class="d-block mb-1">اجمالي المبلغ المطلوب تسديده</span>
-                                <h3 class="card-title text-nowrap mb-2">
-                                    {{ formate_price($total_must_paid) }}
-                                </h3>
-                                <small class="text-danger fw-semibold"><i
-                                        class="bx bx-up-arrow-alt"></i> 
-                                         المطلوب تسديده
-                                </small>
-                            </div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-muted d-block mb-1" style="font-size: 13px; font-weight: 600;">إجمالي المصروفات</span>
+                        <h4 class="card-title mb-1 text-warning fw-bold" style="font-size: 20px;">
+                            {{ formate_price($expenses_total) }}
+                        </h4>
+                        <div class="d-flex justify-content-between align-items-center mt-2 pt-2 border-top">
+                            <small class="text-muted">المصاريف التشغيلية</small>
+                            <a href="{{ route('admin.expenses.index') }}" class="btn btn-xs btn-label-warning py-1">
+                                عرض المصروفات <i class="bx bx-left-arrow-alt ms-1"></i>
+                            </a>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <!--/ Total Revenue -->
-        <div class="col-12 col-md-12 col-lg-12 order-3 order-md-2">
-            <div class="row">
-                <div class="col-md-12">
-                    <h5>الفواتير</h5>
+
+    <!-- Apex Financial Chart -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center bg-white border-bottom py-3">
+                    <div>
+                        <h5 class="card-title mb-0 fw-bold" style="color: #1e293b;"><i class="bx bx-bar-chart-alt-2 text-success me-2"></i>تحليل التدفقات النقدية والحركة المالية</h5>
+                        <small class="text-muted">مقارنة بصرية شاملة لأحجام المبيعات، المشتريات، المقبوضات والمدفوعات</small>
+                    </div>
                 </div>
-                <div class="col-lg-3 col-md-12 col-6 mb-4">
-                    <a href="{{ route('admin.orders.index') }}">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="{{ asset('/theme_2/assets/img/icons/unicons/paypal.png') }}" alt="Credit Card" class="rounded" />
-                                    </div>
-                                </div>
-                                <span class="d-block mb-1">فواتير البيع</span>
-                                <h3 class="card-title text-nowrap mb-2">
-                                    {{ formate_price($sales_total) }}
-                                </h3>
-                                <small class="text-danger fw-semibold"><i
-                                        class="bx bx-up-arrow-alt"></i> 
-                                        اجمالى المبيعات
-                                </small>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-3 col-md-12 col-6 mb-4">
-                    <a href="{{ route('admin.purchasing-invoices.index') }}">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="{{ asset('/theme_2/assets/img/icons/unicons/paypal.png') }}" alt="Credit Card" class="rounded" />
-                                    </div>
-                                </div>
-                                <span class="d-block mb-1">فواتير الشراء</span>
-                                <h3 class="card-title text-nowrap mb-2">
-                                    {{ formate_price($purchasing_total) }}
-                                </h3>
-                                <small class="text-danger fw-semibold"><i
-                                        class="bx bx-up-arrow-alt"></i> 
-                                        اجمالى فواتير الشراء
-                                </small>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-3 col-md-12 col-6 mb-4">
-                    <a href="#s">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="{{ asset('/theme_2/assets/img/icons/unicons/chart.png') }}" alt="Credit Card" class="rounded" />
-                                    </div>
-                                </div>
-                                <span>المرتجعات</span>
-                                <h3 class="card-title text-nowrap mb-1">
-                                {{ formate_price($return_total) }}
-                                </h3>
-                                <small class="text-danger fw-semibold"><i
-                                        class="bx bx-up-arrow-alt"></i>
-                                        اجمالى المرتجع
-                                </small>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-3 col-md-12 col-6 mb-4">
-                    <a href="#s">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="{{ asset('/theme_2/assets/img/icons/unicons/chart.png') }}" alt="Credit Card" class="rounded" />
-                                    </div>
-                                </div>
-                                <span>المصروفات</span>
-                                <h3 class="card-title text-nowrap mb-1">
-                                {{ formate_price($expenses_total) }}
-                                </h3>
-                                <small class="text-danger fw-semibold"><i
-                                        class="bx bx-up-arrow-alt"></i>
-                                        المصروفات
-                                </small>
-                            </div>
-                        </div>
-                    </a>
+                <div class="card-body p-4">
+                    <div id="cashflowChart" style="min-height: 350px;"></div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Details Sections Grid -->
     <div class="row">
-        <!--/ Total Revenue -->
-        <div class="col-12 col-md-12 col-lg-12 order-3 order-md-2">
-            <div class="row">
-                <div class="col-md-12">
-                    <h5>المدفوعات</h5>
+        <!-- Stock Details Card -->
+        <div class="col-lg-4 col-md-12 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h6 class="card-title mb-0 fw-bold" style="color: #1e293b;"><i class="bx bx-box text-primary me-2"></i>حركة المخازن والمنتجات</h6>
                 </div>
-                <div class="col-lg-3 col-md-12 col-6 mb-4">
-                    <a href="#s">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="{{ asset('/theme_2/assets/img/icons/unicons/chart.png') }}" alt="Credit Card" class="rounded" />
-                                    </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <div class="d-flex align-items-center">
+                                <i class="bx bx-barcode-reader text-muted fs-4 me-3"></i>
+                                <div>
+                                    <span class="d-block fw-semibold text-dark">عدد الأصناف</span>
+                                    <small class="text-muted">إجمالي المنتجات المسجلة</small>
                                 </div>
-                                <span>مدفوعات العملاء</span>
-                                <h3 class="card-title text-nowrap mb-1">
-                                {{ formate_price($customer_payments_total) }}
-                                </h3>
-                                <small class="text-danger fw-semibold"><i
-                                        class="bx bx-up-arrow-alt"></i>
-                                    مدفوعات العملاء
-                                </small>
                             </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-3 col-md-12 col-6 mb-4">
-                    <a href="#s">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="{{ asset('/theme_2/assets/img/icons/unicons/chart.png') }}" alt="Credit Card" class="rounded" />
-                                    </div>
+                            <span class="badge bg-label-primary rounded p-2 fw-bold" style="font-size: 14px;">{{ $count_products }} صنف</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <div class="d-flex align-items-center">
+                                <i class="bx bx-store-alt text-muted fs-4 me-3"></i>
+                                <div>
+                                    <span class="d-block fw-semibold text-dark">المستودع الفعلي</span>
+                                    <small class="text-muted">مواقع مخزنية نشطة</small>
                                 </div>
-                                <span>مدفوعات الموردين</span>
-                                <h3 class="card-title text-nowrap mb-1">
-                                    {{ formate_price($supplier_payments_total) }}
-                                </h3>
-                                <small class="text-danger fw-semibold"><i
-                                        class="bx bx-up-arrow-alt"></i>
-                                    مدفوعات الموردين
-                                </small>
                             </div>
-                        </div>
-                    </a>
+                            <span class="badge bg-label-secondary rounded p-2 fw-bold" style="font-size: 14px;">{{ $count_stocks }} أصناف</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <div class="d-flex align-items-center">
+                                <i class="bx bx-error text-danger fs-4 me-3"></i>
+                                <div>
+                                    <span class="d-block fw-semibold text-dark">المنتجات المنتهية</span>
+                                    <small class="text-muted">الكميات التي بلغت الصفر أو أقل</small>
+                                </div>
+                            </div>
+                            <span class="badge {{ $count_low_of_stock > 0 ? 'bg-label-danger' : 'bg-label-success' }} rounded p-2 fw-bold" style="font-size: 14px;">
+                                {{ $count_low_of_stock }} منتج
+                            </span>
+                        </li>
+                    </ul>
+                    <div class="p-3 text-center">
+                        <a href="{{ route('admin.stocks.index') }}" class="btn btn-outline-primary btn-sm w-100 py-2">عرض جرد المخزن بالكامل</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-     <div class="row">
-        <!--/ Total Revenue -->
-        <div class="col-12 col-md-12 col-lg-12 order-3 order-md-2">
-            <div class="row">
-                <div class="col-md-12">
-                    <h5>العملاء و المورديين</h5>
+
+        <!-- Invoices & Sales Card -->
+        <div class="col-lg-4 col-md-12 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h6 class="card-title mb-0 fw-bold" style="color: #1e293b;"><i class="bx bx-receipt text-success me-2"></i>الفواتير والمبيعات</h6>
                 </div>
-                <div class="col-lg-3 col-md-12 col-6 mb-4">
-                    <a href="{{ route('admin.customers.index') }}">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="{{ asset('/theme_2/assets/img/icons/unicons/cc-primary.png') }}" alt="Credit Card" class="rounded" />
-                                    </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <div class="d-flex align-items-center">
+                                <i class="bx bx-trending-up text-success fs-4 me-3"></i>
+                                <div>
+                                    <span class="d-block fw-semibold text-dark">إجمالي فواتير البيع</span>
+                                    <small class="text-muted">المبيعات الإجمالية للعملاء</small>
                                 </div>
-                                <span class="fw-semibold d-block mb-1">العملاء</span>
-                                <h3 class="card-title mb-2">
-                                    {{ $customer_counts }}
-                                </h3>
-                                <small class="text-danger fw-semibold"><i
-                                        class="bx bx-up-arrow-alt"></i>
-                                        عميل
-                                </small>
+                            </div>
+                            <span class="text-success fw-bold" style="font-size: 14.5px;">{{ formate_price($sales_total) }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <div class="d-flex align-items-center">
+                                <i class="bx bx-trending-down text-danger fs-4 me-3"></i>
+                                <div>
+                                    <span class="d-block fw-semibold text-dark">إجمالي فواتير الشراء</span>
+                                    <small class="text-muted">المشتريات الإجمالية من الموردين</small>
+                                </div>
+                            </div>
+                            <span class="text-danger fw-bold" style="font-size: 14.5px;">{{ formate_price($purchasing_total) }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <div class="d-flex align-items-center">
+                                <i class="bx bx-redo text-warning fs-4 me-3"></i>
+                                <div>
+                                    <span class="d-block fw-semibold text-dark">إجمالي المرتجعات</span>
+                                    <small class="text-muted">البضائع المسترجعة من المبيعات</small>
+                                </div>
+                            </div>
+                            <span class="text-warning fw-bold" style="font-size: 14.5px;">{{ formate_price($return_total) }}</span>
+                        </li>
+                    </ul>
+                    <div class="p-3">
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <a href="{{ route('admin.orders.index') }}" class="btn btn-outline-success btn-sm w-100 py-2">فواتير البيع</a>
+                            </div>
+                            <div class="col-6">
+                                <a href="{{ route('admin.purchasing-invoices.index') }}" class="btn btn-outline-danger btn-sm w-100 py-2">فواتير الشراء</a>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
-                <div class="col-lg-3 col-md-12 col-6 mb-4">
-                    <a href="{{ route('admin.suppliers.index') }}">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="{{ asset('/theme_2/assets/img/avatars/user_avatar.png') }}" alt="Credit Card" class="rounded" />
-                                    </div>
+            </div>
+        </div>
+
+        <!-- Stakeholders & Payments Card -->
+        <div class="col-lg-4 col-md-12 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h6 class="card-title mb-0 fw-bold" style="color: #1e293b;"><i class="bx bx-group text-warning me-2"></i>الشركاء والمدفوعات</h6>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <div class="d-flex align-items-center">
+                                <i class="bx bx-user text-muted fs-4 me-3"></i>
+                                <div>
+                                    <span class="d-block fw-semibold text-dark">العملاء والمدفوعات</span>
+                                    <small class="text-muted">العملاء: {{ $customer_counts }} | المقبوضات:</small>
                                 </div>
-                                <span>الموردين</span>
-                                <h3 class="card-title text-nowrap mb-1">
-                                    {{ $supplier_counts }}
-                                </h3>
-                                <small class="text-danger fw-semibold"><i
-                                        class="bx bx-up-arrow-alt"></i>
-                                        مورد
-                                </small>
+                            </div>
+                            <span class="text-success fw-bold" style="font-size: 14px;">{{ formate_price($customer_payments_total) }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <div class="d-flex align-items-center">
+                                <i class="bx bxs-truck text-muted fs-4 me-3"></i>
+                                <div>
+                                    <span class="d-block fw-semibold text-dark">الموردين والمدفوعات</span>
+                                    <small class="text-muted">الموردين: {{ $supplier_counts }} | المدفوعات:</small>
+                                </div>
+                            </div>
+                            <span class="text-danger fw-bold" style="font-size: 14px;">{{ formate_price($supplier_payments_total) }}</span>
+                        </li>
+                    </ul>
+                    <div class="p-3">
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <a href="{{ route('admin.customers.index') }}" class="btn btn-outline-primary btn-sm w-100 py-2">دليل العملاء</a>
+                            </div>
+                            <div class="col-6">
+                                <a href="{{ route('admin.suppliers.index') }}" class="btn btn-outline-secondary btn-sm w-100 py-2">دليل الموردين</a>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+@push('script')
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var options = {
+            series: [{
+                name: 'الإجمالي (جنيه)',
+                data: [
+                    {{ $sales_total }},
+                    {{ $purchasing_total }},
+                    {{ $customer_payments_total }},
+                    {{ $supplier_payments_total }},
+                    {{ $expenses_total }}
+                ]
+            }],
+            chart: {
+                type: 'bar',
+                height: 350,
+                fontFamily: 'Cairo, sans-serif',
+                toolbar: {
+                    show: false
+                }
+            },
+            colors: ['#059669', '#ef4444', '#10b981', '#f59e0b', '#ef4444'],
+            plotOptions: {
+                bar: {
+                    colorByPoint: true,
+                    borderRadius: 6,
+                    columnWidth: '45%',
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: function (val) {
+                    return parseFloat(val).toLocaleString('ar-EG') + " ج.م";
+                },
+                style: {
+                    fontSize: '11px',
+                    colors: ["#fff"]
+                }
+            },
+            grid: {
+                show: true,
+                borderColor: '#f1f5f9',
+                strokeDashArray: 4,
+            },
+            xaxis: {
+                categories: ['إجمالي المبيعات', 'إجمالي المشتريات', 'المحصل من العملاء', 'المدفوع للموردين', 'إجمالي المصروفات'],
+                labels: {
+                    style: {
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        colors: '#64748b'
+                    }
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'القيمة المالية (ج.م)',
+                    style: {
+                        fontFamily: 'Cairo, sans-serif',
+                        fontWeight: 600,
+                        color: '#64748b'
+                    }
+                },
+                labels: {
+                    formatter: function (val) {
+                        return parseFloat(val).toLocaleString('ar-EG');
+                    },
+                    style: {
+                        colors: '#64748b'
+                    }
+                }
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return parseFloat(val).toLocaleString('ar-EG') + " ج.م";
+                    }
+                }
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#cashflowChart"), options);
+        chart.render();
+    });
+</script>
+@endpush

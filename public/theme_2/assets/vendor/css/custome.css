@@ -1,13 +1,466 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap');
+
+/* Apply Cairo Font to layout and text elements, excluding universal selector to preserve icons */
+body, html, .menu-link, .menu-header, .card, .table, .form-control, .form-select, .btn, .select2-container, .modal-content, .modal-title {
+    font-family: 'Cairo', sans-serif !important;
+}
+
+/* Restore font families for icons to prevent any rendering issues */
+.bx, [class^="bx-"], [class*=" bx-"] {
+    font-family: 'boxicons' !important;
+}
+.fa, .fas, .far, .fab, [class^="fa-"], [class*=" fa-"] {
+    font-family: 'Font Awesome 6 Free', 'Font Awesome 5 Free', 'FontAwesome' !important;
+}
+
 .menu-vertical .menu-item .menu-toggle::after {
     left: 1rem !important;
     right: auto !important;
 }
 
 .table-static {
-    background-color: #00796B !important;
+    background-color: #059669 !important;
     color: white !important;
 }
 
-.card{
+.card {
     margin-top: 10px !important;
+}
+
+/* Primary Color Overrides (Emerald/Green Accounting Theme) */
+.text-primary {
+    color: #059669 !important;
+}
+
+.bg-primary {
+    background-color: #059669 !important;
+}
+
+a.bg-primary:hover, a.bg-primary:focus {
+    background-color: #047857 !important;
+}
+
+.bg-label-primary {
+    background-color: rgba(5, 150, 105, 0.1) !important;
+    color: #059669 !important;
+}
+
+.border-label-primary {
+    border: 3px solid rgba(5, 150, 105, 0.3) !important;
+}
+
+.border-light-primary {
+    border: 3px solid rgba(5, 150, 105, 0.08) !important;
+}
+
+.page-item.active .page-link, .page-item.active .page-link:hover, .page-item.active .page-link:focus,
+.pagination li.active > a:not(.page-link),
+.pagination li.active > a:not(.page-link):hover,
+.pagination li.active > a:not(.page-link):focus {
+    border-color: #059669 !important;
+    background-color: #059669 !important;
+    box-shadow: 0 0.125rem 0.25rem rgba(5, 150, 105, 0.4) !important;
+}
+
+.progress-bar {
+    background-color: #059669 !important;
+    box-shadow: 0 2px 4px 0 rgba(5, 150, 105, 0.4) !important;
+}
+
+.list-group-item-primary {
+    background-color: rgba(5, 150, 105, 0.1) !important;
+    color: #059669 !important;
+}
+
+.list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+    border-color: #059669 !important;
+    background-color: #059669 !important;
+}
+
+.alert-primary {
+    background-color: rgba(5, 150, 105, 0.08) !important;
+    border-color: rgba(5, 150, 105, 0.2) !important;
+    color: #059669 !important;
+}
+
+.table-primary {
+    --bs-table-bg: rgba(5, 150, 105, 0.08) !important;
+    border-color: rgba(5, 150, 105, 0.15) !important;
+    color: #334155 !important;
+}
+
+.btn-primary {
+    color: #fff !important;
+    background-color: #059669 !important;
+    border-color: #059669 !important;
+    box-shadow: 0 0.125rem 0.25rem 0 rgba(5, 150, 105, 0.3) !important;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    color: #fff !important;
+    background-color: #047857 !important;
+    border-color: #047857 !important;
+    transform: translateY(-1px);
+}
+
+.btn-outline-primary {
+    color: #059669 !important;
+    border-color: #059669 !important;
+    background: transparent !important;
+    font-weight: 600;
+}
+
+.btn-outline-primary:hover {
+    color: #fff !important;
+    background-color: #059669 !important;
+    border-color: #059669 !important;
+    box-shadow: 0 0.125rem 0.25rem 0 rgba(5, 150, 105, 0.3) !important;
+}
+
+/* Success Button Overrides (Emerald Green theme) */
+.btn-success {
+    color: #fff !important;
+    background-color: #059669 !important;
+    border-color: #059669 !important;
+    box-shadow: 0 0.125rem 0.25rem 0 rgba(5, 150, 105, 0.3) !important;
+    font-weight: 600;
+}
+
+.btn-success:hover, .btn-success:focus, .btn-success:active {
+    color: #fff !important;
+    background-color: #047857 !important;
+    border-color: #047857 !important;
+    box-shadow: 0 0.125rem 0.25rem 0 rgba(4, 120, 87, 0.4) !important;
+    transform: translateY(-1px);
+}
+
+.btn-outline-success {
+    color: #059669 !important;
+    border-color: #059669 !important;
+    background-color: transparent !important;
+    font-weight: 600;
+}
+
+.btn-outline-success:hover, .btn-outline-success:focus, .btn-outline-success:active {
+    color: #fff !important;
+    background-color: #059669 !important;
+    border-color: #059669 !important;
+    box-shadow: 0 0.125rem 0.25rem 0 rgba(5, 150, 105, 0.3) !important;
+}
+
+/* Forms & Fields Global Styles to match Settings index layout */
+.form-control, .form-select, .select2-container--default .select2-selection--single {
+    padding: 10px 16px !important;
+    font-size: 14.5px !important;
+    font-weight: 500 !important;
+    border-radius: 8px !important;
+    border: 1px solid #d9dee3 !important;
+    background-color: #fcfcfd !important;
+    color: #435971 !important;
+    transition: all 0.2s ease-in-out !important;
+    box-shadow: none !important;
+}
+
+.form-control:focus, .form-select:focus,
+.select2-container--default.select2-container--focus .select2-selection--single {
+    background-color: #ffffff !important;
+    border-color: #059669 !important;
+    box-shadow: 0 0 0 0.2rem rgba(5, 150, 105, 0.15) !important;
+}
+
+/* Make labels bold and attractive */
+.form-label, label {
+    font-weight: 700 !important;
+    color: #334155 !important;
+    margin-bottom: 8px !important;
+    font-size: 13.5px !important;
+    display: inline-block;
+}
+
+/* Adjust select2 single selection heights to match new control heights */
+.select2-container--default .select2-selection--single {
+    height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: normal !important;
+    padding-right: 0 !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 100% !important;
+    top: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.form-control-lg, .form-select-lg {
+    padding: 12px 20px !important;
+    font-size: 16px !important;
+}
+
+.form-check-input:checked, .form-check-input[type=checkbox]:indeterminate {
+    background-color: #059669 !important;
+    border-color: #059669 !important;
+    box-shadow: 0 2px 4px 0 rgba(5, 150, 105, 0.4) !important;
+}
+
+/* Dark Slate Sidebar Customization */
+.bg-menu-theme {
+    background-color: #1e293b !important;
+    color: #94a3b8 !important;
+}
+
+.bg-menu-theme .menu-inner-shadow {
+    background: linear-gradient(#1e293b 41%, rgba(30, 41, 59, 0.11) 95%, rgba(30, 41, 59, 0)) !important;
+}
+
+.bg-menu-theme .menu-link {
+    color: #cbd5e1 !important;
+}
+
+.bg-menu-theme .menu-header {
+    color: #64748b !important;
+}
+
+.bg-menu-theme .menu-header:before {
+    background-color: #64748b !important;
+}
+
+.bg-menu-theme .menu-item .menu-link:not(.active):hover,
+.bg-menu-theme .menu-item.open > .menu-link {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: #fff !important;
+}
+
+.bg-menu-theme .menu-inner > .menu-item.active > .menu-link {
+    background-color: rgba(16, 185, 129, 0.15) !important;
+    color: #10b981 !important;
+}
+
+.bg-menu-theme .menu-inner > .menu-item.active:before {
+    background-color: #10b981 !important;
+}
+
+.bg-menu-theme .menu-sub > .menu-item.active > .menu-link:not(.menu-toggle):before {
+    background-color: #10b981 !important;
+    border: 3px solid rgba(16, 185, 129, 0.15) !important;
+}
+
+.bg-menu-theme .menu-sub > .menu-item > .menu-link:before {
+    background-color: #475569 !important;
+}
+
+.app-brand .layout-menu-toggle {
+    background-color: #059669 !important;
+    border: 6px solid #1e293b !important;
+}
+
+.app-brand .layout-menu-toggle i {
+    color: #fff !important;
+}
+
+.bg-menu-theme .app-brand {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.bg-menu-theme .app-brand img {
+    max-height: 48px;
+    filter: brightness(0) invert(1); /* If the logo is colored, make it white to fit the dark sidebar */
+}
+
+/* Premium Table Styling */
+.table thead tr th {
+    background-color: #334155 !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    font-size: 13px !important;
+    padding: 14px 12px !important;
+    border: none !important;
+    text-transform: none !important;
+}
+
+.table tbody tr {
+    border-bottom: 1px solid #e2e8f0 !important;
+    transition: background-color 0.2s;
+}
+
+.table tbody tr:hover {
+    background-color: #f8fafc !important;
+}
+
+.table td {
+    padding: 12px 12px !important;
+    font-size: 13.5px !important;
+    vertical-align: middle !important;
+    color: #475569 !important;
+}
+
+/* Card Improvements */
+.card {
+    border: none !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+    border-radius: 12px !important;
+}
+
+.card-header {
+    border-bottom: 1px solid #f1f5f9 !important;
+    padding: 20px 24px !important;
+}
+
+/* Mobile responsive popup layouts */
+@media (max-width: 991.98px) {
+    .modal-dialog {
+        margin: 10px !important;
+        max-width: calc(100% - 20px) !important;
+    }
+    
+    .mobile-temp-action {
+        text-align: right !important;
+        padding: 12px 15px !important;
+        border-radius: 8px !important;
+        font-size: 14px !important;
+        display: flex !important;
+        align-items: center;
+        width: 100% !important;
+        justify-content: flex-start;
+    }
+    
+    .mobile-temp-action i {
+        margin-left: 10px;
+        font-size: 16px;
+    }
+    
+    /* Make table compact on mobile */
+    .table td, .table th {
+        padding: 8px 6px !important;
+        font-size: 12px !important;
+    }
+}
+
+/* Bottom Sheet style for Modals on Mobile */
+@media (max-width: 991.98px) {
+    .modal.bottom-sheet.show {
+        display: flex !important;
+        align-items: flex-end !important;
+        justify-content: center !important;
+    }
+    .modal.bottom-sheet .modal-dialog {
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        transform: translateY(100%) !important;
+        transition: transform 0.3s ease-out !important;
+        z-index: 1060;
+    }
+    .modal.bottom-sheet.show .modal-dialog {
+        transform: translateY(0) !important;
+    }
+    .modal.bottom-sheet .modal-content {
+        border-radius: 24px 24px 0 0 !important;
+        border: none !important;
+        max-height: 85vh !important;
+        overflow-y: auto !important;
+        padding: 24px 20px 20px 20px !important;
+        box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15) !important;
+    }
+    /* Add pull-down indicator bar at the top of bottom sheet */
+    .modal.bottom-sheet .modal-content::before {
+        content: "" !important;
+        display: block !important;
+        width: 45px !important;
+        height: 5px !important;
+        background-color: #cbd5e1 !important;
+        border-radius: 3px !important;
+        position: absolute !important;
+        top: 10px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+    
+    /* Style modal headers in bottom sheets */
+    .modal.bottom-sheet .modal-header {
+        padding: 5px 0 15px 0 !important;
+        border-bottom: 1px solid #f1f5f9 !important;
+        margin-bottom: 15px !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+    .modal.bottom-sheet .modal-title {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        color: #1e293b !important;
+        width: 100%;
+        text-align: center;
+    }
+    .modal.bottom-sheet .btn-close {
+        position: absolute;
+        left: 20px;
+        top: 18px;
+    }
+}
+
+/* Custom button labels style for actions in mobile bottom sheet */
+.btn-label-danger {
+    background-color: rgba(239, 68, 68, 0.08) !important;
+    border: 1px solid rgba(239, 68, 68, 0.15) !important;
+    color: #ef4444 !important;
+}
+.btn-label-danger:hover {
+    background-color: rgba(239, 68, 68, 0.15) !important;
+}
+
+.btn-label-primary {
+    background-color: rgba(59, 130, 246, 0.08) !important;
+    border: 1px solid rgba(59, 130, 246, 0.15) !important;
+    color: #3b82f6 !important;
+}
+.btn-label-primary:hover {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+}
+
+.btn-label-success {
+    background-color: rgba(5, 150, 105, 0.08) !important;
+    border: 1px solid rgba(5, 150, 105, 0.15) !important;
+    color: #059669 !important;
+}
+.btn-label-success:hover {
+    background-color: rgba(5, 150, 105, 0.15) !important;
+}
+
+.btn-label-secondary {
+    background-color: rgba(100, 116, 139, 0.08) !important;
+    border: 1px solid rgba(100, 116, 139, 0.15) !important;
+    color: #64748b !important;
+}
+.btn-label-secondary:hover {
+    background-color: rgba(100, 116, 139, 0.15) !important;
+}
+
+/* Sidebar Custom Scrollbar Support */
+.menu-vertical .menu-inner {
+    overflow-y: auto !important;
+    max-height: calc(100vh - 80px) !important;
+}
+
+.menu-vertical .menu-inner::-webkit-scrollbar {
+    width: 5px;
+}
+.menu-vertical .menu-inner::-webkit-scrollbar-track {
+    background: transparent;
+}
+.menu-vertical .menu-inner::-webkit-scrollbar-thumb {
+    background: rgba(16, 185, 129, 0.15) !important;
+    border-radius: 3px;
+}
+.menu-vertical .menu-inner::-webkit-scrollbar-thumb:hover {
+    background: rgba(16, 185, 129, 0.35) !important;
 }

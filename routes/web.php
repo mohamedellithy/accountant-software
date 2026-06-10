@@ -14,6 +14,7 @@ use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\PurchasingInvoiceController;
 use App\Http\Controllers\InvoicesPdfController;
 use App\Http\Controllers\SetAccount;
+use App\Http\Controllers\SettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,12 +34,24 @@ Route::group(['middleware' => 'auth'], function () {
     });
     Route::group(['as' => 'admin.'],function(){
         Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+        
+        // تقارير المطلوب تحصيله والمطلوب تسديده
+        Route::get('/customers-debts', [CustomerController::class, 'debtsReport'])->name('customers.debts');
+        Route::get('/customers-debts-pdf', [InvoicesPdfController::class, 'download_pdf_customers_debts'])->name('customers.debts.pdf');
+        Route::get('/suppliers-debts', [SupplierController::class, 'debtsReport'])->name('suppliers.debts');
+        Route::get('/suppliers-debts-pdf', [InvoicesPdfController::class, 'download_pdf_suppliers_debts'])->name('suppliers.debts.pdf');
+
         Route::resource('suppliers', SupplierController::class);
         Route::resource('customers', CustomerController::class);
         Route::resource('products', ProductController::class);
         Route::resource('orders', OrderController::class);
         Route::resource('stocks', StockController::class);
         Route::resource('purchasing-invoices', PurchasingInvoiceController::class);
+        
+        // settings routes
+        Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+        Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+        Route::post('/settings/change-password', [SettingController::class, 'changePassword'])->name('settings.change-password');
         Route::get('/get-customer-info/{id}', [OrderController::class, 'ajax_get_customer_info'])->name('ajax_get_customer_info');
         Route::get('/get-supplier-info/{id}', [OrderController::class, 'ajax_get_supplier_info'])->name('ajax_get_supplier_info');
         Route::get('/get-product-info/{id}', [OrderController::class, 'ajax_get_product_info'])->name('ajax_get_product_info');
