@@ -9,7 +9,7 @@
             <div class="card overflow-hidden" style="border: none; background: linear-gradient(135deg, #059669 0%, #1e293b 100%) !important; box-shadow: 0 8px 20px rgba(5, 150, 105, 0.15) !important;">
                 <div class="card-body p-4 text-white text-end">
                     <div class="row align-items-center">
-                        <div class="col-md-9 text-start">
+                        <div class="col-md-9 text-left">
                             <h3 class="fw-bold mb-1 text-white" style="font-family: 'Cairo', sans-serif !important;">{{ get_setting('logo_pdf_title', env('logo_pdf_title', 'للتنمية الزراعية')) }}</h3>
                             <p class="mb-0 opacity-80" style="font-size: 14px; font-family: 'Cairo', sans-serif !important;">مرحباً بك مجدداً في لوحة المتابعة المالية الفورية وإدارة المخازن والمبيعات الشاملة.</p>
                         </div>
