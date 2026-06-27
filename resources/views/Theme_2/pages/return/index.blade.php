@@ -13,11 +13,14 @@ $filter = request()->query('filter') ?: null; @endphp
        <div class="card">
             <h5 class="card-header">عرض المرتجعات</h5>
             <div class="card-header py-3 ">
-                <div class="d-flex" style="flex-direction: row-reverse;">
-                    <div class="nav-item d-flex align-items-center m-2">
-                        <a href="{{ route('admin.returns.create') }}" class="btn btn-success btn-md" style="color:white">اضافة مرتجع جديدة</a>
-                    </div>
-                </div>
+                 <div class="d-flex justify-content-between align-items-center mb-2">
+                     <div>
+                         <a href="{{ route('admin.returns.export', request()->all()) }}" class="btn btn-success btn-md fw-bold me-2"><i class="bx bx-file me-1"></i> تصدير إكسيل</a>
+                     </div>
+                     <div class="nav-item d-flex align-items-center">
+                         <a href="{{ route('admin.returns.create') }}" class="btn btn-success btn-md" style="color:white">اضافة مرتجع جديدة</a>
+                     </div>
+                 </div>
                 <form id="filter-data" method="get" class=" justify-content-between">
                     <div class="d-flex justify-content-between" style="/*background-color: #eee;*/">
                         <div class="nav-item d-flex align-items-center m-2" style="background-color: #fff;padding: 0px;border: 2px solid;">

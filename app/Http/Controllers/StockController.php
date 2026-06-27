@@ -25,16 +25,29 @@ class StockController extends Controller
         }]);
         $per_page = request('rows') ?: 20;
         $filter_data = $request->all();
-        $stocks->when(isset($filter_data['filter']) && isset($filter_data['filter']['product_id']),function($query) use($filter_data){
+        $stocks->when(isset($filter_data['filter']) && isset($filter_data['filter']['product_id']) && $filter_data['filter']['product_id'] !== '', function($query) use($filter_data){
             $query->whereHas('product', function ($query) use($filter_data){
                 $query->where('id',$filter_data['filter']['product_id']);
             });
-        })->when(isset($filter_data['filter']) && isset($filter_data['filter']['supplier_id']),function($query) use($filter_data){
+        })->when(isset($filter_data['filter']) && isset($filter_data['filter']['supplier_id']) && $filter_data['filter']['supplier_id'] !== '', function($query) use($filter_data){
             $query->whereHas('supplier', function ($query) use($filter_data){
                 $query->where('id',$filter_data['filter']['supplier_id']);
             });
+        })->when(isset($filter_data['filter']) && isset($filter_data['filter']['stock_status']) && $filter_data['filter']['stock_status'] !== '', function($query) use($filter_data){
+            $status = $filter_data['filter']['stock_status'];
+            if ($status === 'out_of_stock') {
+                $query->where('quantity', '<=', 0);
+            } elseif ($status === 'low_5') {
+                $query->where('quantity', '<=', 5);
+            } elseif ($status === 'low_10') {
+                $query->where('quantity', '<=', 10);
+            } elseif ($status === 'low_20') {
+                $query->where('quantity', '<=', 20);
+            } elseif ($status === 'low_50') {
+                $query->where('quantity', '<=', 50);
+            }
         })->when(
-            isset($filter_data['filter']) && isset($filter_data['filter']['price']),
+            isset($filter_data['filter']) && isset($filter_data['filter']['price']) && $filter_data['filter']['price'] !== '',
             function($query) use($filter_data){
                 if($filter_data['filter']['price'] == 'high-price'){
                     $query->orderBy('sale_price', 'desc');

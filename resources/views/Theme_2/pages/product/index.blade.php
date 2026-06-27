@@ -30,7 +30,10 @@
     <!-- DataTales Example -->
     <div class="card mb-4">
         <div class="card">
-            {{-- <h5 class="card-header">عرض الاصناف</h5> --}}
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">عرض الاصناف</h5>
+                <a href="{{ route('admin.products.export') }}" class="btn btn-success btn-sm fw-bold"><i class="bx bx-file me-1"></i> تصدير إكسيل</a>
+            </div>
             <div class="card-header py-3">
                 <form id="filter-data" method="get" class="d-flex justify-content-between">
                     <div class="nav-item d-flex align-items-center m-2" style="background-color: #eee;padding: 8px;">

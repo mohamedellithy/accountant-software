@@ -30,20 +30,23 @@
     <div class="card mb-4 print-hide">
         <div class="card-body">
             <form id="filter-data" method="GET" action="{{ route('admin.suppliers.debts') }}" class="row g-3 align-items-center">
-                <div class="col-12 col-md-5">
+                <div class="col-12 col-md-4">
                     <div class="input-group input-group-merge">
                         <span class="input-group-text"><i class="bx bx-search"></i></span>
                         <input type="text" name="search" class="form-control form-control-lg" placeholder="البحث باسم المورد..." value="{{ $search }}">
                     </div>
                 </div>
-                <div class="col-12 col-md-3">
+                <div class="col-12 col-md-2">
                     <button type="submit" class="btn btn-primary w-100 py-2"><i class="bx bx-filter-alt me-1"></i>بحث</button>
                 </div>
                 <div class="col-12 col-md-2">
                     <a href="{{ route('admin.suppliers.debts.pdf', ['search' => $search]) }}" class="btn btn-outline-danger w-100 py-2"><i class="bx bxs-file-pdf me-1"></i>تنزيل PDF</a>
                 </div>
                 <div class="col-12 col-md-2">
-                    <button type="button" onclick="printDiv('print-area')" class="btn btn-outline-success w-100 py-2"><i class="bx bx-printer me-1"></i>طباعة</button>
+                    <a href="{{ route('admin.supplier-debts.export', ['search' => $search]) }}" class="btn btn-outline-success w-100 py-2"><i class="bx bx-file me-1"></i>تصدير إكسيل</a>
+                </div>
+                <div class="col-12 col-md-2">
+                    <button type="button" onclick="printDiv('print-area')" class="btn btn-outline-secondary w-100 py-2"><i class="bx bx-printer me-1"></i>طباعة</button>
                 </div>
             </form>
         </div>

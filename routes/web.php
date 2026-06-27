@@ -15,6 +15,7 @@ use App\Http\Controllers\PurchasingInvoiceController;
 use App\Http\Controllers\InvoicesPdfController;
 use App\Http\Controllers\SetAccount;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\ExportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +28,12 @@ use App\Http\Controllers\SettingController;
 |
  */
 
-Auth::routes();
+// only login and logout 
+Auth::routes([
+    'register' => false, // Disables user registration routes
+    'reset'    => false, // Disables password reset routes
+    'verify'   => false, // Disables email verification routes
+]);
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', function () {
         return redirect('login');
@@ -84,6 +90,19 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('update-user-discounts/{payment_id}',[PaymentsController::class,'update_user_discounts'])->name('user-discounts.update');
         Route::delete('destroy-user-discounts/{payment_id}',[PaymentsController::class,'delete_user_discounts'])->name('user-discounts.destroy');
         
+        // Export Excel Routes
+        Route::get('export-suppliers', [ExportController::class, 'exportSuppliers'])->name('suppliers.export');
+        Route::get('export-customers', [ExportController::class, 'exportCustomers'])->name('customers.export');
+        Route::get('export-products', [ExportController::class, 'exportProducts'])->name('products.export');
+        Route::get('export-stocks', [ExportController::class, 'exportStocks'])->name('stocks.export');
+        Route::get('export-orders', [ExportController::class, 'exportOrders'])->name('orders.export');
+        Route::get('export-purchasing-invoices', [ExportController::class, 'exportPurchasingInvoices'])->name('purchasing-invoices.export');
+        Route::get('export-expenses', [ExportController::class, 'exportExpenses'])->name('expenses.export');
+        Route::get('export-returns', [ExportController::class, 'exportReturns'])->name('returns.export');
+        Route::get('export-customer-payments', [ExportController::class, 'exportCustomerPayments'])->name('customer-payments.export');
+        Route::get('export-supplier-payments', [ExportController::class, 'exportSupplierPayments'])->name('supplier-payments.export');
+        Route::get('export-customer-debts', [ExportController::class, 'exportCustomerDebts'])->name('customer-debts.export');
+        Route::get('export-supplier-debts', [ExportController::class, 'exportSupplierDebts'])->name('supplier-debts.export');
     });
 });
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

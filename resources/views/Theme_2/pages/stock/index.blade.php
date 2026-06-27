@@ -48,9 +48,9 @@
                                 @enderror
                             </div>
                             <div class="mb-3 col-md-4">
-                                <label class="form-label"  for="formtabs-country">
+                                <label class="form-label" for="add-stock-supplier-id">
                                     اسم المورد</label>
-                                <select name="supplier_id" id="formtabs-country" class="form-select2 form-control"
+                                <select name="supplier_id" id="add-stock-supplier-id" class="form-select2 form-control"
                                     data-allow-clear="true" required>
                                     @foreach($suppliers as $supplier)
                                         <option value={{ $supplier->id }}>{{ $supplier->name }}</option>
@@ -72,12 +72,15 @@
     <!-- DataTales Example -->
     <div class="card mb-4">
         <div class="card">
-            <h5 class="card-header">عرض الاصناف</h5>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">عرض الاصناف</h5>
+                <a href="{{ route('admin.stocks.export', request()->all()) }}" class="btn btn-success btn-sm fw-bold"><i class="bx bx-file me-1"></i> تصدير إكسيل</a>
+            </div>
             <div class="card-header py-3 ">
                 <form id="filter-data" method="get" class="d-flex justify-content-between">
-                    <div class="mb-3 col-12 col-md-4">
-                        <label class="form-label" for="formtabs-country">اسم الصنف</label>
-                        <select name="filter[product_id]" onchange="document.getElementById('filter-data').submit()" class="form-select2 form-control"
+                    <div class="mb-3 col-12 col-md-3">
+                        <label class="form-label" for="filter-product-id">اسم الصنف</label>
+                        <select name="filter[product_id]" id="filter-product-id" onchange="document.getElementById('filter-data').submit()" class="form-select2 form-control"
                             data-allow-clear="true">
                             <option value="">الكل</option>
                             @foreach($products as $product)
@@ -86,15 +89,26 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="mb-3 col-12 col-md-4">
-                        <label class="form-label"  for="formtabs-country">اسم المورد</label>
-                        <select name="filter[supplier_id]" id="formtabs-country" onchange="document.getElementById('filter-data').submit()" class="form-select2 form-control"
+                    <div class="mb-3 col-12 col-md-3">
+                        <label class="form-label" for="filter-supplier-id">اسم المورد</label>
+                        <select name="filter[supplier_id]" id="filter-supplier-id" onchange="document.getElementById('filter-data').submit()" class="form-select2 form-control"
                             data-allow-clear="true">
                             <option value="">الكل</option>
                             @foreach($suppliers as $supplier)
                                 <option value={{ $supplier->id }} @isset($filter['supplier_id']) @if ($filter['supplier_id'] == $supplier->id) selected @endif
                                     @endisset>{{ $supplier->name }}</option>
                             @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3 col-12 col-md-3">
+                        <label class="form-label" for="filter-stock-status">حالة المخزون / الكمية</label>
+                        <select name="filter[stock_status]" id="filter-stock-status" onchange="document.getElementById('filter-data').submit()" class="form-select form-control">
+                            <option value="">جميع الكميات</option>
+                            <option value="out_of_stock" @isset($filter['stock_status']) @if($filter['stock_status'] == 'out_of_stock') selected @endif @endisset>منتهي (كمية 0)</option>
+                            <option value="low_5" @isset($filter['stock_status']) @if($filter['stock_status'] == 'low_5') selected @endif @endisset>قارب على الانتهاء (≤ 5)</option>
+                            <option value="low_10" @isset($filter['stock_status']) @if($filter['stock_status'] == 'low_10') selected @endif @endisset>قارب على الانتهاء (≤ 10)</option>
+                            <option value="low_20" @isset($filter['stock_status']) @if($filter['stock_status'] == 'low_20') selected @endif @endisset>قارب على الانتهاء (≤ 20)</option>
+                            <option value="low_50" @isset($filter['stock_status']) @if($filter['stock_status'] == 'low_50') selected @endif @endisset>قارب على الانتهاء (≤ 50)</option>
                         </select>
                     </div>
                     <div class="d-flex">

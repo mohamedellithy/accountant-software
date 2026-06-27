@@ -51,7 +51,10 @@ $filter = request()->query('filter') ?: null;
    <!-- DataTales Example -->
    <div class="card mb-4">
        <div class="card">
-           <h5 class="card-header">عرض العملاء</h5>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">عرض العملاء</h5>
+                <a href="{{ route('admin.customers.export') }}" class="btn btn-success btn-sm fw-bold"><i class="bx bx-file me-1"></i> تصدير إكسيل</a>
+            </div>
            <div class="card-header py-3 ">
                <form id="filter-data" method="get" class="d-flex justify-content-between">
                    <div class="mb-3 col-12 col-md-4">

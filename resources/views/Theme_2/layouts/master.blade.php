@@ -76,6 +76,31 @@
         .select2-container{
             display: block !important;
         }
+        .select2-container--open, .select2-dropdown {
+            z-index: 999999 !important;
+        }
+        #mobileFilterModal .modal-content {
+            max-height: 85vh !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: visible !important;
+        }
+        #mobileFilterModal .modal-body {
+            max-height: 60vh !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            padding-bottom: 25px !important;
+        }
+        #mobileFilterModal .select2-container {
+            width: 100% !important;
+            display: block !important;
+        }
+        #mobileFilterModal .select2-selection {
+            height: 45px !important;
+            display: flex !important;
+            align-items: center !important;
+            cursor: pointer !important;
+        }
         @media(max-width:1000px){
             .card-header form#filter-data,
             .card-body form#filter-data{
@@ -532,15 +557,61 @@
                         }
                     });
                     $filterForm.find('select, input').addClass('form-control-lg');
+
+                    // Remove inline onchange and onblur so filter fields don't submit automatically on mobile
+                    $filterForm.find('select, input, textarea').each(function() {
+                        this.removeAttribute('onchange');
+                        this.removeAttribute('onblur');
+                        this.onchange = null;
+                        this.onblur = null;
+                    }).off('change blur');
                     
-                    // Ensure Select2 dropdown works inside the modal
-                    if ($.fn.select2) {
-                        $filterForm.find('.form-select2').select2({
-                            dropdownParent: $('#mobileFilterModal')
-                        });
+                    function initMobileSelect2() {
+                        if ($.fn.select2) {
+                            $('#mobileFilterModalBody').find('.form-select2, select').each(function() {
+                                var $select = $(this);
+                                if ($select.data('select2')) {
+                                    $select.select2('destroy');
+                                }
+                                $select.select2({
+                                    dropdownParent: $('#mobileFilterModal'),
+                                    width: '100%'
+                                });
+                            });
+                        }
                     }
+                    initMobileSelect2();
                 }
             }
+
+            // Ensure Select2 dropdown opens properly when modal is shown
+            $('#mobileFilterModal').on('show.bs.modal shown.bs.modal', function() {
+                if ($.fn.select2) {
+                    $('#mobileFilterModalBody').find('.form-select2, select').each(function() {
+                        var $select = $(this);
+                        if ($select.data('select2')) {
+                            $select.select2('destroy');
+                        }
+                        $select.select2({
+                            dropdownParent: $('#mobileFilterModal'),
+                            width: '100%'
+                        });
+                    });
+                }
+            });
+
+            // Explicit tap/click handler for mobile select2 container in filter modal
+            $(document).on('click mousedown touchstart', '#mobileFilterModalBody .select2-container', function(e) {
+                var $select = $(this).siblings('select');
+                if (!$select.length) {
+                    $select = $(this).prev('select');
+                }
+                if ($select.length && $.fn.select2) {
+                    if (!$select.data('select2') || !$select.data('select2').isOpen()) {
+                        $select.select2('open');
+                    }
+                }
+            });
 
             // Bind Apply button in filter modal to submit the form
             $('#mobileFilterModal .btn-primary').on('click', function() {
