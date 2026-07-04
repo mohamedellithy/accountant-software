@@ -51,6 +51,8 @@
                                     </td>
                                     <td style="direction: ltr;border:1px solid black">
                                         {{ formate_price($balance) }}
+                                    </td>
+                                </tr>
                                 <?php $applied_discounts = []; ?>
                                 @foreach ($orders as $order)
                                     @if(isset($order->order_id))
