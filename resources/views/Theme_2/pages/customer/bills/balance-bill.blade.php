@@ -15,10 +15,35 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <h5 class="card-header">
-                        كشف حساب {{ $customer->name }}
-                    </h5>
-                    <div class="table-responsive text-nowrap">
+                    <div class="card-header py-3">
+                        <div class="d-flex invoice-header" style="align-items: center; justify-content: space-between;">
+                            <div class="d-flex align-items-center">
+                                @if(get_setting('logo'))
+                                    <div style="margin-left: 15px;">
+                                        <img src="{{ public_path(get_setting('logo')) }}" alt="Logo" style="max-height: 55px; max-width: 150px; object-fit: contain;">
+                                    </div>
+                                @endif
+                                <div class="head">
+                                    <strong style="font-size: 16px; display: block;">{{ get_setting('logo_pdf_title', env('logo_pdf_title')) }}</strong>
+                                    <p style="margin: 3px 0 0 0;">(م/ت)  {{ get_setting('phone_number', env('phone_number')) }} @if(get_setting('telephone')) - {{ get_setting('telephone') }} @endif</p>
+                                </div>
+                            </div>
+                            <div class="date d-flex">
+                                <strong>تحرير في </strong>
+                                <span>{{ date('Y-m-d') }}</span>
+                            </div>
+                        </div>
+                        <div class="d-flex custom" style="width:100%;justify-content: space-between;">
+                            <label width="300px" style="margin-right:0px !important">
+                                <strong class="customfir">
+                                     كشف حساب السيد /
+                                </strong>
+                                {{ $customer->name }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive text-nowrap">
                         <table class="table table-border" Cellpadding="6px" >
                             <thead class="table-light">
                                 <tr class="table-dark" style="background-color:#eee;padding:10px;border:1px solid black" height="25">
@@ -377,25 +402,75 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="d-flex footer" style="justify-content: space-between;padding-top: 15px;">
+                        <label style="width:300px">
+                            <strong>
+                                المستلم /
+                            </strong>
+                            {{ $customer->name }}
+                        </label>
+                        <label>
+                            <strong class="signature">
+                                التوقيع /
+                            </strong>
+                            ............................................................
+                        </label>
+                    </div>
+                    <hr/>
+                    <div class="d-flex footer">
+                        <table class="table table-borderless" style="width:100%">
+                            <tr style="border: 0px;color: #566a7f;">
+                                <th style="color: #566a7f !important;text-align: center; border: none !important;">
+                                    <strong>ادارة</strong>
+                                    <p style="padding: 0px;margin: 0px;">م . {{ get_setting('manager_name', env('manager_name')) }}</p>
+                                </th>
+                                <th style="color: #566a7f !important;text-align: center; border: none !important;">
+                                    <strong>رقم التليفون</strong>
+                                    <p style="padding: 0px;margin: 0px;">{{ get_setting('phone_number', env('phone_number')) }} @if(get_setting('telephone')) / {{ get_setting('telephone') }} @endif</p>
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-        <style>
-            .table{
-                with:100%;
-                text-align: right !important;
-                border-bottom:1px solid gray !important;
-            }
-            .table tr td,
-            .table th td {
-                text-align: right !important;
-            }
-            .table tr td
-            {
-                margin:0px;
-                border:1px solid gray !important;
-            }
-        </style>
+    </div>
+    <div style="text-align: center; margin-top: 30px; border-top: 1px dashed #ccc; padding-top: 10px; font-size: 10px; color: #666;">
+        <span>تم تطوير هذا النظام بواسطة <strong>multi-solutions</strong> لحلول البرمجيات وتكنولوجيا المعلومات</span>
+        <br/>
+        <span>واتساب / جوال: 201026051966 - 201080766906</span>
+    </div>
+    <style>
+        .table{
+            with:100%;
+            text-align: right !important;
+            border-bottom:1px solid gray !important;
+        }
+        .table tr td,
+        .table th td {
+            text-align: right !important;
+        }
+        .table tr td
+        {
+            margin:0px;
+            border:1px solid gray !important;
+        }
+        .table-light th{
+            color: #566a7f !important;
+            border-left: 1px solid lightgray;
+        }
+        .invoice-header{
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .invoice-header .date{
+            align-items: center;
+        }
+        .invoice-header .date span{
+            padding: 10px;
+        }
+    </style>
 </body>
 </html>
 
