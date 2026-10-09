@@ -88,6 +88,62 @@ function get_balance_stake_holder($customer){
     return $balance;
 }
 
+function get_stakeholders_balances_summary(){
+    $rows = \DB::table('stake_holders as sh')
+        ->whereNull('sh.deleted_at')
+        ->leftJoin(\DB::raw('(SELECT customer_id, SUM(total_price) as total FROM orders GROUP BY customer_id) as o'), 'o.customer_id', '=', 'sh.id')
+        ->leftJoin(\DB::raw('(SELECT supplier_id, SUM(total_price) as total FROM purchasing_invoices GROUP BY supplier_id) as p'), 'p.supplier_id', '=', 'sh.id')
+        ->leftJoin(\DB::raw('(SELECT customer_id, SUM(value) as total FROM customer_payments GROUP BY customer_id) as cp'), 'cp.customer_id', '=', 'sh.id')
+        ->leftJoin(\DB::raw('(SELECT supplier_id, SUM(value) as total FROM supplier_payments GROUP BY supplier_id) as sp'), 'sp.supplier_id', '=', 'sh.id')
+        ->leftJoin(\DB::raw("(SELECT customer_id, SUM(total_price) as total FROM returneds WHERE type_return = 'sale' GROUP BY customer_id) as sr"), 'sr.customer_id', '=', 'sh.id')
+        ->leftJoin(\DB::raw("(SELECT customer_id, SUM(total_price) as total FROM returneds WHERE type_return = 'purchasing' GROUP BY customer_id) as pr"), 'pr.customer_id', '=', 'sh.id')
+        ->leftJoin(\DB::raw("(SELECT stake_holder_id, SUM(value) as total FROM returns_payments WHERE type_return = 'sale' GROUP BY stake_holder_id) as srp"), 'srp.stake_holder_id', '=', 'sh.id')
+        ->leftJoin(\DB::raw("(SELECT stake_holder_id, SUM(value) as total FROM returns_payments WHERE type_return = 'purchasing' GROUP BY stake_holder_id) as prp"), 'prp.stake_holder_id', '=', 'sh.id')
+        ->leftJoin(\DB::raw('(SELECT user_id, SUM(value) as total FROM discount_on_stack_holders GROUP BY user_id) as d'), 'd.user_id', '=', 'sh.id')
+        ->select([
+            'sh.id',
+            'sh.role',
+            \DB::raw('COALESCE(sh.balance, 0) as start_balance'),
+            \DB::raw('COALESCE(o.total, 0) as total_orders'),
+            \DB::raw('COALESCE(p.total, 0) as total_purchasing_invoices'),
+            \DB::raw('COALESCE(cp.total, 0) as orders_payments'),
+            \DB::raw('COALESCE(sp.total, 0) as total_purchasing_payments'),
+            \DB::raw('COALESCE(sr.total, 0) as sales_returns'),
+            \DB::raw('COALESCE(pr.total, 0) as purchasing_returns'),
+            \DB::raw('COALESCE(srp.total, 0) as sales_return_payments'),
+            \DB::raw('COALESCE(prp.total, 0) as purchasing_return_payments'),
+            \DB::raw('COALESCE(d.total, 0) as discounts'),
+        ])
+        ->get();
+
+    $total_must_collect = 0;
+    $total_must_paid = 0;
+
+    foreach ($rows as $row) {
+        $balance = $row->start_balance - $row->total_orders + $row->total_purchasing_invoices 
+            + $row->orders_payments - $row->total_purchasing_payments
+            + $row->sales_returns - $row->purchasing_returns 
+            - $row->sales_return_payments + $row->purchasing_return_payments;
+
+        if ($row->role === 'supplier') {
+            $balance -= $row->discounts;
+        } else {
+            $balance += $row->discounts;
+        }
+
+        if ($balance < 0) {
+            $total_must_collect += abs($balance);
+        } elseif ($balance > 0) {
+            $total_must_paid += $balance;
+        }
+    }
+
+    return [
+        'total_must_collect' => $total_must_collect,
+        'total_must_paid'    => $total_must_paid,
+    ];
+}
+
 
 function IndexList($collection,$loop){
     return ($collection->total()- $loop->index ) - (($collection->currentpage()-1) * $collection->perpage() );
