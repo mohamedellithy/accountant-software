@@ -79,10 +79,10 @@ function get_balance_stake_holder($customer){
     $balance = $start_balance - $total_orders + $total_purchasing_invoices + $orders_payments - $total_purchasing_payments
         + $sales_returns - $purchasing_returns - $sales_return_payments + $purchasing_return_payments;
 
-    if ($customer->role === 'supplier') {
-        $balance -= $discounts;
-    } else {
+    if ($balance <= 0) {
         $balance += $discounts;
+    } else {
+        $balance -= $discounts;
     }
 
     return $balance;
@@ -125,10 +125,10 @@ function get_stakeholders_balances_summary(){
             + $row->sales_returns - $row->purchasing_returns 
             - $row->sales_return_payments + $row->purchasing_return_payments;
 
-        if ($row->role === 'supplier') {
-            $balance -= $row->discounts;
-        } else {
+        if ($balance <= 0) {
             $balance += $row->discounts;
+        } else {
+            $balance -= $row->discounts;
         }
 
         if ($balance < 0) {
